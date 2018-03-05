@@ -811,4 +811,4 @@ extern	vmCvar_t	g_singlePlayer;
 extern	vmCvar_t	g_proxMineTimeout;
 extern	vmCvar_t	g_playerCapsule;
 extern	vmCvar_t	g_instagib;
-
+extern vmCvar_t g_instagibWeapon;

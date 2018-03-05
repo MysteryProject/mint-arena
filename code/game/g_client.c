@@ -1067,6 +1067,7 @@ void PlayerSpawn(gentity_t *ent) {
 //	char	*savedAreaBits;
 	int		accuracy_hits, accuracy_shots;
 	int		eventSequence;
+	gitem_t *it;
 
 	index = ent - g_entities;
 	player = ent->player;
@@ -1171,8 +1172,18 @@ void PlayerSpawn(gentity_t *ent) {
 	player->ps.playerNum = index;
 
 	if ( g_instagib.integer ) {
-		player->ps.stats[STAT_WEAPONS] = ( 1 << WP_RAILGUN );
-		player->ps.ammo[WP_RAILGUN] = 999;
+		it = BG_FindItemByClassname(g_instagibWeapon.string);
+
+		if (it != NULL)
+		{
+			player->ps.stats[STAT_WEAPONS] = (1 << it->giTag);
+			player->ps.ammo[it->giTag] = 999;
+		}
+		else
+		{
+			player->ps.stats[STAT_WEAPONS] = (1 << WP_RAILGUN);
+			player->ps.ammo[WP_RAILGUN] = 999;
+		}
 	} else {
 		player->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
 		if ( g_gametype.integer == GT_TEAM ) {

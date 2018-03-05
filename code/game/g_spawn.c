@@ -302,6 +302,7 @@ qboolean G_CallSpawn( gentity_t *ent ) {
 	spawn_t	*s;
 	gitem_t	*item;
 	int		i;
+	gitem_t *tmp, *tmp2;
 
 	if ( !ent->classname ) {
 		G_Printf ("G_CallSpawn: NULL classname\n");
@@ -315,9 +316,30 @@ qboolean G_CallSpawn( gentity_t *ent ) {
 			continue;
 		}
 		if ( !strcmp(item->classname, ent->classname) ) {
-			if ( g_instagib.integer && item->giType != IT_TEAM ) {
-				// only spawn team play items in instagib mode
-				return qfalse;
+			if ( g_instagib.integer )
+			{// && item->giType != IT_TEAM ) {
+				if (item->giType == IT_WEAPON || item->giType == IT_AMMO)
+				{
+					tmp = BG_FindItemByClassname(g_instagibWeapon.string);
+
+					if (tmp != NULL && tmp->giType == IT_WEAPON)
+					{
+						tmp2 = BG_FindItemForAmmo(tmp->giTag);
+						ent->classname = tmp2->classname;
+						G_SpawnItem(ent, tmp2);
+						return qtrue;
+					}
+					else
+					{
+						tmp2 = BG_FindItemForAmmo(WP_RAILGUN);
+						ent->classname = tmp2->classname;
+						G_SpawnItem(ent, tmp2);
+						return qtrue;
+					}
+				}
+				else if (item->giType != IT_TEAM)
+					// only spawn team play items in instagib mode
+					return qfalse;
 			}
 			G_SpawnItem( ent, item );
 			return qtrue;

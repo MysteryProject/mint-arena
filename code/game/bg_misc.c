@@ -1215,6 +1215,25 @@ gitem_t	*BG_FindItem( const char *pickupName ) {
 }
 
 /*
+===============
+BG_FindItem
+
+===============
+*/
+gitem_t *BG_FindItemByClassname(const char *classname)
+{
+	gitem_t *it;
+
+	for (it = bg_itemlist + 1; it->classname; it++)
+	{
+		if (!Q_stricmp(it->classname, classname))
+			return it;
+	}
+
+	return NULL;
+}
+
+/*
 ============
 BG_PlayerTouchesItem
 

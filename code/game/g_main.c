@@ -115,90 +115,91 @@ vmCvar_t	g_proxMineTimeout;
 #endif
 vmCvar_t	g_playerCapsule;
 vmCvar_t	g_instagib;
+vmCvar_t 	g_instagibWeapon;
 
-static cvarTable_t		gameCvarTable[] = {
+static cvarTable_t gameCvarTable[] = {
 	// don't override the cheat state set by the system
-	{ &g_cheats, "sv_cheats", "", 0, 0, RANGE_ALL },
+	{&g_cheats, "sv_cheats", "", 0, 0, RANGE_ALL},
 
 	// noset vars
-	{ NULL, "gameversion", PRODUCT_NAME " " PRODUCT_VERSION " " PLATFORM_STRING " " PRODUCT_DATE, CVAR_SERVERINFO | CVAR_ROM, 0, RANGE_ALL },
-	{ NULL, "gameprotocol", GAME_PROTOCOL, CVAR_SERVERINFO | CVAR_ROM, 0, RANGE_ALL },
-	{ &g_restarted, "g_restarted", "0", CVAR_ROM, 0, RANGE_ALL },
+	{NULL, "gameversion", PRODUCT_NAME " " PRODUCT_VERSION " " PLATFORM_STRING " " PRODUCT_DATE, CVAR_SERVERINFO | CVAR_ROM, 0, RANGE_ALL},
+	{NULL, "gameprotocol", GAME_PROTOCOL, CVAR_SERVERINFO | CVAR_ROM, 0, RANGE_ALL},
+	{&g_restarted, "g_restarted", "0", CVAR_ROM, 0, RANGE_ALL},
 
 	// latched vars
-	{ &g_gametype, "g_gametype", "0", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH, GCF_DO_RESTART, RANGE_INT(0, GT_MAX_GAME_TYPE-1)  },
-	{ &g_instagib, "g_instagib", "0", CVAR_LATCH, GCF_DO_RESTART, RANGE_BOOL },
+	{&g_gametype, "g_gametype", "0", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH, GCF_DO_RESTART, RANGE_INT(0, GT_MAX_GAME_TYPE - 1)},
+	{&g_instagib, "g_instagib", "0", CVAR_LATCH, GCF_DO_RESTART, RANGE_BOOL},
 
-	{ &g_maxplayers, "sv_maxclients", "8", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, RANGE_ALL },
-	{ &g_maxGamePlayers, "g_maxGameClients", "0", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, RANGE_INT(0, MAX_CLIENTS-1) },
+	{&g_maxplayers, "sv_maxclients", "8", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, RANGE_ALL},
+	{&g_maxGamePlayers, "g_maxGameClients", "0", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, RANGE_INT(0, MAX_CLIENTS - 1)},
 
 	// change anytime vars
-	{ &g_dmflags, "dmflags", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, GCF_TRACK_CHANGE, RANGE_ALL },
-	{ &g_fraglimit, "fraglimit", "20", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, GCF_TRACK_CHANGE, RANGE_INT(0, INT_MAX) },
-	{ &g_timelimit, "timelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, GCF_TRACK_CHANGE, RANGE_INT(0, INT_MAX/60000) },
-	{ &g_capturelimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, GCF_TRACK_CHANGE, RANGE_INT(0, INT_MAX) },
+	{&g_dmflags, "dmflags", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, GCF_TRACK_CHANGE, RANGE_ALL},
+	{&g_fraglimit, "fraglimit", "20", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, GCF_TRACK_CHANGE, RANGE_INT(0, INT_MAX)},
+	{&g_timelimit, "timelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, GCF_TRACK_CHANGE, RANGE_INT(0, INT_MAX / 60000)},
+	{&g_capturelimit, "capturelimit", "8", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, GCF_TRACK_CHANGE, RANGE_INT(0, INT_MAX)},
 
-	{ &g_synchronousClients, "g_synchronousClients", "0", CVAR_SYSTEMINFO, 0, RANGE_BOOL },
+	{&g_synchronousClients, "g_synchronousClients", "0", CVAR_SYSTEMINFO, 0, RANGE_BOOL},
 
-	{ &g_friendlyFire, "g_friendlyFire", "0", CVAR_ARCHIVE, GCF_TRACK_CHANGE, RANGE_BOOL },
+	{&g_friendlyFire, "g_friendlyFire", "0", CVAR_ARCHIVE, GCF_TRACK_CHANGE, RANGE_BOOL},
 
-	{ &g_teamAutoJoin, "g_teamAutoJoin", "0", CVAR_ARCHIVE, 0, RANGE_BOOL },
-	{ &g_teamForceBalance, "g_teamForceBalance", "0", CVAR_ARCHIVE, 0, RANGE_BOOL },
+	{&g_teamAutoJoin, "g_teamAutoJoin", "0", CVAR_ARCHIVE, 0, RANGE_BOOL},
+	{&g_teamForceBalance, "g_teamForceBalance", "0", CVAR_ARCHIVE, 0, RANGE_BOOL},
 
-	{ &g_warmup, "g_warmup", "20", CVAR_ARCHIVE, GCF_TRACK_CHANGE, RANGE_ALL },
-	{ &g_doWarmup, "g_doWarmup", "0", CVAR_ARCHIVE, GCF_TRACK_CHANGE, RANGE_BOOL },
-	{ &g_logfile, "g_log", "games.log", CVAR_ARCHIVE, 0, RANGE_ALL },
-	{ &g_logfileSync, "g_logsync", "0", CVAR_ARCHIVE, 0, RANGE_ALL },
+	{&g_warmup, "g_warmup", "20", CVAR_ARCHIVE, GCF_TRACK_CHANGE, RANGE_ALL},
+	{&g_doWarmup, "g_doWarmup", "0", CVAR_ARCHIVE, GCF_TRACK_CHANGE, RANGE_BOOL},
+	{&g_logfile, "g_log", "games.log", CVAR_ARCHIVE, 0, RANGE_ALL},
+	{&g_logfileSync, "g_logsync", "0", CVAR_ARCHIVE, 0, RANGE_ALL},
 
-	{ &g_password, "g_password", "", CVAR_USERINFO, 0, RANGE_ALL },
+	{&g_password, "g_password", "", CVAR_USERINFO, 0, RANGE_ALL},
 
-	{ &g_banIPs, "g_banIPs", "", CVAR_ARCHIVE, 0, RANGE_ALL },
-	{ &g_filterBan, "g_filterBan", "1", CVAR_ARCHIVE, 0, RANGE_ALL },
+	{&g_banIPs, "g_banIPs", "", CVAR_ARCHIVE, 0, RANGE_ALL},
+	{&g_filterBan, "g_filterBan", "1", CVAR_ARCHIVE, 0, RANGE_ALL},
 
-	{ &g_needpass, "g_needpass", "0", CVAR_SERVERINFO | CVAR_ROM, 0, RANGE_BOOL },
+	{&g_needpass, "g_needpass", "0", CVAR_SERVERINFO | CVAR_ROM, 0, RANGE_BOOL},
 
-	{ &g_dedicated, "dedicated", "0", 0, 0, RANGE_ALL },
+	{&g_dedicated, "dedicated", "0", 0, 0, RANGE_ALL},
 
-	{ &g_speed, "g_speed", "320", 0, GCF_TRACK_CHANGE, RANGE_ALL },
-	{ &g_gravity, "g_gravity", "800", 0, GCF_TRACK_CHANGE, RANGE_ALL },
-	{ &g_knockback, "g_knockback", "1000", 0, GCF_TRACK_CHANGE, RANGE_ALL },
-	{ &g_quadfactor, "g_quadfactor", "3", 0, GCF_TRACK_CHANGE, RANGE_ALL },
-	{ &g_weaponRespawn, "g_weaponrespawn", "5", 0, GCF_TRACK_CHANGE, RANGE_ALL },
-	{ &g_weaponTeamRespawn, "g_weaponTeamRespawn", "30", 0, GCF_TRACK_CHANGE, RANGE_ALL },
-	{ &g_forcerespawn, "g_forcerespawn", "20", 0, GCF_TRACK_CHANGE, RANGE_ALL },
-	{ &g_inactivity, "g_inactivity", "0", 0, GCF_TRACK_CHANGE, RANGE_BOOL },
-	{ &g_debugMove, "g_debugMove", "0", 0, 0, RANGE_BOOL },
-	{ &g_debugDamage, "g_debugDamage", "0", 0, 0, RANGE_BOOL },
-	{ &g_motd, "g_motd", "", 0, 0, RANGE_ALL },
+	{&g_speed, "g_speed", "320", 0, GCF_TRACK_CHANGE, RANGE_ALL},
+	{&g_gravity, "g_gravity", "800", 0, GCF_TRACK_CHANGE, RANGE_ALL},
+	{&g_knockback, "g_knockback", "1000", 0, GCF_TRACK_CHANGE, RANGE_ALL},
+	{&g_quadfactor, "g_quadfactor", "3", 0, GCF_TRACK_CHANGE, RANGE_ALL},
+	{&g_weaponRespawn, "g_weaponrespawn", "5", 0, GCF_TRACK_CHANGE, RANGE_ALL},
+	{&g_weaponTeamRespawn, "g_weaponTeamRespawn", "30", 0, GCF_TRACK_CHANGE, RANGE_ALL},
+	{&g_forcerespawn, "g_forcerespawn", "20", 0, GCF_TRACK_CHANGE, RANGE_ALL},
+	{&g_inactivity, "g_inactivity", "0", 0, GCF_TRACK_CHANGE, RANGE_BOOL},
+	{&g_debugMove, "g_debugMove", "0", 0, 0, RANGE_BOOL},
+	{&g_debugDamage, "g_debugDamage", "0", 0, 0, RANGE_BOOL},
+	{&g_motd, "g_motd", "", 0, 0, RANGE_ALL},
 
-	{ &g_podiumDist, "g_podiumDist", "80", 0, 0, RANGE_ALL },
-	{ &g_podiumDrop, "g_podiumDrop", "70", 0, 0, RANGE_ALL },
+	{&g_podiumDist, "g_podiumDist", "80", 0, 0, RANGE_ALL},
+	{&g_podiumDrop, "g_podiumDrop", "70", 0, 0, RANGE_ALL},
 
-	{ &g_allowVote, "g_allowVote", "1", CVAR_ARCHIVE, 0, RANGE_BOOL },
-	{ &g_listEntity, "g_listEntity", "0", 0, 0, RANGE_ALL },
+	{&g_allowVote, "g_allowVote", "1", CVAR_ARCHIVE, 0, RANGE_BOOL},
+	{&g_listEntity, "g_listEntity", "0", 0, 0, RANGE_ALL},
 
-	{ &g_singlePlayer, "ui_singlePlayerActive", "0", CVAR_SYSTEMINFO | CVAR_ROM, 0, RANGE_ALL },
+	{&g_singlePlayer, "ui_singlePlayerActive", "0", CVAR_SYSTEMINFO | CVAR_ROM, 0, RANGE_ALL},
 
 #ifdef MISSIONPACK
-	{ &g_obeliskHealth, "g_obeliskHealth", "2500", 0, 0, RANGE_ALL },
-	{ &g_obeliskRegenPeriod, "g_obeliskRegenPeriod", "1", 0, 0, RANGE_ALL },
-	{ &g_obeliskRegenAmount, "g_obeliskRegenAmount", "15", 0, 0, RANGE_ALL },
-	{ &g_obeliskRespawnDelay, "g_obeliskRespawnDelay", "10", CVAR_SYSTEMINFO, 0, RANGE_ALL },
+	{&g_obeliskHealth, "g_obeliskHealth", "2500", 0, 0, RANGE_ALL},
+	{&g_obeliskRegenPeriod, "g_obeliskRegenPeriod", "1", 0, 0, RANGE_ALL},
+	{&g_obeliskRegenAmount, "g_obeliskRegenAmount", "15", 0, 0, RANGE_ALL},
+	{&g_obeliskRespawnDelay, "g_obeliskRespawnDelay", "10", CVAR_SYSTEMINFO, 0, RANGE_ALL},
 
-	{ &g_cubeTimeout, "g_cubeTimeout", "30", 0, 0, RANGE_ALL },
-	{ &g_redteam, "g_redteam", DEFAULT_REDTEAM_NAME, CVAR_ARCHIVE | CVAR_SYSTEMINFO, GCF_TRACK_CHANGE | GCF_TEAM_SHADER, RANGE_ALL },
-	{ &g_blueteam, "g_blueteam", DEFAULT_BLUETEAM_NAME, CVAR_ARCHIVE | CVAR_SYSTEMINFO, GCF_TRACK_CHANGE | GCF_TEAM_SHADER, RANGE_ALL },
+	{&g_cubeTimeout, "g_cubeTimeout", "30", 0, 0, RANGE_ALL},
+	{&g_redteam, "g_redteam", DEFAULT_REDTEAM_NAME, CVAR_ARCHIVE | CVAR_SYSTEMINFO, GCF_TRACK_CHANGE | GCF_TEAM_SHADER, RANGE_ALL},
+	{&g_blueteam, "g_blueteam", DEFAULT_BLUETEAM_NAME, CVAR_ARCHIVE | CVAR_SYSTEMINFO, GCF_TRACK_CHANGE | GCF_TEAM_SHADER, RANGE_ALL},
 
-	{ &g_proxMineTimeout, "g_proxMineTimeout", "20000", 0, 0, RANGE_ALL },
+	{&g_proxMineTimeout, "g_proxMineTimeout", "20000", 0, 0, RANGE_ALL},
 #endif
-	{ &g_playerCapsule, "g_playerCapsule", "0", 0, 0, RANGE_BOOL },
-	{ &g_smoothClients, "g_smoothClients", "1", 0, 0, RANGE_BOOL },
-	{ &pmove_overbounce, "pmove_overbounce", "0", CVAR_SYSTEMINFO, 0, RANGE_BOOL },
-	{ &pmove_fixed, "pmove_fixed", "0", CVAR_SYSTEMINFO, 0, RANGE_BOOL },
-	{ &pmove_msec, "pmove_msec", "8", CVAR_SYSTEMINFO, 0, RANGE_ALL },
+	{&g_playerCapsule, "g_playerCapsule", "0", 0, 0, RANGE_BOOL},
+	{&g_smoothClients, "g_smoothClients", "1", 0, 0, RANGE_BOOL},
+	{&pmove_overbounce, "pmove_overbounce", "0", CVAR_SYSTEMINFO, 0, RANGE_BOOL},
+	{&pmove_fixed, "pmove_fixed", "0", CVAR_SYSTEMINFO, 0, RANGE_BOOL},
+	{&pmove_msec, "pmove_msec", "8", CVAR_SYSTEMINFO, 0, RANGE_ALL},
 
-	{ &g_rankings, "g_rankings", "0", 0, 0, RANGE_ALL }
-
+	{&g_rankings, "g_rankings", "0", 0, 0, RANGE_ALL},
+	{&g_instagibWeapon, "g_instagibWeapon", "weapon_railgun", CVAR_SERVERINFO | CVAR_ARCHIVE, GCF_TRACK_CHANGE, RANGE_ALL}
 };
 
 static int gameCvarTableSize = ARRAY_LEN( gameCvarTable );
