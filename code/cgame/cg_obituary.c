@@ -8,9 +8,6 @@ static int numObits;
 
 static qboolean obitInit = qfalse;
 
-static int obitBottom;
-static int obitTop;
-
 /*
 ===================
 CG_ClearObit
@@ -393,7 +390,7 @@ void CG_DrawObituary(void)
 
     CG_SetScreenPlacement(PLACE_RIGHT, PLACE_BOTTOM);
 
-    for (i = 0; i < OBIT_MAX_VISABLE; i++)
+    for (i = OBIT_MAX_VISABLE - 1; i >= 0; i--)
     {
         if (obitStack[i].target[0] == '\0')
             continue;
@@ -420,7 +417,7 @@ void CG_DrawObituary(void)
         RemoveColorEscapeSequences(obitStack[i].attacker);
         RemoveColorEscapeSequences(obitStack[i].target);
 
-        y = 480 - cg_obituaryY[cg.cur_localPlayerNum].integer - (i * cg_obituaryGap[cg.cur_localPlayerNum].integer);
+        y = 480 - (cg_obituaryY[cg.cur_localPlayerNum].integer + ((OBIT_MAX_VISABLE - 1 - i) * cg_obituaryGap[cg.cur_localPlayerNum].integer));
         x = 640 - cg_obituaryX[cg.cur_localPlayerNum].integer;
 
         weapString = va("[%s]", obitStack[i].weapon);

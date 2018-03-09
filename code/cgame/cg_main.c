@@ -559,8 +559,8 @@ static userCvarTable_t userCvarTable[] = {
 	{cg_thirdPersonAngle, "cg_thirdPersonAngle", "0", CVAR_CHEAT, RANGE_ALL},
 	{cg_thirdPersonHeight, "cg_thirdPersonHeight", "24", 0, RANGE_INT(0, 32)},
 	{cg_thirdPersonSmooth, "cg_thirdPersonSmooth", "0", 0, RANGE_ALL}, // this cvar exists because it's behavior is too buggy to enable by default
-	{cg_obituaryX, "cg_obituaryX", "150", CVAR_ARCHIVE, RANGE_ALL},
-	{cg_obituaryY, "cg_obituaryY", "120", CVAR_ARCHIVE, RANGE_ALL},
+	{cg_obituaryX, "cg_obituaryX", "100", CVAR_ARCHIVE, RANGE_ALL},
+	{cg_obituaryY, "cg_obituaryY", "435", CVAR_ARCHIVE, RANGE_ALL},
 	{cg_obituaryGap, "cg_obituaryGap", "10", CVAR_ARCHIVE, RANGE_ALL},
 	{cg_obituarySpacing, "cg_obituarySpacing", "3", CVAR_ARCHIVE, RANGE_ALL},
 
