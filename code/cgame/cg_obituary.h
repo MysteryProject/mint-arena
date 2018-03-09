@@ -3,9 +3,7 @@
 
 #include "cg_local.h"
 
-#define OBIT_MAX_VISABLE 5
-
-#define OBIT_MAX_NAME_LENGTH 28
+#define OBIT_MAX_VISABLE 8
 
 #define OBIT_FADE_TIME 5000
 
@@ -29,9 +27,9 @@
 
 typedef struct
 {
-    char attacker[OBIT_MAX_NAME_LENGTH];
-    char target[OBIT_MAX_NAME_LENGTH];
-    char weapon[OBIT_MAX_NAME_LENGTH];
+    char attacker[MAX_NAME_LENGTH];
+    char target[MAX_NAME_LENGTH];
+    char weapon[MAX_NAME_LENGTH];
     team_t attackerTeam;
     team_t targetTeam;
     int time;

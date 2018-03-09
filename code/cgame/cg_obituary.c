@@ -261,8 +261,8 @@ void CG_ParseObituary(entityState_t *ent)
     playerInfo_t *targetpi, *attackerpi;
     const char *targetInfo;
     const char *attackerInfo;
-    char targetName[OBIT_MAX_NAME_LENGTH];
-    char attackerName[OBIT_MAX_NAME_LENGTH];
+    char targetName[MAX_NAME_LENGTH];
+    char attackerName[MAX_NAME_LENGTH];
     int i;
 
     if (!obitInit)
