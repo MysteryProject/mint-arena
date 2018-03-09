@@ -2869,6 +2869,8 @@ static void CG_Draw2D(stereoFrame_t stereoFrame, qboolean *voiceMenuOpen)
 #endif
 	}
 
+	CG_DrawObituary();
+	
 	CG_DrawVote();
 	CG_DrawTeamVote();
 

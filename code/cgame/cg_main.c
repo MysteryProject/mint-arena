@@ -329,6 +329,12 @@ vmCvar_t	cg_thirdPersonAngle[MAX_SPLITVIEW];
 vmCvar_t	cg_thirdPersonHeight[MAX_SPLITVIEW];
 vmCvar_t	cg_thirdPersonSmooth[MAX_SPLITVIEW];
 
+// tmp?
+vmCvar_t cg_obituaryX[MAX_SPLITVIEW];
+vmCvar_t cg_obituaryY[MAX_SPLITVIEW];
+vmCvar_t cg_obituaryGap[MAX_SPLITVIEW];
+vmCvar_t cg_obituarySpacing[MAX_SPLITVIEW];
+
 #ifdef MISSIONPACK
 vmCvar_t	cg_currentSelectedPlayer[MAX_SPLITVIEW];
 vmCvar_t	cg_currentSelectedPlayerName[MAX_SPLITVIEW];
@@ -539,24 +545,28 @@ static cvarTable_t cgameCvarTable[] = {
 };
 
 static userCvarTable_t userCvarTable[] = {
-	{ cg_color1, "color1", XSTRING( DEFAULT_PLAYER_COLOR1 ), CVAR_USERINFO | CVAR_ARCHIVE, RANGE_ALL },
-	{ cg_color2, "color2", XSTRING( DEFAULT_PLAYER_COLOR2 ), CVAR_USERINFO | CVAR_ARCHIVE, RANGE_ALL },
-	{ cg_handicap, "handicap", "100", CVAR_USERINFO | CVAR_ARCHIVE, RANGE_ALL },
-	{ cg_teamtask, "teamtask", "0", CVAR_USERINFO, RANGE_ALL },
-	{ cg_teampref, "teampref", "", CVAR_USERINFO, RANGE_ALL },
+	{cg_color1, "color1", XSTRING(DEFAULT_PLAYER_COLOR1), CVAR_USERINFO | CVAR_ARCHIVE, RANGE_ALL},
+	{cg_color2, "color2", XSTRING(DEFAULT_PLAYER_COLOR2), CVAR_USERINFO | CVAR_ARCHIVE, RANGE_ALL},
+	{cg_handicap, "handicap", "100", CVAR_USERINFO | CVAR_ARCHIVE, RANGE_ALL},
+	{cg_teamtask, "teamtask", "0", CVAR_USERINFO, RANGE_ALL},
+	{cg_teampref, "teampref", "", CVAR_USERINFO, RANGE_ALL},
 
-	{ cg_autoswitch, "cg_autoswitch", "1", CVAR_ARCHIVE, RANGE_BOOL },
-	{ cg_cyclePastGauntlet, "cg_cyclePastGauntlet", "1", CVAR_ARCHIVE, RANGE_BOOL },
-	{ cg_drawGun, "cg_drawGun", "1", CVAR_ARCHIVE, RANGE_INT(0, 3) },
-	{ cg_thirdPerson, "cg_thirdPerson", "0", 0, RANGE_BOOL },
-	{ cg_thirdPersonRange, "cg_thirdPersonRange", "40", CVAR_CHEAT, RANGE_ALL },
-	{ cg_thirdPersonAngle, "cg_thirdPersonAngle", "0", CVAR_CHEAT, RANGE_ALL },
-	{ cg_thirdPersonHeight, "cg_thirdPersonHeight", "24", 0, RANGE_INT( 0, 32 ) },
-	{ cg_thirdPersonSmooth, "cg_thirdPersonSmooth", "0", 0, RANGE_ALL }, // this cvar exists because it's behavior is too buggy to enable by default
+	{cg_autoswitch, "cg_autoswitch", "1", CVAR_ARCHIVE, RANGE_BOOL},
+	{cg_cyclePastGauntlet, "cg_cyclePastGauntlet", "1", CVAR_ARCHIVE, RANGE_BOOL},
+	{cg_drawGun, "cg_drawGun", "1", CVAR_ARCHIVE, RANGE_INT(0, 3)},
+	{cg_thirdPerson, "cg_thirdPerson", "0", 0, RANGE_BOOL},
+	{cg_thirdPersonRange, "cg_thirdPersonRange", "40", CVAR_CHEAT, RANGE_ALL},
+	{cg_thirdPersonAngle, "cg_thirdPersonAngle", "0", CVAR_CHEAT, RANGE_ALL},
+	{cg_thirdPersonHeight, "cg_thirdPersonHeight", "24", 0, RANGE_INT(0, 32)},
+	{cg_thirdPersonSmooth, "cg_thirdPersonSmooth", "0", 0, RANGE_ALL}, // this cvar exists because it's behavior is too buggy to enable by default
+	{cg_obituaryX, "cg_obituaryX", "150", CVAR_ARCHIVE, RANGE_ALL},
+	{cg_obituaryY, "cg_obituaryY", "120", CVAR_ARCHIVE, RANGE_ALL},
+	{cg_obituaryGap, "cg_obituaryGap", "10", CVAR_ARCHIVE, RANGE_ALL},
+	{cg_obituarySpacing, "cg_obituarySpacing", "3", CVAR_ARCHIVE, RANGE_ALL},
 
 #ifdef MISSIONPACK
-	{ cg_currentSelectedPlayer, "cg_currentSelectedPlayer", "0", CVAR_ARCHIVE, RANGE_ALL },
-	{ cg_currentSelectedPlayerName, "cg_currentSelectedPlayerName", "", CVAR_ARCHIVE, RANGE_ALL }
+	{cg_currentSelectedPlayer, "cg_currentSelectedPlayer", "0", CVAR_ARCHIVE, RANGE_ALL},
+	{cg_currentSelectedPlayerName, "cg_currentSelectedPlayerName", "", CVAR_ARCHIVE, RANGE_ALL}
 #endif
 };
 

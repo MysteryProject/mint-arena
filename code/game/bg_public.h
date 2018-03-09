@@ -1254,6 +1254,9 @@ int PC_ExpectTokenString(int handle, char *string);
 int PC_ExpectTokenType(int handle, int type, int subtype, pc_token_t *token);
 int PC_ExpectAnyToken(int handle, pc_token_t *token);
 
+void RemoveColorEscapeSequences(char *text);
+
+
 #define MAX_STRINGFIELD				80
 //field types
 #define FT_CHAR						1			// char
