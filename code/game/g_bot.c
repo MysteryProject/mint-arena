@@ -316,31 +316,30 @@ int g_numMaps;
 
 void G_LoadMapList(void)
 {
-	char dirlist[1024];
-	int numdirs;
-	char *dirptr;
-	int dirlen;
-	int i;
-	int count = 0;
+	int				len;
+	fileHandle_t	f;
+	char			buf[MAX_ARENAS_TEXT];
+	char *filename = "mapcycle.txt";
 
-	numdirs = trap_FS_GetFileList("maps", ".bsp", dirlist, 1024);
-	dirptr = dirlist;
+	len = trap_FS_FOpenFile(filename, &f, FS_READ);
 
-	for (i = 0; i < numdirs; i++, dirptr += dirlen + 1)
-	{
-		dirlen = strlen(dirptr);
-
-		if (!strcmp(dirptr, "test_bigbox.bsp"))
-			continue;
-
-		g_mapList[count] = trap_HeapMalloc(dirlen + 1);
-		COM_StripExtension(dirptr, g_mapList[count], dirlen);
-		count++;
-
-		//G_Printf("Map %d:  %s\n", count, g_mapList[count - 1]);
+	if ( !f ) {
+		trap_Print(va(S_COLOR_RED "file not found: %s\n", filename));
+		return;
+	}
+	if ( len >= MAX_ARENAS_TEXT ) {
+		trap_FS_FCloseFile( f );
+		trap_Print(va(S_COLOR_RED "file too large: %s is %i, max allowed is %i\n", filename, len, MAX_ARENAS_TEXT));
+		return;
 	}
 
-	g_numMaps = count - 1;
+	trap_FS_Read( buf, len, f );
+	buf[len] = 0;
+	trap_FS_FCloseFile( f );
+
+	g_numMaps += G_ParseInfos(buf, MAX_ARENAS - g_numMaps, &g_mapList[g_numMaps]);
+
+	G_Printf("Found %d maps for mapcycle.\n", g_numMaps);
 }
 
 /*
@@ -349,8 +348,116 @@ G_SelectRandomArenaName
 
 ===============
 */
-void G_SelectRandomArenaName(char *oldmap, char *newmap)
+qboolean G_SelectRandomArenaName(char *oldmap, char *newmap, qboolean limit)
 {
+#if 1
+	int num;
+	int newgametype = g_gametype.integer;
+	char map[1024];
+	char *type;
+	const char *arenainfo;
+	char **mapInfos = (limit) ? g_mapList : g_arenaInfos;
+	int numMaps = (limit) ? g_numMaps : g_numArenas;
+	int fraglimit, capturelimit;
+
+	if (numMaps < 2)
+	{
+		G_Printf("G_SelectRandomArenaName: Could not find maps, return current\n");
+		newmap = oldmap;
+		return qfalse;
+	}
+
+	while (qtrue)
+	{
+		num = random() * (numMaps - 1);
+
+		arenainfo = mapInfos[num];
+
+		Q_strncpyz(map, Info_ValueForKey(arenainfo, "map"), sizeof(map));
+
+		if (strcmp(map, oldmap))
+			break;
+	}
+
+	strcpy(newmap, map);
+
+	//arenainfo = G_GetArenaInfoByMap(map);
+
+	//G_Printf("\nTRYING TO LOAD MAP %s (%d)\n", newmap, num);
+
+	if (limit)
+		arenainfo = G_GetArenaInfoByMap(map);
+		
+	if (!arenainfo)
+		return qtrue;
+
+	type = Info_ValueForKey(arenainfo, "type");
+
+	// look through all available gametypes for this map
+	// if we're already set to a valid one, just keep the gametype the same
+	// otherwise chose the first one in the list below that's available to set it as.
+	if (*type)
+	{
+		if (strstr(type, "ffa"))
+		{
+			if (g_gametype.integer == GT_FFA)
+			{
+				newgametype = g_gametype.integer;
+				goto finished;
+			}
+			else
+				newgametype = GT_FFA;
+		}
+		if (strstr(type, "team"))
+		{
+			if (g_gametype.integer == GT_TEAM)
+			{
+				newgametype = g_gametype.integer;
+				goto finished;
+			}
+			else if (newgametype == g_gametype.integer)
+				newgametype = GT_TEAM;
+		}
+		if (strstr(type, "tourney"))
+		{
+			if (g_gametype.integer == GT_TOURNAMENT)
+			{
+				newgametype = g_gametype.integer;
+				goto finished;
+			}
+			else if (newgametype == g_gametype.integer)
+				newgametype = GT_TOURNAMENT;
+		}
+		if (strstr(type, "ctf"))
+		{
+			if (g_gametype.integer == GT_CTF)
+			{
+				newgametype = g_gametype.integer;
+				goto finished;
+			}
+			else if (newgametype == g_gametype.integer)
+				newgametype = GT_CTF;
+		}
+	}
+
+	finished:
+	if (newgametype != g_gametype.integer)
+		trap_Cvar_SetValue("g_gametype", newgametype);
+
+	if (limit)
+	{
+		fraglimit = atoi(Info_ValueForKey(mapInfos[num], "fraglimit"));
+		capturelimit = atoi(Info_ValueForKey(mapInfos[num], "capturelimit"));
+
+		if (fraglimit > 0)
+			trap_Cvar_SetValue("fraglimit", fraglimit);
+
+		if (capturelimit > 0)
+			trap_Cvar_SetValue("capturelimit", capturelimit);
+	}
+
+	return qtrue;
+#else
 	int num;
 
 	if (g_numMaps < 2)
@@ -371,6 +478,7 @@ void G_SelectRandomArenaName(char *oldmap, char *newmap)
 	//G_Printf("\nTRYING TO LOAD MAP %s (%d)\n", g_mapList[num], num);
 
 	strcpy(newmap, g_mapList[num]);
+#endif
 }
 
 /*
@@ -1116,16 +1224,18 @@ void G_InitBots( qboolean restart ) {
 			return;
 		}
 
-		fragLimit = atoi( Info_ValueForKey( arenainfo, "fraglimit" ) );
-		timeLimit = atoi( Info_ValueForKey( arenainfo, "timelimit" ) );
+		fragLimit = atoi(Info_ValueForKey(arenainfo, "fraglimit"));
+		timeLimit = atoi(Info_ValueForKey(arenainfo, "timelimit"));
 
-		if ( !fragLimit && !timeLimit ) {
-			trap_Cvar_SetValue( "fraglimit", 10 );
-			trap_Cvar_SetValue( "timelimit", 0 );
+		if (!fragLimit && !timeLimit)
+		{
+			trap_Cvar_SetValue("fraglimit", 10);
+			trap_Cvar_SetValue("timelimit", 0);
 		}
-		else {
-			trap_Cvar_SetValue( "fraglimit", fragLimit );
-			trap_Cvar_SetValue( "timelimit", timeLimit );
+		else
+		{
+			trap_Cvar_SetValue("fraglimit", fragLimit);
+			trap_Cvar_SetValue("timelimit", timeLimit);
 		}
 
 		basedelay = BOT_BEGIN_DELAY_BASE;

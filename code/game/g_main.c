@@ -1239,7 +1239,7 @@ void BeginIntermission( void ) {
 
 }
 
-extern char *G_SelectRandomArenaName(char *oldmap);
+extern qboolean G_SelectRandomArenaName(char *oldmap, char *newmap, qboolean limit);
 
 /*
 =============
@@ -1257,7 +1257,7 @@ void ExitLevel(void)
 	char nextmap[MAX_STRING_CHARS];
 	char d1[MAX_STRING_CHARS];
 	char currentMap[MAX_QPATH];
-	char *nextMapName;
+	char nextMapName[MAX_QPATH];
 	char serverinfo[MAX_INFO_STRING];
 
 	//bot interbreeding
@@ -1279,17 +1279,15 @@ void ExitLevel(void)
 	trap_Cvar_VariableStringBuffer( "nextmap", nextmap, sizeof(nextmap) );
 	trap_Cvar_VariableStringBuffer( "d1", d1, sizeof(d1) );
 
-	if (!Q_stricmp(g_nextmapmode.string, "random"))
+	if (!Q_stricmp(g_nextmapmode.string, "random") || !Q_stricmp(g_nextmapmode.string, "file"))
 	{
 		trap_GetServerinfo(serverinfo, sizeof(serverinfo));
 		Q_strncpyz(currentMap, Info_ValueForKey(serverinfo, "mapname"), sizeof(currentMap));
-		nextMapName = G_SelectRandomArenaName(currentMap);
-		
-		trap_Cmd_ExecuteText(EXEC_APPEND, va("map %s\n", nextMapName));
-	}
-	else if (!Q_stricmp(g_nextmapmode.string, "file"))
-	{
-		// load mapcycle file here
+
+		if (G_SelectRandomArenaName(currentMap, nextMapName, !Q_stricmp(g_nextmapmode.string, "file")))
+			trap_Cmd_ExecuteText(EXEC_APPEND, va("map %s\n", nextMapName));
+		else
+			trap_Cmd_ExecuteText(EXEC_APPEND, "vstr nextmap\n");
 	}
 	else if (!Q_stricmp(nextmap, "map_restart 0") && Q_stricmp(d1, ""))
 	{
