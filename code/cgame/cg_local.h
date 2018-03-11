@@ -1489,11 +1489,12 @@ extern	vmCvar_t		cg_currentSelectedPlayer[MAX_SPLITVIEW];
 extern	vmCvar_t		cg_currentSelectedPlayerName[MAX_SPLITVIEW];
 #endif
 
-// tmp
+// obituary
 extern vmCvar_t cg_obituaryX[MAX_SPLITVIEW];
 extern vmCvar_t cg_obituaryY[MAX_SPLITVIEW];
 extern vmCvar_t cg_obituaryGap[MAX_SPLITVIEW];
 extern vmCvar_t cg_obituarySpacing[MAX_SPLITVIEW];
+extern vmCvar_t cg_obituaryFadetime[MAX_SPLITVIEW];
 
 //
 // cg_main.c

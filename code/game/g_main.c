@@ -116,6 +116,7 @@ vmCvar_t	g_proxMineTimeout;
 vmCvar_t	g_playerCapsule;
 vmCvar_t	g_instagib;
 vmCvar_t 	g_instagibWeapon;
+vmCvar_t g_nextmapmode;
 
 static cvarTable_t gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -172,6 +173,9 @@ static cvarTable_t gameCvarTable[] = {
 	{&g_debugMove, "g_debugMove", "0", 0, 0, RANGE_BOOL},
 	{&g_debugDamage, "g_debugDamage", "0", 0, 0, RANGE_BOOL},
 	{&g_motd, "g_motd", "", 0, 0, RANGE_ALL},
+	{&g_nextmapmode, "g_nextmapmode", "", CVAR_ARCHIVE, 0, RANGE_ALL}, 	// "" - default, use nextmap command
+																		// "random" - randomly choses a map from arenas list (currently just a random map)
+																		// "file" - loads from mapycylce.txt (TODO)
 
 	{&g_podiumDist, "g_podiumDist", "80", 0, 0, RANGE_ALL},
 	{&g_podiumDrop, "g_podiumDrop", "70", 0, 0, RANGE_ALL},
@@ -1235,6 +1239,7 @@ void BeginIntermission( void ) {
 
 }
 
+extern char *G_SelectRandomArenaName(char *oldmap);
 
 /*
 =============
@@ -1245,11 +1250,15 @@ or moved to a new level based on the "nextmap" cvar
 
 =============
 */
-void ExitLevel (void) {
+void ExitLevel(void)
+{
 	int		i;
 	gplayer_t *cl;
 	char nextmap[MAX_STRING_CHARS];
 	char d1[MAX_STRING_CHARS];
+	char currentMap[MAX_QPATH];
+	char *nextMapName;
+	char serverinfo[MAX_INFO_STRING];
 
 	//bot interbreeding
 	BotInterbreedEndMatch();
@@ -1270,11 +1279,26 @@ void ExitLevel (void) {
 	trap_Cvar_VariableStringBuffer( "nextmap", nextmap, sizeof(nextmap) );
 	trap_Cvar_VariableStringBuffer( "d1", d1, sizeof(d1) );
 
-	if( !Q_stricmp( nextmap, "map_restart 0" ) && Q_stricmp( d1, "" ) ) {
-		trap_Cvar_Set( "nextmap", "vstr d2" );
-		trap_Cmd_ExecuteText( EXEC_APPEND, "vstr d1\n" );
-	} else {
-		trap_Cmd_ExecuteText( EXEC_APPEND, "vstr nextmap\n" );
+	if (!Q_stricmp(g_nextmapmode.string, "random"))
+	{
+		trap_GetServerinfo(serverinfo, sizeof(serverinfo));
+		Q_strncpyz(currentMap, Info_ValueForKey(serverinfo, "mapname"), sizeof(currentMap));
+		nextMapName = G_SelectRandomArenaName(currentMap);
+		
+		trap_Cmd_ExecuteText(EXEC_APPEND, va("map %s\n", nextMapName));
+	}
+	else if (!Q_stricmp(g_nextmapmode.string, "file"))
+	{
+		// load mapcycle file here
+	}
+	else if (!Q_stricmp(nextmap, "map_restart 0") && Q_stricmp(d1, ""))
+	{
+		trap_Cvar_Set("nextmap", "vstr d2");
+		trap_Cmd_ExecuteText(EXEC_APPEND, "vstr d1\n");
+	}
+	else
+	{
+		trap_Cmd_ExecuteText(EXEC_APPEND, "vstr nextmap\n");
 	}
 
 	level.changemap = NULL;

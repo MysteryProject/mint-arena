@@ -329,11 +329,13 @@ vmCvar_t	cg_thirdPersonAngle[MAX_SPLITVIEW];
 vmCvar_t	cg_thirdPersonHeight[MAX_SPLITVIEW];
 vmCvar_t	cg_thirdPersonSmooth[MAX_SPLITVIEW];
 
-// tmp?
+// obituary customizing
 vmCvar_t cg_obituaryX[MAX_SPLITVIEW];
 vmCvar_t cg_obituaryY[MAX_SPLITVIEW];
 vmCvar_t cg_obituaryGap[MAX_SPLITVIEW];
 vmCvar_t cg_obituarySpacing[MAX_SPLITVIEW];
+vmCvar_t cg_obituaryFadetime[MAX_SPLITVIEW];
+vmCvar_t cg_obituaryMaxVisable[MAX_SPLITVIEW];
 
 #ifdef MISSIONPACK
 vmCvar_t	cg_currentSelectedPlayer[MAX_SPLITVIEW];
@@ -560,9 +562,10 @@ static userCvarTable_t userCvarTable[] = {
 	{cg_thirdPersonHeight, "cg_thirdPersonHeight", "24", 0, RANGE_INT(0, 32)},
 	{cg_thirdPersonSmooth, "cg_thirdPersonSmooth", "0", 0, RANGE_ALL}, // this cvar exists because it's behavior is too buggy to enable by default
 	{cg_obituaryX, "cg_obituaryX", "100", CVAR_ARCHIVE, RANGE_ALL},
-	{cg_obituaryY, "cg_obituaryY", "435", CVAR_ARCHIVE, RANGE_ALL},
+	{cg_obituaryY, "cg_obituaryY", "400", CVAR_ARCHIVE, RANGE_ALL},
 	{cg_obituaryGap, "cg_obituaryGap", "10", CVAR_ARCHIVE, RANGE_ALL},
 	{cg_obituarySpacing, "cg_obituarySpacing", "3", CVAR_ARCHIVE, RANGE_ALL},
+	{cg_obituaryFadetime, "cg_obituaryFadetime", "5.0", CVAR_ARCHIVE, RANGE_ALL},
 
 #ifdef MISSIONPACK
 	{cg_currentSelectedPlayer, "cg_currentSelectedPlayer", "0", CVAR_ARCHIVE, RANGE_ALL},

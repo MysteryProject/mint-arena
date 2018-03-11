@@ -311,6 +311,68 @@ int G_SelectRandomBotInfo( int team ) {
 	return -1;
 }
 
+char *g_mapList[1024];
+int g_numMaps;
+
+void G_LoadMapList(void)
+{
+	char dirlist[1024];
+	int numdirs;
+	char *dirptr;
+	int dirlen;
+	int i;
+	int count = 0;
+
+	numdirs = trap_FS_GetFileList("maps", ".bsp", dirlist, 1024);
+	dirptr = dirlist;
+
+	for (i = 0; i < numdirs; i++, dirptr += dirlen + 1)
+	{
+		dirlen = strlen(dirptr);
+
+		if (!strcmp(dirptr, "test_bigbox.bsp"))
+			continue;
+
+		g_mapList[count] = trap_HeapMalloc(dirlen + 1);
+		COM_StripExtension(dirptr, g_mapList[count], dirlen);
+		count++;
+
+		//G_Printf("Map %d:  %s\n", count, g_mapList[count - 1]);
+	}
+
+	g_numMaps = count - 1;
+}
+
+/*
+===============
+G_SelectRandomArenaName
+
+===============
+*/
+void G_SelectRandomArenaName(char *oldmap, char *newmap)
+{
+	int num;
+
+	if (g_numMaps < 2)
+	{
+		G_Printf("G_SelectRandomArenaName: Could not find maps, return current\n");
+		newmap = oldmap;
+		return;
+	}
+
+	while (qtrue)
+	{
+		num = random() * (g_numMaps - 1);
+
+		if (strcmp(oldmap, g_mapList[num]))
+			break;
+	}
+
+	//G_Printf("\nTRYING TO LOAD MAP %s (%d)\n", g_mapList[num], num);
+
+	strcpy(newmap, g_mapList[num]);
+}
+
 /*
 ===============
 G_AddRandomBot
@@ -1042,8 +1104,9 @@ void G_InitBots( qboolean restart ) {
 
 	G_LoadBots();
 	G_LoadArenas();
+	G_LoadMapList();
 
-	trap_Cvar_Register( &bot_minplayers, "bot_minplayers", "0", CVAR_SERVERINFO );
+	trap_Cvar_Register(&bot_minplayers, "bot_minplayers", "0", CVAR_SERVERINFO);
 
 	if( g_gametype.integer == GT_SINGLE_PLAYER ) {
 		trap_GetServerinfo( serverinfo, sizeof(serverinfo) );

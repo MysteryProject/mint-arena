@@ -3,9 +3,6 @@
 static obituary_t obitStack[OBIT_MAX_VISABLE];
 static int numObits;
 
-//tatic modelInfo_t modelInfo[MAX_MODEL_INFO];
-//static int numModelInfo;
-
 static qboolean obitInit = qfalse;
 
 /*
@@ -190,9 +187,13 @@ static void CG_AddObituary(char *attackerName, char *targetName, team_t attacker
         //    weapString = "HS";
         //    break;
 
-        //case MI_SAMETEAM:
-        //  weapString = "TK";
-        //  break;
+        case MI_SAMETEAM:
+            weapString = "Teamkill";
+            break;
+
+        case MOD_TELEFRAG:
+            weapString = "Telefrag";
+            break;
 
         case MOD_CRUSH:
             weapString = "Crushed";
@@ -208,6 +209,9 @@ static void CG_AddObituary(char *attackerName, char *targetName, team_t attacker
 
         case MOD_TRIGGER_HURT:
         case MOD_FALLING:
+            weapString = "Fell";
+            break;
+            
         case MOD_SUICIDE:
             weapString = "Suicide";
             break;
@@ -303,7 +307,7 @@ void CG_ParseObituary(entityState_t *ent)
 
     if ((attacker == ENTITYNUM_WORLD) || (attacker == target))
     {
-        CG_AddObituary(NULL, targetName, -1, targetpi->team, mod);
+        CG_AddObituary(NULL, targetName, -1, targetpi->team, (attacker == target) ? MOD_SUICIDE : mod);
         return;
     }
 
@@ -388,14 +392,14 @@ void CG_DrawObituary(void)
     if (!obitInit)
         CG_InitObituary();
 
-    CG_SetScreenPlacement(PLACE_RIGHT, PLACE_BOTTOM);
+    CG_SetScreenPlacement(PLACE_RIGHT, PLACE_TOP);
 
     for (i = OBIT_MAX_VISABLE - 1; i >= 0; i--)
     {
         if (obitStack[i].target[0] == '\0')
             continue;
 
-        color = CG_FadeColor(obitStack[i].time, OBIT_FADE_TIME);
+        color = CG_FadeColor(obitStack[i].time, 1000 * atof(cg_obituaryFadetime[cg.cur_localPlayerNum].string));
 
         if (!color)
         {
