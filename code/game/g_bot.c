@@ -391,55 +391,87 @@ qboolean G_SelectRandomArenaName(char *oldmap, char *newmap, qboolean limit)
 	if (!arenainfo)
 		return qtrue;
 
-	type = Info_ValueForKey(arenainfo, "type");
-
-	// look through all available gametypes for this map
-	// if we're already set to a valid one, just keep the gametype the same
-	// otherwise chose the first one in the list below that's available to set it as.
-	if (*type)
+	if (limit)
 	{
-		if (strstr(type, "ffa"))
+		// get the mode from the mapcycle config
+		type = Info_ValueForKey(mapInfos[num], "mode");
+
+		if (*type)
 		{
-			if (g_gametype.integer == GT_FFA)
+			if (strstr(type, "ffa"))
 			{
-				newgametype = g_gametype.integer;
-				goto finished;
+				newgametype = GT_FFA;
+			}
+			else if (strstr(type, "team"))
+			{
+				newgametype = GT_TEAM;
+			}
+			else if (strstr(type, "tourney"))
+			{
+				newgametype = GT_TOURNAMENT;
+			}
+			else if (strstr(type, "ctf"))
+			{
+				newgametype = GT_CTF;
 			}
 			else
+			{
 				newgametype = GT_FFA;
-		}
-		if (strstr(type, "team"))
-		{
-			if (g_gametype.integer == GT_TEAM)
-			{
-				newgametype = g_gametype.integer;
-				goto finished;
 			}
-			else if (newgametype == g_gametype.integer)
-				newgametype = GT_TEAM;
-		}
-		if (strstr(type, "tourney"))
-		{
-			if (g_gametype.integer == GT_TOURNAMENT)
-			{
-				newgametype = g_gametype.integer;
-				goto finished;
-			}
-			else if (newgametype == g_gametype.integer)
-				newgametype = GT_TOURNAMENT;
-		}
-		if (strstr(type, "ctf"))
-		{
-			if (g_gametype.integer == GT_CTF)
-			{
-				newgametype = g_gametype.integer;
-				goto finished;
-			}
-			else if (newgametype == g_gametype.integer)
-				newgametype = GT_CTF;
 		}
 	}
+	
+	if (!limit || (newgametype != g_gametype.integer && *type))
+	{
+		type = Info_ValueForKey(arenainfo, "type");
 
+		// look through all available gametypes for this map
+		// if we're already set to a valid one, just keep the gametype the same
+		// otherwise chose the first one in the list below that's available to set it as.
+		if (*type)
+		{
+			if (strstr(type, "ffa"))
+			{
+				if (g_gametype.integer == GT_FFA)
+				{
+					newgametype = g_gametype.integer;
+					goto finished;
+				}
+				else
+					newgametype = GT_FFA;
+			}
+			if (strstr(type, "team"))
+			{
+				if (g_gametype.integer == GT_TEAM)
+				{
+					newgametype = g_gametype.integer;
+					goto finished;
+				}
+				else if (newgametype == g_gametype.integer)
+					newgametype = GT_TEAM;
+			}
+			if (strstr(type, "tourney"))
+			{
+				if (g_gametype.integer == GT_TOURNAMENT)
+				{
+					newgametype = g_gametype.integer;
+					goto finished;
+				}
+				else if (newgametype == g_gametype.integer)
+					newgametype = GT_TOURNAMENT;
+			}
+			if (strstr(type, "ctf"))
+			{
+				if (g_gametype.integer == GT_CTF)
+				{
+					newgametype = g_gametype.integer;
+					goto finished;
+				}
+				else if (newgametype == g_gametype.integer)
+					newgametype = GT_CTF;
+			}
+		}
+	}
 	finished:
 	if (newgametype != g_gametype.integer)
 		trap_Cvar_SetValue("g_gametype", newgametype);
