@@ -1497,6 +1497,9 @@ extern vmCvar_t cg_obituarySpacing[MAX_SPLITVIEW];
 extern vmCvar_t cg_obituaryFadetime[MAX_SPLITVIEW];
 
 //
+extern vmCvar_t cg_showLowAmmoPerWeapon[MAX_SPLITVIEW];
+
+//
 // cg_main.c
 //
 const char *CG_ConfigString( int index );

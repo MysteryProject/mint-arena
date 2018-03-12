@@ -421,7 +421,7 @@ void CG_DrawObituary(void)
         RemoveColorEscapeSequences(obitStack[i].attacker);
         RemoveColorEscapeSequences(obitStack[i].target);
 
-        y = 480 - (cg_obituaryY[cg.cur_localPlayerNum].integer + ((OBIT_MAX_VISABLE - 1 - i) * cg_obituaryGap[cg.cur_localPlayerNum].integer));
+        y = 480 - (cg_obituaryY[cg.cur_localPlayerNum].integer + ((OBIT_MAX_VISABLE - 1 - i) * cg_obituarySpacing[cg.cur_localPlayerNum].integer));
         x = 640 - cg_obituaryX[cg.cur_localPlayerNum].integer;
 
         weapString = va("[%s]", obitStack[i].weapon);
@@ -446,10 +446,10 @@ void CG_DrawObituary(void)
         else
         {
             // center
-            x -= ((CG_DrawStrlen(va("[%s]%s", weapString, obitStack[i].target), fontFlags)) / 2) + (cg_obituarySpacing[cg.cur_localPlayerNum].integer);
+            x -= ((CG_DrawStrlen(va("[%s]%s", weapString, obitStack[i].target), fontFlags)) / 2) + (cg_obituaryGap[cg.cur_localPlayerNum].integer);
         }
 
-        x += cg_obituarySpacing[cg.cur_localPlayerNum].integer;
+        x += cg_obituaryGap[cg.cur_localPlayerNum].integer;
 
         drawColor[0] = color[0] * 255;
         drawColor[1] = color[1] * 255;
@@ -460,7 +460,7 @@ void CG_DrawObituary(void)
         CG_DrawString(x, y, weapString, fontFlags, drawColor);
         x += CG_DrawStrlen(weapString, fontFlags);
 
-        x += cg_obituarySpacing[cg.cur_localPlayerNum].integer;
+        x += cg_obituaryGap[cg.cur_localPlayerNum].integer;
 
         drawColor[0] = color[0] * teamColor2[0];
         drawColor[1] = color[1] * teamColor2[1];

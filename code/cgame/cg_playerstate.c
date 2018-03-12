@@ -48,47 +48,115 @@ void CG_CheckAmmo( void ) {
 	int		previous;
 	int		weapons;
 
-	// see about how many seconds of ammo we have remaining
-	weapons = cg.cur_ps->stats[ STAT_WEAPONS ];
-	total = 0;
-	for ( i = WP_MACHINEGUN ; i < WP_NUM_WEAPONS ; i++ ) {
-		if ( ! ( weapons & ( 1 << i ) ) ) {
-			continue;
-		}
-		if ( cg.cur_ps->ammo[i] < 0 ) {
-			continue;
-		}
-		switch ( i ) {
-		case WP_ROCKET_LAUNCHER:
-		case WP_GRENADE_LAUNCHER:
-		case WP_RAILGUN:
-		case WP_SHOTGUN:
+	if (!cg_showLowAmmoPerWeapon[cg.cur_localPlayerNum].integer)
+	{
+		// default behaviour
+		// see about how many seconds of ammo we have remaining
+		weapons = cg.cur_ps->stats[STAT_WEAPONS];
+		total = 0;
+		for (i = WP_MACHINEGUN; i < WP_NUM_WEAPONS; i++)
+		{
+			if (!(weapons & (1 << i)))
+			{
+				continue;
+			}
+			if (cg.cur_ps->ammo[i] < 0)
+			{
+				continue;
+			}
+			switch (i)
+			{
+			case WP_ROCKET_LAUNCHER:
+			case WP_GRENADE_LAUNCHER:
+			case WP_RAILGUN:
+			case WP_SHOTGUN:
 #ifdef MISSIONPACK
-		case WP_PROX_LAUNCHER:
+			case WP_PROX_LAUNCHER:
 #endif
-			total += cg.cur_ps->ammo[i] * 1000;
-			break;
-		default:
-			total += cg.cur_ps->ammo[i] * 200;
-			break;
+				total += cg.cur_ps->ammo[i] * 1000;
+				break;
+			default:
+				total += cg.cur_ps->ammo[i] * 200;
+				break;
+			}
+			if (total >= 5000)
+			{
+				cg.cur_lc->lowAmmoWarning = 0;
+				return;
+			}
 		}
-		if ( total >= 5000 ) {
-			cg.cur_lc->lowAmmoWarning = 0;
-			return;
+
+		previous = cg.cur_lc->lowAmmoWarning;
+
+		if (total == 0)
+		{
+			cg.cur_lc->lowAmmoWarning = 2;
+		}
+		else
+		{
+			cg.cur_lc->lowAmmoWarning = 1;
 		}
 	}
+	else
+	{
+		weapons = cg.cur_ps->weapon;
 
-	previous = cg.cur_lc->lowAmmoWarning;
+		previous = cg.cur_lc->lowAmmoWarning;
 
-	if ( total == 0 ) {
-		cg.cur_lc->lowAmmoWarning = 2;
-	} else {
-		cg.cur_lc->lowAmmoWarning = 1;
+		if (cg.cur_ps->ammo[weapons] < 0)
+			return; // marxy: hopefully this is sufficient
+		else if (cg.cur_ps->ammo[weapons] == 0)
+			cg.cur_lc->lowAmmoWarning = 2; // out of ammo
+		else
+		{
+			switch (weapons)
+			{
+			case WP_MACHINEGUN:
+				total = 25;
+				break;
+			case WP_SHOTGUN:
+				total = 5;
+				break;
+			case WP_GRENADE_LAUNCHER:
+				total = 5;
+				break;
+			case WP_ROCKET_LAUNCHER:
+				total = 5;
+				break;
+			case WP_LIGHTNING:
+				total = 30;
+				break;
+			case WP_RAILGUN:
+				total = 5;
+				break;
+			case WP_PLASMAGUN:
+				total = 40;
+				break;
+			case WP_BFG:
+				total = 30;
+				break;
+			case WP_GAUNTLET:
+			case WP_GRAPPLING_HOOK:
+			default:
+				total = 0; // shouldnt happen
+				break;
+			}
+
+			if (cg.cur_ps->ammo[weapons] > total)
+			{
+				previous = cg.cur_lc->lowAmmoWarning = 0; // plenty of ammo
+			}
+			else
+			{
+				cg.cur_lc->lowAmmoWarning = 1; // low ammo
+			}
+		}
 	}
 
 	// play a sound on transitions
-	if ( cg.cur_lc->lowAmmoWarning != previous ) {
-		trap_S_StartLocalSound( cgs.media.noAmmoSound, CHAN_LOCAL_SOUND );
+	if (cg.cur_lc->lowAmmoWarning != previous)
+	{
+		trap_S_StartLocalSound(cgs.media.noAmmoSound, CHAN_LOCAL_SOUND);
 	}
 }
 

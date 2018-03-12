@@ -472,6 +472,7 @@ qboolean G_SelectRandomArenaName(char *oldmap, char *newmap, qboolean limit)
 			}
 		}
 	}
+	
 	finished:
 	if (newgametype != g_gametype.integer)
 		trap_Cvar_SetValue("g_gametype", newgametype);

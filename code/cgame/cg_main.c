@@ -337,8 +337,11 @@ vmCvar_t cg_obituarySpacing[MAX_SPLITVIEW];
 vmCvar_t cg_obituaryFadetime[MAX_SPLITVIEW];
 vmCvar_t cg_obituaryMaxVisable[MAX_SPLITVIEW];
 
+//
+vmCvar_t cg_showLowAmmoPerWeapon[MAX_SPLITVIEW];
+
 #ifdef MISSIONPACK
-vmCvar_t	cg_currentSelectedPlayer[MAX_SPLITVIEW];
+vmCvar_t cg_currentSelectedPlayer[MAX_SPLITVIEW];
 vmCvar_t	cg_currentSelectedPlayerName[MAX_SPLITVIEW];
 #endif
 
@@ -563,9 +566,10 @@ static userCvarTable_t userCvarTable[] = {
 	{cg_thirdPersonSmooth, "cg_thirdPersonSmooth", "0", 0, RANGE_ALL}, // this cvar exists because it's behavior is too buggy to enable by default
 	{cg_obituaryX, "cg_obituaryX", "100", CVAR_ARCHIVE, RANGE_ALL},
 	{cg_obituaryY, "cg_obituaryY", "400", CVAR_ARCHIVE, RANGE_ALL},
-	{cg_obituaryGap, "cg_obituaryGap", "10", CVAR_ARCHIVE, RANGE_ALL},
-	{cg_obituarySpacing, "cg_obituarySpacing", "3", CVAR_ARCHIVE, RANGE_ALL},
+	{cg_obituarySpacing, "cg_obituarySpacing", "10", CVAR_ARCHIVE, RANGE_ALL},
+	{cg_obituaryGap, "cg_obituaryGap", "3", CVAR_ARCHIVE, RANGE_ALL},
 	{cg_obituaryFadetime, "cg_obituaryFadetime", "5.0", CVAR_ARCHIVE, RANGE_ALL},
+	{cg_showLowAmmoPerWeapon, "cg_showLowAmmoPerWeapon", "1", CVAR_ARCHIVE, RANGE_ALL},
 
 #ifdef MISSIONPACK
 	{cg_currentSelectedPlayer, "cg_currentSelectedPlayer", "0", CVAR_ARCHIVE, RANGE_ALL},
