@@ -875,7 +875,7 @@ void FireWeapon( gentity_t *ent ) {
 		}
 		break;
 	case WP_TAPRIFLE:
-		Bullet_Fire(ent, 50, 22, MOD_TAPRIFLE);
+		Bullet_Fire(ent, 20, 34, MOD_TAPRIFLE);
 		break;
 	case WP_GRENADE_LAUNCHER:
 		weapon_grenadelauncher_fire( ent );

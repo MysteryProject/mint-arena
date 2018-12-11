@@ -1640,6 +1640,9 @@ static void PM_Weapon( void ) {
 		PM_StartTorsoAnim( TORSO_ATTACK );
 	}
 
+	if (pm->ps->weaponstate == WEAPON_FIRED)
+		return;
+
 	pm->ps->weaponstate = WEAPON_FIRING;
 
 	// check for out of ammo
@@ -1738,6 +1741,9 @@ static void PM_Weapon( void ) {
 	}
 
 	pm->ps->weaponTime += addTime;
+
+	if (pm->ps->weapon == WP_TAPRIFLE)
+		pm->ps->weaponstate = WEAPON_FIRED;
 }
 
 /*
