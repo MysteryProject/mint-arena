@@ -3494,7 +3494,7 @@ void BotAimAtEnemy(bot_state_t *bs) {
 	if (wi.number == WP_MACHINEGUN) {
 		aim_accuracy = Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_MACHINEGUN, 0, 1);
 	}
-	else if (wi.number == WP_SHOTGUN) {
+	else if (wi.number == WP_SHOTGUN || wi.number == WP_AUTOSHOTTY) {
 		aim_accuracy = Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_SHOTGUN, 0, 1);
 	}
 	else if (wi.number == WP_GRENADE_LAUNCHER) {
@@ -3704,9 +3704,11 @@ void BotAimAtEnemy(bot_state_t *bs) {
 	//
 	if (wi.number == WP_MACHINEGUN ||
 		wi.number == WP_SHOTGUN ||
+		wi.number == WP_AUTOSHOTTY ||
 		wi.number == WP_LIGHTNING ||
 		wi.number == WP_RAILGUN ||
-		wi.number == WP_MINIRAIL) {
+		wi.number == WP_MINIRAIL)
+	{
 		//distance towards the enemy
 		dist = VectorLength(dir);
 		if (dist > 150) dist = 150;

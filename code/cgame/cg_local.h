@@ -1784,8 +1784,8 @@ void CG_RegisterItemVisuals( int itemNum );
 void CG_FireWeapon( centity_t *cent );
 void CG_MissileHitWall( int weapon, int playerNum, vec3_t origin, vec3_t dir, impactSound_t soundType );
 void CG_MissileHitPlayer( int weapon, vec3_t origin, vec3_t dir, int entityNum );
-void CG_ShotgunPattern( vec3_t origin, vec3_t origin2, int seed, int otherEntNum );
-void CG_ShotgunFire( entityState_t *es );
+void CG_ShotgunPattern(vec3_t origin, vec3_t origin2, int seed, int otherEntNum, int count, int spread);
+void CG_ShotgunFire(entityState_t *es, int event);
 void CG_Bullet( vec3_t origin, int sourceEntityNum, vec3_t normal, qboolean flesh, int fleshEntityNum );
 
 void CG_RailTrail(playerInfo_t *pi, vec3_t start, vec3_t end);

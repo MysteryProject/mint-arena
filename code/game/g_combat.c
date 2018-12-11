@@ -365,6 +365,7 @@ void body_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int d
 char	*modNames[] = {
 	"MOD_UNKNOWN",
 	"MOD_SHOTGUN",
+	"MOD_AUTOSHOTTY",
 	"MOD_GAUNTLET",
 	"MOD_MACHINEGUN",
 	"MOD_GRENADE",

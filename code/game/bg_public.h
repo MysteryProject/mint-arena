@@ -89,6 +89,8 @@ Suite 120, Rockville, Maryland 20850 USA.
 
 #define DEFAULT_SHOTGUN_SPREAD	700
 #define DEFAULT_SHOTGUN_COUNT	11
+#define AUTOSHOTTY_SPREAD 1100
+#define AUTOSHOTTY_COUNT 27
 
 #define	ITEM_RADIUS			15		// item sizes are needed for client side pickup detection
 
@@ -651,11 +653,11 @@ typedef enum
 	WP_NAILGUN,
 	WP_PROX_LAUNCHER,
 	WP_CHAINGUN,
-	WP_AUTOSHOTTY,
 	WP_TAPRIFLE,
 	WP_TETHER_LIGHTNING,
 #endif
 	WP_MINIRAIL,
+	WP_AUTOSHOTTY,
 
 	WP_NUM_WEAPONS
 } weapon_t;
@@ -750,6 +752,7 @@ typedef enum {
 	EV_RAILTRAIL,
 	EV_MINIRAILTRAIL,
 	EV_SHOTGUN,
+	EV_AUTOSHOTTY,
 
 	EV_PAIN,
 	EV_DEATH1,
@@ -988,6 +991,7 @@ typedef enum {
 typedef enum {
 	MOD_UNKNOWN,
 	MOD_SHOTGUN,
+	MOD_AUTOSHOTTY,
 	MOD_GAUNTLET,
 	MOD_MACHINEGUN,
 	MOD_GRENADE,

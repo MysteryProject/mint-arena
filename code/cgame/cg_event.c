@@ -277,6 +277,7 @@ static void CG_Obituary( entityState_t *ent ) {
 			message = "was machinegunned by";
 			break;
 		case MOD_SHOTGUN:
+		case MOD_AUTOSHOTTY:
 			message = "was gunned down by";
 			break;
 		case MOD_GRENADE:
@@ -1051,7 +1052,12 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 
 	case EV_SHOTGUN:
 		DEBUGNAME("EV_SHOTGUN");
-		CG_ShotgunFire( es );
+		CG_ShotgunFire(es, EV_SHOTGUN);
+		break;
+
+	case EV_AUTOSHOTTY:
+		DEBUGNAME("EV_AUTOSHOTTY");
+		CG_ShotgunFire(es, EV_AUTOSHOTTY);
 		break;
 
 	case EV_GENERAL_SOUND:

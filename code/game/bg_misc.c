@@ -204,6 +204,20 @@ gitem_t bg_itemlist[] =
 			WP_SHOTGUN,
 			/* sounds */ ""},
 
+		/*QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+*/
+		{
+			"weapon_autoshotty",
+			"sound/misc/w_pkup.wav",
+			{"models/weapons/autoshotty/autoshotty.md3",
+			 NULL, NULL, NULL},
+			/* icon */ "icons/iconw_autoshotty",
+			/* pickup */ "Auto-Shotty",
+			25,
+			IT_WEAPON,
+			WP_AUTOSHOTTY,
+			/* sounds */ ""},
+
 		/*QUAKED weapon_machinegun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
 */
 		{
@@ -1529,6 +1543,7 @@ char *eventnames[] = {
 	"EV_RAILTRAIL",
 	"EV_MINIRAILTRAIL",
 	"EV_SHOTGUN",
+	"EV_AUTOSHOTTY",
 
 	"EV_PAIN",
 	"EV_DEATH1",

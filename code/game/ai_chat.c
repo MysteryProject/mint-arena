@@ -265,40 +265,43 @@ char *BotWeaponNameForMeansOfDeath(int mod) {
 	gitem_t		*item;
 
 	switch(mod) {
-		case MOD_SHOTGUN:
-			weapon = WP_SHOTGUN;
-			break;
-		case MOD_GAUNTLET:
-			weapon = WP_GAUNTLET;
-			break;
-		case MOD_MACHINEGUN:
-			weapon = WP_MACHINEGUN;
-			break;
-		case MOD_GRENADE:
-		case MOD_GRENADE_SPLASH:
-			weapon = WP_GRENADE_LAUNCHER;
-			break;
-		case MOD_ROCKET:
-		case MOD_ROCKET_SPLASH:
-			weapon = WP_ROCKET_LAUNCHER;
-			break;
-		case MOD_PLASMA:
-		case MOD_PLASMA_SPLASH:
-			weapon = WP_PLASMAGUN;
-			break;
-		case MOD_RAILGUN:
-			weapon = WP_RAILGUN;
-			break;
-		case MOD_MINIRAIL:
-			weapon = WP_MINIRAIL;
-			break;
-		case MOD_LIGHTNING:
-			weapon = WP_LIGHTNING;
-			break;
-		case MOD_BFG:
-		case MOD_BFG_SPLASH:
-			weapon = WP_BFG;
-			break;
+	case MOD_SHOTGUN:
+		weapon = WP_SHOTGUN;
+		break;
+	case MOD_AUTOSHOTTY:
+		weapon = WP_AUTOSHOTTY;
+		break;
+	case MOD_GAUNTLET:
+		weapon = WP_GAUNTLET;
+		break;
+	case MOD_MACHINEGUN:
+		weapon = WP_MACHINEGUN;
+		break;
+	case MOD_GRENADE:
+	case MOD_GRENADE_SPLASH:
+		weapon = WP_GRENADE_LAUNCHER;
+		break;
+	case MOD_ROCKET:
+	case MOD_ROCKET_SPLASH:
+		weapon = WP_ROCKET_LAUNCHER;
+		break;
+	case MOD_PLASMA:
+	case MOD_PLASMA_SPLASH:
+		weapon = WP_PLASMAGUN;
+		break;
+	case MOD_RAILGUN:
+		weapon = WP_RAILGUN;
+		break;
+	case MOD_MINIRAIL:
+		weapon = WP_MINIRAIL;
+		break;
+	case MOD_LIGHTNING:
+		weapon = WP_LIGHTNING;
+		break;
+	case MOD_BFG:
+	case MOD_BFG_SPLASH:
+		weapon = WP_BFG;
+		break;
 #ifdef MISSIONPACK
 		case MOD_NAIL:
 			weapon = WP_NAILGUN;

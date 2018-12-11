@@ -732,7 +732,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 		break;
 
 	case WP_SHOTGUN:
-	//case WP_AUTOSHOTTY:
+	case WP_AUTOSHOTTY:
 		MAKERGB( weaponInfo->flashDlightColor, 1, 1, 0 );
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/shotgun/sshotf1b.wav", qfalse );
 		weaponInfo->ejectBrassFunc = CG_ShotgunEjectBrass;
@@ -1996,7 +1996,7 @@ void CG_MissileHitWall( int weapon, int playerNum, vec3_t origin, vec3_t dir, im
 		isSprite = qtrue;
 		break;
 	case WP_SHOTGUN:
-	//case WP_AUTOSHOTTY:
+	case WP_AUTOSHOTTY:
 		mod = cgs.media.bulletFlashModel;
 		shader = cgs.media.bulletExplosionShader;
 		mark = cgs.media.bulletMarkShader;
@@ -2172,7 +2172,7 @@ Perform the same traces the server did to locate the
 hit splashes
 ================
 */
-void CG_ShotgunPattern( vec3_t origin, vec3_t origin2, int seed, int otherEntNum ) {
+void CG_ShotgunPattern( vec3_t origin, vec3_t origin2, int seed, int otherEntNum, int count, int spread ) {
 	int			i;
 	float		r, u;
 	vec3_t		end;
@@ -2185,9 +2185,10 @@ void CG_ShotgunPattern( vec3_t origin, vec3_t origin2, int seed, int otherEntNum
 	CrossProduct( forward, right, up );
 
 	// generate the "random" spread pattern
-	for ( i = 0 ; i < DEFAULT_SHOTGUN_COUNT ; i++ ) {
-		r = Q_crandom( &seed ) * DEFAULT_SHOTGUN_SPREAD * 16;
-		u = Q_crandom( &seed ) * DEFAULT_SHOTGUN_SPREAD * 16;
+	for (i = 0; i < count; i++)
+	{
+		r = Q_crandom(&seed) * spread * 16;
+		u = Q_crandom(&seed) * spread * 16;
 		VectorMA( origin, 8192 * 16, forward, end);
 		VectorMA (end, r, right, end);
 		VectorMA (end, u, up, end);
@@ -2201,7 +2202,7 @@ void CG_ShotgunPattern( vec3_t origin, vec3_t origin2, int seed, int otherEntNum
 CG_ShotgunFire
 ==============
 */
-void CG_ShotgunFire( entityState_t *es ) {
+void CG_ShotgunFire( entityState_t *es, int event ) {
 	vec3_t	v, up;
 	int		contents;
 
@@ -2216,7 +2217,10 @@ void CG_ShotgunFire( entityState_t *es ) {
 		CG_SmokePuff( v, up, 32, 1, 1, 1, 0.33f, 900, cg.time, 0, LEF_PUFF_DONT_SCALE, cgs.media.shotgunSmokePuffShader );
 	}
 
-	CG_ShotgunPattern( es->pos.trBase, es->origin2, es->eventParm, es->otherEntityNum );
+	if (event == EV_SHOTGUN)
+		CG_ShotgunPattern(es->pos.trBase, es->origin2, es->eventParm, es->otherEntityNum, DEFAULT_SHOTGUN_COUNT, DEFAULT_SHOTGUN_SPREAD);
+	else
+		CG_ShotgunPattern(es->pos.trBase, es->origin2, es->eventParm, es->otherEntityNum, AUTOSHOTTY_COUNT, AUTOSHOTTY_SPREAD);
 }
 
 /*

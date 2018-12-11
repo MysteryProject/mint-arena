@@ -265,9 +265,9 @@ SHOTGUN
 // client predicts same spreads
 #define	DEFAULT_SHOTGUN_DAMAGE	10
 
-qboolean ShotgunPellet( vec3_t start, vec3_t end, gentity_t *ent ) {
+qboolean ShotgunPellet( vec3_t start, vec3_t end, gentity_t *ent, int damage, int mod ) {
 	trace_t		tr;
-	int			damage, i, passent;
+	int			i, passent;
 	gentity_t	*traceEnt;
 #ifdef MISSIONPACK
 	vec3_t		impactpoint, bouncedir;
@@ -288,7 +288,7 @@ qboolean ShotgunPellet( vec3_t start, vec3_t end, gentity_t *ent ) {
 		}
 
 		if ( traceEnt->takedamage) {
-			damage = DEFAULT_SHOTGUN_DAMAGE * s_quadFactor;
+			damage *= s_quadFactor;
 #ifdef MISSIONPACK
 			if ( traceEnt->player && traceEnt->player->invulnerabilityTime > level.time ) {
 				if (G_InvulnerabilityEffect( traceEnt, forward, tr.endpos, impactpoint, bouncedir )) {
@@ -307,7 +307,7 @@ qboolean ShotgunPellet( vec3_t start, vec3_t end, gentity_t *ent ) {
 			if( LogAccuracyHit( traceEnt, ent ) ) {
 				hitPlayer = qtrue;
 			}
-			G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, 0, MOD_SHOTGUN);
+			G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, 0, mod);
 			return hitPlayer;
 		}
 		return qfalse;
@@ -316,7 +316,7 @@ qboolean ShotgunPellet( vec3_t start, vec3_t end, gentity_t *ent ) {
 }
 
 // this should match CG_ShotgunPattern
-void ShotgunPattern( vec3_t origin, vec3_t origin2, int seed, gentity_t *ent ) {
+void ShotgunPattern( vec3_t origin, vec3_t origin2, int seed, gentity_t *ent, int count, int spread, int damage, int mod ) {
 	int			i;
 	float		r, u;
 	vec3_t		end;
@@ -333,13 +333,13 @@ void ShotgunPattern( vec3_t origin, vec3_t origin2, int seed, gentity_t *ent ) {
 	G_DoTimeShiftFor( ent );
 
 	// generate the "random" spread pattern
-	for ( i = 0 ; i < DEFAULT_SHOTGUN_COUNT ; i++ ) {
-		r = Q_crandom( &seed ) * DEFAULT_SHOTGUN_SPREAD * 16;
-		u = Q_crandom( &seed ) * DEFAULT_SHOTGUN_SPREAD * 16;
+	for ( i = 0 ; i < count ; i++ ) {
+		r = Q_crandom( &seed ) * spread * 16;
+		u = Q_crandom( &seed ) * spread * 16;
 		VectorMA( origin, 8192 * 16, forward, end);
 		VectorMA (end, r, right, end);
 		VectorMA (end, u, up, end);
-		if( ShotgunPellet( origin, end, ent ) && !hitPlayer ) {
+		if( ShotgunPellet( origin, end, ent, damage, mod ) && !hitPlayer ) {
 			hitPlayer = qtrue;
 			ent->player->accuracy_hits++;
 		}
@@ -349,20 +349,19 @@ void ShotgunPattern( vec3_t origin, vec3_t origin2, int seed, gentity_t *ent ) {
 	G_UndoTimeShiftFor( ent );
 }
 
-
-void weapon_supershotgun_fire (gentity_t *ent) {
-	gentity_t		*tent;
+void weapon_shotgun_fire(gentity_t *ent, int count, int spread, int damage, int event, int mod)
+{
+	gentity_t *tent;
 
 	// send shotgun blast
-	tent = G_TempEntity( muzzle, EV_SHOTGUN );
-	VectorScale( forward, 4096, tent->s.origin2 );
-	SnapVector( tent->s.origin2 );
-	tent->s.eventParm = rand() & 255;		// seed for spread pattern
+	tent = G_TempEntity(muzzle, event);
+	VectorScale(forward, 4096, tent->s.origin2);
+	SnapVector(tent->s.origin2);
+	tent->s.eventParm = rand() & 255; // seed for spread pattern
 	tent->s.otherEntityNum = ent->s.number;
 
-	ShotgunPattern( tent->s.pos.trBase, tent->s.origin2, tent->s.eventParm, ent );
+	ShotgunPattern(tent->s.pos.trBase, tent->s.origin2, tent->s.eventParm, ent, count, spread, damage, mod);
 }
-
 
 /*
 ======================================================================
@@ -863,7 +862,10 @@ void FireWeapon( gentity_t *ent ) {
 		Weapon_LightningFire( ent );
 		break;
 	case WP_SHOTGUN:
-		weapon_supershotgun_fire( ent );
+		weapon_shotgun_fire(ent, DEFAULT_SHOTGUN_COUNT, DEFAULT_SHOTGUN_SPREAD, DEFAULT_SHOTGUN_DAMAGE, EV_SHOTGUN, MOD_SHOTGUN);
+		break;
+	case WP_AUTOSHOTTY:
+		weapon_shotgun_fire(ent, AUTOSHOTTY_COUNT, AUTOSHOTTY_SPREAD, 2, EV_AUTOSHOTTY, MOD_AUTOSHOTTY);
 		break;
 	case WP_MACHINEGUN:
 		if ( g_gametype.integer != GT_TEAM ) {
