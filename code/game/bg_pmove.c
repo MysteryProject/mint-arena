@@ -1651,7 +1651,19 @@ static void PM_Weapon( void ) {
 
 	// take an ammo away if not infinite
 	if ( pm->ps->ammo[ pm->ps->weapon ] != -1 ) {
-		pm->ps->ammo[ pm->ps->weapon ]--;
+		switch (pm->ps->weapon)
+		{
+		case WP_AUTOSHOTTY:
+			pm->ps->ammo[WP_SHOTGUN]--;
+			break;
+		case WP_MINIRAIL:
+			pm->ps->ammo[WP_RAILGUN]--;
+			break;
+		default:
+			pm->ps->ammo[pm->ps->weapon]--;
+			break;
+		}
+		
 	}
 
 	// fire weapon

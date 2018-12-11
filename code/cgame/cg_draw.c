@@ -431,7 +431,13 @@ static void CG_DrawStatusBar( void ) {
 	// ammo
 	//
 	if ( cent->currentState.weapon ) {
-		value = ps->ammo[cent->currentState.weapon];
+		if (cent->currentState.weapon == WP_AUTOSHOTTY)
+			value = ps->ammo[WP_SHOTGUN];
+		else if (cent->currentState.weapon == WP_MINIRAIL)
+			value = ps->ammo[WP_RAILGUN];
+		else
+			value = ps->ammo[cent->currentState.weapon];
+
 		if ( value > -1 ) {
 			if ( cg.cur_lc->predictedPlayerState.weaponstate == WEAPON_FIRING
 				&& cg.cur_lc->predictedPlayerState.weaponTime > 100 ) {
