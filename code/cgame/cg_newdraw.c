@@ -110,7 +110,7 @@ void CG_Text_PaintInMotion(float x, float y, float scale, const vec4_t color, co
 		shadowOffset = 0;
 	}
 
-	Text_Paint( x, y, CG_FontForScale( scale ), scale, color, text, adjust, limit, shadowOffset, 0, qfalse, qfalse );
+	Text_Paint( x, y, CG_FontForScale( scale ), scale, color, text, adjust, limit, shadowOffset, 0, qfalse, qtrue );
 }
 
 void CG_Text_Paint_Limit(float *maxX, float x, float y, float scale, const vec4_t color, const char* text, float adjust, int limit) {
@@ -279,7 +279,7 @@ void CG_SelectPrevPlayer( int localPlayerNum ) {
 	team = cg.snap->pss[ localPlayerNum ].persistant[PERS_TEAM];
 
 	CG_CheckOrderPending( localPlayerNum );
-	if (cg_currentSelectedPlayer[ localPlayerNum ].integer > 0 && cg_currentSelectedPlayer[ localPlayerNum ].integer < numSortedTeamPlayers[team]) {
+	if (cg_currentSelectedPlayer[ localPlayerNum ].integer > 0 && cg_currentSelectedPlayer[ localPlayerNum ].integer <= numSortedTeamPlayers[team]) {
 		cg_currentSelectedPlayer[ localPlayerNum ].integer--;
 	} else {
 		cg_currentSelectedPlayer[ localPlayerNum ].integer = numSortedTeamPlayers[team];
