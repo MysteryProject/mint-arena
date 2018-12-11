@@ -438,7 +438,8 @@ weapon_railgun_fire
 =================
 */
 #define	MAX_RAIL_HITS	4
-void weapon_railgun_fire (gentity_t *ent) {
+void weapon_railgun_fire(gentity_t *ent, int damage, int mod, int event)
+{
 	vec3_t		end;
 #ifdef MISSIONPACK
 	vec3_t impactpoint, bouncedir;
@@ -446,14 +447,13 @@ void weapon_railgun_fire (gentity_t *ent) {
 	trace_t		trace;
 	gentity_t	*tent;
 	gentity_t	*traceEnt;
-	int			damage;
 	int			i;
 	int			hits;
 	int			unlinked;
 	int			passent;
 	gentity_t	*unlinkedEntities[MAX_RAIL_HITS];
 
-	damage = 100 * s_quadFactor;
+	damage *= s_quadFactor;
 
 	VectorMA (muzzle, 8192, forward, end);
 
@@ -478,7 +478,7 @@ void weapon_railgun_fire (gentity_t *ent) {
 					// snap the endpos to integers to save net bandwidth, but nudged towards the line
 					SnapVectorTowards( trace.endpos, muzzle );
 					// send railgun beam effect
-					tent = G_TempEntity( trace.endpos, EV_RAILTRAIL );
+					tent = G_TempEntity(trace.endpos, event);
 					// set player number for custom colors on the railtrail
 					tent->s.playerNum = ent->s.playerNum;
 					VectorCopy( muzzle, tent->s.origin2 );
@@ -502,7 +502,7 @@ void weapon_railgun_fire (gentity_t *ent) {
 				if( LogAccuracyHit( traceEnt, ent ) ) {
 					hits++;
 				}
-				G_Damage (traceEnt, ent, ent, forward, trace.endpos, damage, 0, MOD_RAILGUN);
+				G_Damage (traceEnt, ent, ent, forward, trace.endpos, damage, 0, mod);
 #endif
 		}
 		if ( trace.contents & CONTENTS_SOLID ) {
@@ -528,7 +528,7 @@ void weapon_railgun_fire (gentity_t *ent) {
 	SnapVectorTowards( trace.endpos, muzzle );
 
 	// send railgun beam effect
-	tent = G_TempEntity( trace.endpos, EV_RAILTRAIL );
+	tent = G_TempEntity( trace.endpos, event );
 
 	// set player number for custom colors on the railtrail
 	tent->s.playerNum = ent->s.playerNum;
@@ -882,7 +882,10 @@ void FireWeapon( gentity_t *ent ) {
 		Weapon_Plasmagun_Fire( ent );
 		break;
 	case WP_RAILGUN:
-		weapon_railgun_fire( ent );
+		weapon_railgun_fire(ent, 100, MOD_RAILGUN, EV_RAILTRAIL);
+		break;
+	case WP_MINIRAIL:
+		weapon_railgun_fire(ent, 48, MOD_MINIRAIL, EV_MINIRAILTRAIL);
 		break;
 	case WP_BFG:
 		BFG_Fire( ent );

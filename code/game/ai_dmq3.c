@@ -1771,6 +1771,7 @@ void BotUpdateInventory(bot_state_t *bs) {
 	bs->inventory[INVENTORY_ROCKETLAUNCHER] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_ROCKET_LAUNCHER)) != 0;
 	bs->inventory[INVENTORY_LIGHTNING] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_LIGHTNING)) != 0;
 	bs->inventory[INVENTORY_RAILGUN] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_RAILGUN)) != 0;
+	//bs->inventory[INVENTORY_MINIRAIL] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_MINIRAIL)) != 0;
 	bs->inventory[INVENTORY_PLASMAGUN] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_PLASMAGUN)) != 0;
 	bs->inventory[INVENTORY_BFG10K] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_BFG)) != 0;
 	bs->inventory[INVENTORY_GRAPPLINGHOOK] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_GRAPPLING_HOOK)) != 0;
@@ -3507,7 +3508,7 @@ void BotAimAtEnemy(bot_state_t *bs) {
 	else if (wi.number == WP_LIGHTNING) {
 		aim_accuracy = Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_LIGHTNING, 0, 1);
 	}
-	else if (wi.number == WP_RAILGUN) {
+	else if (wi.number == WP_RAILGUN || wi.number == WP_MINIRAIL) {
 		aim_accuracy = Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_RAILGUN, 0, 1);
 	}
 	else if (wi.number == WP_PLASMAGUN) {
@@ -3704,7 +3705,8 @@ void BotAimAtEnemy(bot_state_t *bs) {
 	if (wi.number == WP_MACHINEGUN ||
 		wi.number == WP_SHOTGUN ||
 		wi.number == WP_LIGHTNING ||
-		wi.number == WP_RAILGUN) {
+		wi.number == WP_RAILGUN ||
+		wi.number == WP_MINIRAIL) {
 		//distance towards the enemy
 		dist = VectorLength(dir);
 		if (dist > 150) dist = 150;

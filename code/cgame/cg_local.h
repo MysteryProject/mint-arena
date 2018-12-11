@@ -935,8 +935,10 @@ typedef struct {
 	qhandle_t	machinegunBrassModel;
 	qhandle_t	shotgunBrassModel;
 
-	qhandle_t	railRingsShader;
-	qhandle_t	railCoreShader;
+	qhandle_t railRingsShader;
+	qhandle_t railCoreShader;
+	qhandle_t minirailRingsShader;
+	qhandle_t minirailCoreShader;
 
 	qhandle_t	lightningShader;
 
@@ -1056,7 +1058,8 @@ typedef struct {
 	sfxHandle_t	sfx_ric3;
 	//sfxHandle_t	sfx_railg;
 	sfxHandle_t	sfx_rockexp;
-	sfxHandle_t	sfx_plasmaexp;
+	sfxHandle_t sfx_plasmaexp;
+	sfxHandle_t sfx_minirailexp;
 #ifdef MISSIONPACK
 	sfxHandle_t	sfx_proxexp;
 	sfxHandle_t	sfx_nghit;
@@ -1785,8 +1788,10 @@ void CG_ShotgunPattern( vec3_t origin, vec3_t origin2, int seed, int otherEntNum
 void CG_ShotgunFire( entityState_t *es );
 void CG_Bullet( vec3_t origin, int sourceEntityNum, vec3_t normal, qboolean flesh, int fleshEntityNum );
 
-void CG_RailTrail( playerInfo_t *pi, vec3_t start, vec3_t end );
-void CG_GrappleTrail( centity_t *ent, const weaponInfo_t *wi );
+void CG_RailTrail(playerInfo_t *pi, vec3_t start, vec3_t end);
+void CG_MiniRailTrail(playerInfo_t *pi, vec3_t start, vec3_t end);
+void CG_RailTrailEX(playerInfo_t *pi, vec3_t start, vec3_t end, qhandle_t coreShader, qhandle_t ringShader);
+void CG_GrappleTrail(centity_t *ent, const weaponInfo_t *wi);
 void CG_AddViewWeapon (playerState_t *ps);
 void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team );
 void CG_DrawWeaponSelect( void );

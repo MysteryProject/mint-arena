@@ -220,23 +220,34 @@ static void CG_NailgunEjectBrass( centity_t *cent ) {
 CG_RailTrail
 ==========================
 */
-void CG_RailTrail (playerInfo_t *pi, vec3_t start, vec3_t end) {
+void CG_RailTrail(playerInfo_t *pi, vec3_t start, vec3_t end)
+{
+	CG_RailTrailEX(pi, start, end, cgs.media.railCoreShader, cgs.media.railRingsShader);
+}
+
+void CG_MiniRailTrail(playerInfo_t *pi, vec3_t start, vec3_t end)
+{
+	CG_RailTrailEX(pi, start, end, cgs.media.minirailCoreShader, cgs.media.minirailRingsShader);
+}
+
+void CG_RailTrailEX(playerInfo_t *pi, vec3_t start, vec3_t end, qhandle_t coreShader, qhandle_t ringShader)
+{
 	vec3_t axis[36], move, move2, vec, temp;
-	float  len;
-	int    i, j, skip;
- 
+	float len;
+	int i, j, skip;
+
 	localEntity_t *le;
-	refEntity_t   *re;
- 
-#define RADIUS   4
+	refEntity_t *re;
+
+#define RADIUS 4
 #define ROTATION 1
-#define SPACING  5
- 
+#define SPACING 5
+
 	start[2] -= 4;
- 
+
 	le = CG_AllocLocalEntity();
 	re = &le->refEntity;
- 
+
 	le->leType = LE_FADE_RGB;
 	le->startTime = cg.time;
 	le->endTime = cg.time + cg_railTrailTime.value;
@@ -244,8 +255,8 @@ void CG_RailTrail (playerInfo_t *pi, vec3_t start, vec3_t end) {
  
 	re->shaderTime = cg.time;
 	re->reType = RT_RAIL_CORE;
-	re->customShader = cgs.media.railCoreShader;
- 
+	re->customShader = coreShader;
+
 	VectorCopy(start, re->origin);
 	VectorCopy(end, re->oldorigin);
  
@@ -300,7 +311,7 @@ void CG_RailTrail (playerInfo_t *pi, vec3_t start, vec3_t end) {
 			re->shaderTime = cg.time;
 			re->reType = RT_SPRITE;
 			re->radius = 1.1f;
-			re->customShader = cgs.media.railRingsShader;
+			re->customShader = ringShader;
 
 			re->shaderRGBA[0] = pi->color2[0] * 255;
 			re->shaderRGBA[1] = pi->color2[1] * 255;
@@ -671,6 +682,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 		break;
 
 	case WP_LIGHTNING:
+	//case WP_TETHER_LIGHTNING:
 		MAKERGB( weaponInfo->flashDlightColor, 0.6f, 0.6f, 1.0f );
 		weaponInfo->readySound = trap_S_RegisterSound( "sound/weapons/melee/fsthum.wav", qfalse );
 		weaponInfo->firingSound = trap_S_RegisterSound( "sound/weapons/lightning/lg_hum.wav", qfalse );
@@ -709,6 +721,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 #endif
 
 	case WP_MACHINEGUN:
+	//case WP_TAPRIFLE:
 		MAKERGB( weaponInfo->flashDlightColor, 1, 1, 0 );
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/machinegun/machgf1b.wav", qfalse );
 		weaponInfo->flashSound[1] = trap_S_RegisterSound( "sound/weapons/machinegun/machgf2b.wav", qfalse );
@@ -719,6 +732,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 		break;
 
 	case WP_SHOTGUN:
+	//case WP_AUTOSHOTTY:
 		MAKERGB( weaponInfo->flashDlightColor, 1, 1, 0 );
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/shotgun/sshotf1b.wav", qfalse );
 		weaponInfo->ejectBrassFunc = CG_ShotgunEjectBrass;
@@ -785,12 +799,21 @@ void CG_RegisterWeapon( int weaponNum ) {
 		break;
 
 	case WP_RAILGUN:
-		weaponInfo->readySound = trap_S_RegisterSound( "sound/weapons/railgun/rg_hum.wav", qfalse );
+		weaponInfo->readySound = trap_S_RegisterSound("sound/weapons/railgun/rg_hum.wav", qfalse);
+		MAKERGB(weaponInfo->flashDlightColor, 1, 0.5f, 0);
+		weaponInfo->flashSound[0] = trap_S_RegisterSound("sound/weapons/railgun/railgf1a.wav", qfalse);
+		cgs.media.railExplosionShader = trap_R_RegisterShader("railExplosion");
+		cgs.media.railRingsShader = trap_R_RegisterShader("railDisc");
+		cgs.media.railCoreShader = trap_R_RegisterShader("railCore");
+		break;
+		
+	case WP_MINIRAIL:
+		weaponInfo->readySound = trap_S_RegisterSound( "sound/weapons/minirail/rg_hum.wav", qfalse );
 		MAKERGB( weaponInfo->flashDlightColor, 1, 0.5f, 0 );
-		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/railgun/railgf1a.wav", qfalse );
+		weaponInfo->flashSound[0] = trap_S_RegisterSound("sound/weapons/minirail/railgf1a.wav", qfalse);
 		cgs.media.railExplosionShader = trap_R_RegisterShader( "railExplosion" );
-		cgs.media.railRingsShader = trap_R_RegisterShader( "railDisc" );
-		cgs.media.railCoreShader = trap_R_RegisterShader( "railCore" );
+		cgs.media.minirailRingsShader = trap_R_RegisterShader( "minirailDisc" );
+		cgs.media.minirailCoreShader = trap_R_RegisterShader( "minirailCore" );
 		break;
 
 	case WP_BFG:
@@ -1218,7 +1241,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	gun.renderfx = parent->renderfx;
 
 	// set custom shading for railgun refire rate
-	if( weaponNum == WP_RAILGUN && cent->pe.railFireTime + 1500 > cg.time ) {
+	if( (weaponNum == WP_RAILGUN || weaponNum == WP_MINIRAIL) && cent->pe.railFireTime + 1500 > cg.time ) {
 		int scale = 255 * ( cg.time - cent->pe.railFireTime ) / 1500;
 		gun.shaderRGBA[0] = ( pi->c1RGBA[0] * scale ) >> 8;
 		gun.shaderRGBA[1] = ( pi->c1RGBA[1] * scale ) >> 8;
@@ -1807,7 +1830,8 @@ void CG_FireWeapon( centity_t *cent ) {
 		}
 	}
 
-	if( ent->weapon == WP_RAILGUN ) {
+	if (ent->weapon == WP_RAILGUN || ent->weapon == WP_MINIRAIL)
+	{
 		cent->pe.railFireTime = cg.time;
 	}
 
@@ -1887,6 +1911,7 @@ void CG_MissileHitWall( int weapon, int playerNum, vec3_t origin, vec3_t dir, im
 		break;
 #endif
 	case WP_LIGHTNING:
+	//case WP_TETHER_LIGHTNING:
 		// no explosion at LG impact, it is added with the beam
 		r = rand() & 3;
 		if ( r < 2 ) {
@@ -1947,6 +1972,14 @@ void CG_MissileHitWall( int weapon, int playerNum, vec3_t origin, vec3_t dir, im
 		mark = cgs.media.energyMarkShader;
 		radius = 24;
 		break;
+	case WP_MINIRAIL:
+		mod = cgs.media.ringFlashModel;
+		shader = cgs.media.railExplosionShader;
+		//sfx = cgs.media.sfx_railg;
+		sfx = cgs.media.sfx_minirailexp;
+		mark = cgs.media.energyMarkShader;
+		radius = 24;
+		break;
 	case WP_PLASMAGUN:
 		mod = cgs.media.ringFlashModel;
 		shader = cgs.media.plasmaExplosionShader;
@@ -1963,6 +1996,7 @@ void CG_MissileHitWall( int weapon, int playerNum, vec3_t origin, vec3_t dir, im
 		isSprite = qtrue;
 		break;
 	case WP_SHOTGUN:
+	//case WP_AUTOSHOTTY:
 		mod = cgs.media.bulletFlashModel;
 		shader = cgs.media.bulletExplosionShader;
 		mark = cgs.media.bulletMarkShader;
@@ -1987,6 +2021,7 @@ void CG_MissileHitWall( int weapon, int playerNum, vec3_t origin, vec3_t dir, im
 #endif
 
 	case WP_MACHINEGUN:
+	//case WP_TAPRIFLE:
 		mod = cgs.media.bulletFlashModel;
 		shader = cgs.media.bulletExplosionShader;
 		mark = cgs.media.bulletMarkShader;
@@ -2030,7 +2065,7 @@ void CG_MissileHitWall( int weapon, int playerNum, vec3_t origin, vec3_t dir, im
 	// impact mark
 	//
 	alphaFade = (mark == cgs.media.energyMarkShader);	// plasma fades alpha, all others fade color
-	if ( weapon == WP_RAILGUN ) {
+	if ( weapon == WP_RAILGUN || weapon == WP_MINIRAIL ) {
 		float	*color;
 
 		// colorize with player color

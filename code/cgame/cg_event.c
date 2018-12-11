@@ -304,6 +304,7 @@ static void CG_Obituary( entityState_t *ent ) {
 			message2 = "'s plasmagun";
 			break;
 		case MOD_RAILGUN:
+		case MOD_MINIRAIL:
 			message = "was railed by";
 			break;
 		case MOD_LIGHTNING:
@@ -1005,6 +1006,35 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 		if ( es->eventParm != 255 ) {
 			ByteToDir( es->eventParm, dir );
 			CG_MissileHitWall( es->weapon, playerNum, position, dir, IMPACTSOUND_DEFAULT );
+		}
+		break;
+
+	case EV_MINIRAILTRAIL:
+		DEBUGNAME("EV_MINIRAILTRAIL");
+		cent->currentState.weapon = WP_MINIRAIL;
+
+		if (es->playerNum >= 0 && es->playerNum < MAX_CLIENTS)
+		{
+			for (i = 0; i < CG_MaxSplitView(); i++)
+			{
+				if (es->playerNum == cg.snap->pss[i].playerNum && !cg.localPlayers[i].renderingThirdPerson)
+				{
+					if (cg_drawGun[i].integer == 2)
+						VectorMA(es->origin2, 8, cg.refdef.viewaxis[1], es->origin2);
+					else if (cg_drawGun[i].integer == 3)
+						VectorMA(es->origin2, 4, cg.refdef.viewaxis[1], es->origin2);
+					break;
+				}
+			}
+		}
+
+		CG_MiniRailTrail(pi, es->origin2, es->pos.trBase);
+
+		// if the end was on a nomark surface, don't make an explosion
+		if (es->eventParm != 255)
+		{
+			ByteToDir(es->eventParm, dir);
+			CG_MissileHitWall(es->weapon, playerNum, position, dir, IMPACTSOUND_DEFAULT);
 		}
 		break;
 

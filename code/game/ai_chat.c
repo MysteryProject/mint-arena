@@ -289,6 +289,9 @@ char *BotWeaponNameForMeansOfDeath(int mod) {
 		case MOD_RAILGUN:
 			weapon = WP_RAILGUN;
 			break;
+		case MOD_MINIRAIL:
+			weapon = WP_MINIRAIL;
+			break;
 		case MOD_LIGHTNING:
 			weapon = WP_LIGHTNING;
 			break;

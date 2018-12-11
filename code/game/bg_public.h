@@ -633,7 +633,8 @@ typedef enum {
 
 
 // NOTE: may not have more than MAX_WEAPONS
-typedef enum {
+typedef enum
+{
 	WP_NONE,
 
 	WP_GAUNTLET,
@@ -650,11 +651,14 @@ typedef enum {
 	WP_NAILGUN,
 	WP_PROX_LAUNCHER,
 	WP_CHAINGUN,
+	WP_AUTOSHOTTY,
+	WP_TAPRIFLE,
+	WP_TETHER_LIGHTNING,
 #endif
+	WP_MINIRAIL,
 
 	WP_NUM_WEAPONS
 } weapon_t;
-
 
 // reward sounds (stored in ps->persistant[PERS_PLAYEREVENTS])
 #define	PLAYEREVENT_DENIEDREWARD		0x0001
@@ -744,6 +748,7 @@ typedef enum {
 	EV_MISSILE_MISS,
 	EV_MISSILE_MISS_METAL,
 	EV_RAILTRAIL,
+	EV_MINIRAILTRAIL,
 	EV_SHOTGUN,
 
 	EV_PAIN,
@@ -992,6 +997,7 @@ typedef enum {
 	MOD_PLASMA,
 	MOD_PLASMA_SPLASH,
 	MOD_RAILGUN,
+	MOD_MINIRAIL,
 	MOD_LIGHTNING,
 	MOD_BFG,
 	MOD_BFG_SPLASH,

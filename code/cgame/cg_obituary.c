@@ -95,6 +95,7 @@ char *modNames2[] = {
     "MOD_PLASMA",
     "MOD_PLASMA_SPLASH",
     "MOD_RAILGUN",
+    "MOD_MINIRAIL",
     "MOD_LIGHTNING",
     "MOD_BFG",
     "MOD_BFG_SPLASH",
@@ -175,6 +176,10 @@ static void CG_AddObituary(char *attackerName, char *targetName, team_t attacker
             break;
 
         case MOD_RAILGUN:
+            weapString = weaponStrings[WP_RAILGUN];
+            break;
+
+        case MOD_MINIRAIL:
             weapString = weaponStrings[WP_RAILGUN];
             break;
 
