@@ -80,8 +80,9 @@ char *weaponStrings[] =
     "Plasma",
     "BGK",
     "GPHook",
-    "Handcannon",
-    "AutoShotty"
+    "Mini-Rail",
+    "AutoShotty",
+    "TapRifle"
 };
 
 // these are just for logging, the client prints its own messages
@@ -91,6 +92,7 @@ char *modNames2[] = {
     "MOD_AUTOSHOTTY",
     "MOD_GAUNTLET",
     "MOD_MACHINEGUN",
+    "MOD_TAPRIFLE",
     "MOD_GRENADE",
     "MOD_GRENADE_SPLASH",
     "MOD_ROCKET",
@@ -153,6 +155,10 @@ static void CG_AddObituary(char *attackerName, char *targetName, team_t attacker
 
         case MOD_MACHINEGUN:
             weapString = weaponStrings[WP_MACHINEGUN];
+            break;
+
+        case MOD_TAPRIFLE:
+            weapString = weaponStrings[WP_TAPRIFLE];
             break;
 
         case MOD_SHOTGUN:

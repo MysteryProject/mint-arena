@@ -232,6 +232,20 @@ gitem_t bg_itemlist[] =
 			WP_MACHINEGUN,
 			/* sounds */ ""},
 
+		/*QUAKED weapon_machinegun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+*/
+		{
+			"weapon_taprifle",
+			"sound/misc/w_pkup.wav",
+			{"models/weapons/taprifle/taprifle.md3",
+			 NULL, NULL, NULL},
+			/* icon */ "icons/iconw_taprifle",
+			/* pickup */ "Tap-Rifle",
+			20,
+			IT_WEAPON,
+			WP_TAPRIFLE,
+			/* sounds */ ""},
+
 		/*QUAKED weapon_grenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
 */
 		{

@@ -721,7 +721,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 #endif
 
 	case WP_MACHINEGUN:
-	//case WP_TAPRIFLE:
+	case WP_TAPRIFLE:
 		MAKERGB( weaponInfo->flashDlightColor, 1, 1, 0 );
 		weaponInfo->flashSound[0] = trap_S_RegisterSound( "sound/weapons/machinegun/machgf1b.wav", qfalse );
 		weaponInfo->flashSound[1] = trap_S_RegisterSound( "sound/weapons/machinegun/machgf2b.wav", qfalse );
@@ -2021,7 +2021,7 @@ void CG_MissileHitWall( int weapon, int playerNum, vec3_t origin, vec3_t dir, im
 #endif
 
 	case WP_MACHINEGUN:
-	//case WP_TAPRIFLE:
+	case WP_TAPRIFLE:
 		mod = cgs.media.bulletFlashModel;
 		shader = cgs.media.bulletExplosionShader;
 		mark = cgs.media.bulletMarkShader;

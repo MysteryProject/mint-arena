@@ -276,6 +276,9 @@ static void CG_Obituary( entityState_t *ent ) {
 		case MOD_MACHINEGUN:
 			message = "was machinegunned by";
 			break;
+		case MOD_TAPRIFLE:
+			message = "tapped out by";
+			break;
 		case MOD_SHOTGUN:
 		case MOD_AUTOSHOTTY:
 			message = "was gunned down by";
