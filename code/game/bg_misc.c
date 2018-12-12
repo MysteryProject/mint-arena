@@ -33,6 +33,23 @@ Suite 120, Rockville, Maryland 20850 USA.
 #include "../qcommon/q_shared.h"
 #include "bg_public.h"
 
+weapon_t bg_weaponlevels[] =
+{
+	WP_TAPRIFLE,
+	WP_SHOTGUN,
+	WP_MACHINEGUN,
+	WP_LIGHTNING,
+	WP_BFG,
+	WP_ROCKET_LAUNCHER,
+	WP_AUTOSHOTTY,
+	WP_GRENADE_LAUNCHER,
+	WP_PLASMAGUN,
+	WP_MINIRAIL,
+	WP_GAUNTLET
+};
+
+int bg_numweaponLevels = ARRAY_LEN(bg_weaponlevels);
+
 /*QUAKED item_***** ( 0 0 0 ) (-16 -16 -16) (16 16 16) suspended
 DO NOT USE THIS CLASS, IT JUST HOLDS GENERAL INFORMATION.
 The suspended flag will allow items to hang in the air, otherwise they are dropped to the next surface.
@@ -1005,6 +1022,7 @@ int bg_numPlayerStateFields = ARRAY_LEN(bg_playerStateFields);
 // may not contain spaces, dpmaster will reject the server
 const char *bg_netGametypeNames[GT_MAX_GAME_TYPE] = {
 	"FFA",
+	"GunGame"
 	"Tournament",
 	"SP",
 	"TeamDM",
@@ -1018,6 +1036,7 @@ const char *bg_netGametypeNames[GT_MAX_GAME_TYPE] = {
 
 const char *bg_displayGametypeNames[GT_MAX_GAME_TYPE] = {
 	"Free For All",
+	"Gun Game",
 	"Tournament",
 	"Single Player",
 	"Team Deathmatch",
@@ -1590,8 +1609,9 @@ char *eventnames[] = {
 	"EV_TAUNT_FOLLOWME",
 	"EV_TAUNT_GETFLAG",
 	"EV_TAUNT_GUARDBASE",
-	"EV_TAUNT_PATROL"
+	"EV_TAUNT_PATROL",
 
+	"EV_GUNGAMESWAP"
 };
 
 /*

@@ -193,7 +193,7 @@ static void CG_AddObituary(char *attackerName, char *targetName, team_t attacker
             break;
 
         case MOD_MINIRAIL:
-            weapString = weaponStrings[WP_RAILGUN];
+            weapString = weaponStrings[WP_MINIRAIL];
             break;
 
         case MOD_BFG:
@@ -341,7 +341,13 @@ void CG_ParseObituary(entityState_t *ent)
 
             ps = &cg.snap->pss[i];
 
-            if (cgs.gametype < GT_TEAM)
+            if (cgs.gametype == GT_GUNGAME)
+            {
+                s = va("You killed %s\n%s place with %i", targetName,
+                       CG_PlaceString(ps->persistant[PERS_RANK] + 1),
+                       ps->persistant[PERS_GUNGAME_LEVEL]);
+            }
+            else if (cgs.gametype < GT_TEAM)
             {
                 s = va("You killed %s\n%s place with %i", targetName,
                        CG_PlaceString(ps->persistant[PERS_RANK] + 1),

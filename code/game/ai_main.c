@@ -1433,6 +1433,10 @@ void BotUpdateInput(bot_state_t *bs, int time, int elapsed_time) {
 	if (bi.actionflags & ACTION_RESPAWN) {
 		if (bs->lastucmd.buttons & BUTTON_ATTACK) bi.actionflags &= ~(ACTION_RESPAWN|ACTION_ATTACK);
 	}
+	//single fire weapon hack
+	if (bi.actionflags & ACTION_ATTACK && bs->cur_ps.weaponstate == WEAPON_FIRED)
+		bi.actionflags ^= ACTION_ATTACK;
+
 	//convert the bot input to a usercmd
 	BotInputToUserCommand(&bi, &bs->lastucmd, bs->cur_ps.delta_angles, time);
 	//subtract the delta angles
@@ -1545,7 +1549,8 @@ int BotAI(int playernum, float thinktime) {
 	//set the weapon selection every AI frame
 	EA_SelectWeapon(bs->playernum, bs->weaponnum);
 	//subtract the delta angles
-	for (j = 0; j < 3; j++) {
+	for (j = 0; j < 3; j++)
+	{
 		bs->viewangles[j] = AngleMod(bs->viewangles[j] - SHORT2ANGLE(bs->cur_ps.delta_angles[j]));
 	}
 	//everything was ok

@@ -1564,7 +1564,11 @@ void BotChooseWeapon(bot_state_t *bs) {
 		EA_SelectWeapon(bs->playernum, bs->weaponnum);
 	}
 	else {
-		newweaponnum = BotChooseBestFightWeapon(bs->ws, bs->inventory);
+		if (g_gametype.integer == GT_GUNGAME)
+			newweaponnum = bg_weaponlevels[bs->cur_ps.persistant[PERS_GUNGAME_LEVEL]];
+		else
+			newweaponnum = BotChooseBestFightWeapon(bs->ws, bs->inventory);
+
 		if (bs->weaponnum != newweaponnum) bs->weaponchange_time = FloatTime();
 		bs->weaponnum = newweaponnum;
 		//BotAI_Print(PRT_MESSAGE, "bs->weaponnum = %d\n", bs->weaponnum);
@@ -1758,6 +1762,7 @@ BotUpdateInventory
 ==================
 */
 void BotUpdateInventory(bot_state_t *bs) {
+#if 1
 	int oldinventory[MAX_ITEMS];
 
 	memcpy(oldinventory, bs->inventory, sizeof(oldinventory));
@@ -1771,7 +1776,6 @@ void BotUpdateInventory(bot_state_t *bs) {
 	bs->inventory[INVENTORY_ROCKETLAUNCHER] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_ROCKET_LAUNCHER)) != 0;
 	bs->inventory[INVENTORY_LIGHTNING] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_LIGHTNING)) != 0;
 	bs->inventory[INVENTORY_RAILGUN] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_RAILGUN)) != 0;
-	//bs->inventory[INVENTORY_MINIRAIL] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_MINIRAIL)) != 0;
 	bs->inventory[INVENTORY_PLASMAGUN] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_PLASMAGUN)) != 0;
 	bs->inventory[INVENTORY_BFG10K] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_BFG)) != 0;
 	bs->inventory[INVENTORY_GRAPPLINGHOOK] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_GRAPPLING_HOOK)) != 0;
@@ -1780,6 +1784,9 @@ void BotUpdateInventory(bot_state_t *bs) {
 	bs->inventory[INVENTORY_PROXLAUNCHER] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_PROX_LAUNCHER)) != 0;;
 	bs->inventory[INVENTORY_CHAINGUN] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_CHAINGUN)) != 0;;
 #endif
+	bs->inventory[INVENTORY_MINIRAIL] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_MINIRAIL)) != 0;
+	bs->inventory[INVENTORY_AUTOSHOTTY] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_AUTOSHOTTY)) != 0;
+	bs->inventory[INVENTORY_TAPRIFLE] = (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_TAPRIFLE)) != 0;
 	//ammo
 	bs->inventory[INVENTORY_SHELLS] = bs->cur_ps.ammo[WP_SHOTGUN];
 	bs->inventory[INVENTORY_BULLETS] = bs->cur_ps.ammo[WP_MACHINEGUN];
@@ -1827,6 +1834,7 @@ void BotUpdateInventory(bot_state_t *bs) {
 		bs->inventory[INVENTORY_REDCUBE] = 0;
 		bs->inventory[INVENTORY_BLUECUBE] = bs->cur_ps.tokens;
 	}
+#endif
 #endif
 	BotCheckItemPickup(bs, oldinventory);
 }
@@ -2312,11 +2320,13 @@ float BotAggression(bot_state_t *bs) {
 	if (bs->inventory[INVENTORY_PLASMAGUN] > 0 &&
 			bs->inventory[INVENTORY_CELLS] > 40) return 85;
 	//if the bot can use the grenade launcher
-	if (bs->inventory[INVENTORY_GRENADELAUNCHER] > 0 &&
-			bs->inventory[INVENTORY_GRENADES] > 10) return 80;
+	if (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_GRENADE_LAUNCHER) > 0 &&
+		bs->cur_ps.ammo[WP_GRENADE_LAUNCHER] > 10)
+		return 80;
 	//if the bot can use the shotgun
-	if (bs->inventory[INVENTORY_SHOTGUN] > 0 &&
-			bs->inventory[INVENTORY_SHELLS] > 10) return 50;
+	if (bs->cur_ps.stats[STAT_WEAPONS] & (1 << WP_SHOTGUN) &&
+		bs->cur_ps.ammo[WP_SHOTGUN] > 10)
+		return 50;
 	//otherwise the bot is not feeling too good
 	return 0;
 }
@@ -3508,7 +3518,7 @@ void BotAimAtEnemy(bot_state_t *bs) {
 	else if (wi.number == WP_LIGHTNING) {
 		aim_accuracy = Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_LIGHTNING, 0, 1);
 	}
-	else if (wi.number == WP_RAILGUN || wi.number == WP_MINIRAIL) {
+	else if (wi.number == WP_RAILGUN || wi.number == WP_MINIRAIL || wi.number == WP_TAPRIFLE) {
 		aim_accuracy = Characteristic_BFloat(bs->character, CHARACTERISTIC_AIM_ACCURACY_RAILGUN, 0, 1);
 	}
 	else if (wi.number == WP_PLASMAGUN) {

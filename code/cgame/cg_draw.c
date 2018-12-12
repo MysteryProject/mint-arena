@@ -400,7 +400,7 @@ static void CG_DrawStatusBar( void ) {
 	VectorClear( angles );
 
 	// draw any 3D icons first, so the changes back to 2D are minimized
-	if ( cent->currentState.weapon && cg_weapons[ cent->currentState.weapon ].ammoModel ) {
+	if ( cent->currentState.weapon && cg_weapons[ cent->currentState.weapon ].ammoModel && cgs.gametype != GT_GUNGAME ) {
 		origin[0] = 70;
 		origin[1] = 0;
 		origin[2] = 0;
@@ -448,7 +448,6 @@ static void CG_DrawStatusBar( void ) {
 			}
 
 			CG_DrawField (0, SCREEN_HEIGHT, UI_VA_BOTTOM, 3, value, colors[color] );
-
 			// if we didn't draw a 3D icon, draw a 2D icon for ammo
 			if ( !cg_draw3dIcons.integer && cg_drawIcons.integer ) {
 				qhandle_t	icon;
@@ -459,6 +458,21 @@ static void CG_DrawStatusBar( void ) {
 				}
 			}
 		}
+	}
+
+	if (cgs.gametype == GT_GUNGAME)
+	{
+		qhandle_t icon;
+		char *s;
+
+		s = va("%d/%d", cg.cur_ps->persistant[PERS_GUNGAME_LEVEL] + 1, bg_numweaponLevels);
+
+		CG_DrawString(0 + BIGCHAR_WIDTH * 5, SCREEN_HEIGHT, s, UI_VA_BOTTOM | UI_RIGHT | UI_GRADIENT | UI_GIANTFONT | UI_NOSCALE, colors[3]);
+
+		icon = cg_weapons[cg.cur_lc->predictedPlayerState.weapon].weaponIcon;
+		
+		if (icon)
+			CG_DrawPic(BIGCHAR_WIDTH * 5 + TEXT_ICON_SPACE, SCREEN_HEIGHT - ICON_SIZE, ICON_SIZE, ICON_SIZE, icon);
 	}
 
 	//
@@ -999,8 +1013,13 @@ static float CG_DrawScores( float y ) {
 		qboolean	spectator;
 
 		x = 640;
-		score = cg.cur_ps->persistant[PERS_SCORE];
-		spectator = ( cg.cur_ps->persistant[PERS_TEAM] == TEAM_SPECTATOR );
+		
+		if (cgs.gametype == GT_GUNGAME)
+			score = cg.cur_ps->persistant[PERS_GUNGAME_LEVEL]+1;
+		else
+			score = cg.cur_ps->persistant[PERS_SCORE];
+
+		spectator = (cg.cur_ps->persistant[PERS_TEAM] == TEAM_SPECTATOR);
 
 		// always show your score in the second box if not in first place
 		if ( s1 != score ) {
@@ -2857,7 +2876,9 @@ static void CG_Draw2D(stereoFrame_t stereoFrame, qboolean *voiceMenuOpen)
 			if(stereoFrame == STEREO_CENTER)
 				CG_DrawCrosshair();
 			CG_DrawCrosshairNames();
-			CG_DrawWeaponSelect();
+
+			if (cgs.gametype != GT_GUNGAME)
+				CG_DrawWeaponSelect();
 
 #ifndef MISSIONPACK_HUD
 			CG_DrawHoldableItem();

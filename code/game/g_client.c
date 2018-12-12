@@ -1171,31 +1171,48 @@ void PlayerSpawn(gentity_t *ent) {
 
 	player->ps.playerNum = index;
 
-	if ( g_instagib.integer ) {
-		it = BG_FindItemByClassname(g_instagibWeapon.string);
+	player->ps.ammo[WP_GAUNTLET] = -1;
+	player->ps.ammo[WP_GRAPPLING_HOOK] = -1;
 
-		if (it != NULL)
+	if (g_gametype.integer == GT_GUNGAME)
+	{
+		int weapon = bg_weaponlevels[player->ps.persistant[PERS_GUNGAME_LEVEL]];
+		player->ps.stats[STAT_WEAPONS] = (1 << weapon);
+
+		for (i = WP_NUM_WEAPONS - 1; i > 0; i--)
+			player->ps.ammo[i] = 99999;
+	}
+	else
+	{
+		player->ps.stats[STAT_WEAPONS] |= (1 << WP_GAUNTLET);
+		if (g_instagib.integer)
 		{
-			player->ps.stats[STAT_WEAPONS] = (1 << it->giTag);
-			player->ps.ammo[it->giTag] = 999;
+			it = BG_FindItemByClassname(g_instagibWeapon.string);
+
+			if (it != NULL)
+			{
+				player->ps.stats[STAT_WEAPONS] = (1 << it->giTag);
+				player->ps.ammo[it->giTag] = 999;
+			}
+			else
+			{
+				player->ps.stats[STAT_WEAPONS] = (1 << WP_RAILGUN);
+				player->ps.ammo[WP_RAILGUN] = 999;
+			}
 		}
 		else
 		{
-			player->ps.stats[STAT_WEAPONS] = (1 << WP_RAILGUN);
-			player->ps.ammo[WP_RAILGUN] = 999;
-		}
-	} else {
-		player->ps.stats[STAT_WEAPONS] = ( 1 << WP_MACHINEGUN );
-		if ( g_gametype.integer == GT_TEAM ) {
-			player->ps.ammo[WP_MACHINEGUN] = 50;
-		} else {
-			player->ps.ammo[WP_MACHINEGUN] = 100;
+			player->ps.stats[STAT_WEAPONS] = (1 << WP_MACHINEGUN);
+			if (g_gametype.integer == GT_TEAM)
+			{
+				player->ps.ammo[WP_MACHINEGUN] = 50;
+			}
+			else
+			{
+				player->ps.ammo[WP_MACHINEGUN] = 100;
+			}
 		}
 	}
-
-	player->ps.stats[STAT_WEAPONS] |= ( 1 << WP_GAUNTLET );
-	player->ps.ammo[WP_GAUNTLET] = -1;
-	player->ps.ammo[WP_GRAPPLING_HOOK] = -1;
 
 	// health will count down towards max_health
 	ent->health = player->ps.stats[STAT_HEALTH] = player->ps.stats[STAT_MAX_HEALTH] + 25;

@@ -97,7 +97,7 @@ void TossPlayerItems( gentity_t *self ) {
 	// weapon that isn't the mg or gauntlet.  Without this, a player
 	// can pick up a weapon, be killed, and not drop the weapon because
 	// their weapon change hasn't completed yet and they are still holding the MG.
-	if ( weapon == WP_MACHINEGUN || weapon == WP_GRAPPLING_HOOK ) {
+	if ( weapon == WP_MACHINEGUN || weapon == WP_GRAPPLING_HOOK) {
 		if ( self->player->ps.weaponstate == WEAPON_DROPPING ) {
 			BG_DecomposeUserCmdValue( self->player->pers.cmd.stateValue, &weapon );
 		}
@@ -107,7 +107,7 @@ void TossPlayerItems( gentity_t *self ) {
 	}
 
 	if ( weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK && 
-		self->player->ps.ammo[ weapon ] && !g_instagib.integer ) {
+		self->player->ps.ammo[ weapon ] && !g_instagib.integer && g_gametype.integer != GT_GUNGAME) {
 		// find the item type for this weapon
 		item = BG_FindItemForWeapon( weapon );
 
@@ -528,6 +528,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	int			i;
 	char		*killerName, *obit;
 	qboolean	gibPlayer;
+	int weapon;
 
 	if ( self->player->ps.pm_type == PM_DEAD ) {
 		return;
@@ -603,8 +604,25 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 		if ( attacker == self || OnSameTeam (self, attacker ) ) {
 			AddScore( attacker, self->r.currentOrigin, -1 );
+
+			if (g_gametype.integer == GT_GUNGAME && self->player->ps.persistant[PERS_GUNGAME_LEVEL] > 0)
+				self->player->ps.persistant[PERS_GUNGAME_LEVEL]--;
 		} else {
 			AddScore( attacker, self->r.currentOrigin, 1 );
+
+			if (g_gametype.integer == GT_GUNGAME && attacker->player->ps.weapon == bg_weaponlevels[attacker->player->ps.persistant[PERS_GUNGAME_LEVEL]])
+			{
+				attacker->player->ps.persistant[PERS_GUNGAME_LEVEL]++;
+
+				// only chose another weapon if we dont finish the game
+				if (attacker->player->ps.persistant[PERS_GUNGAME_LEVEL] < bg_numweaponLevels)
+				{
+					weapon = bg_weaponlevels[attacker->player->ps.persistant[PERS_GUNGAME_LEVEL]];
+					attacker->player->ps.stats[STAT_WEAPONS] = (1 << weapon);
+					attacker->player->ps.ammo[weapon] = -1;
+					G_AddEvent(attacker, EV_GUNGAMESWAP, weapon);
+				}
+			}
 
 			if( meansOfDeath == MOD_GAUNTLET ) {
 				
@@ -636,6 +654,9 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 	} else {
 		AddScore( self, self->r.currentOrigin, -1 );
+
+		if (g_gametype.integer == GT_GUNGAME && self->player->ps.persistant[PERS_GUNGAME_LEVEL] > 0)
+			self->player->ps.persistant[PERS_GUNGAME_LEVEL]--;
 	}
 
 	// Add team bonuses

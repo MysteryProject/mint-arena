@@ -1572,7 +1572,6 @@ void CG_DrawWeaponSelect( void ) {
 	trap_R_SetColor( NULL );
 }
 
-
 /*
 ===============
 CG_WeaponSelectable
@@ -1787,7 +1786,19 @@ void CG_OutOfAmmoChange( int localPlayerNum ) {
 	}
 }
 
+void CG_GunGameWeaponSwap(int localPlayerNum, weapon_t weapon)
+{
+	localPlayer_t *player;
+	playerState_t *ps;
+	int i;
 
+	if (cg.localPlayers[localPlayerNum].playerNum == -1)
+		return;
+
+	player = &cg.localPlayers[localPlayerNum];
+	player->weaponSelectTime = cg.time;
+	player->weaponSelect = weapon;
+}
 
 /*
 ===================================================================================================

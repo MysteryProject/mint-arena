@@ -80,6 +80,12 @@ Suite 120, Rockville, Maryland 20850 USA.
 #define INVENTORY_NEUTRALFLAG		47
 #define INVENTORY_REDCUBE			48
 #define INVENTORY_BLUECUBE			49
+
+// new weapons
+#define INVENTORY_TAPRIFLE          50
+#define INVENTORY_MINIRAIL          51
+#define INVENTORY_AUTOSHOTTY        52
+
 //enemy stuff
 #define ENEMY_HORIZONTAL_DIST		200
 #define ENEMY_HEIGHT				201
@@ -169,6 +175,6 @@ Suite 120, Rockville, Maryland 20850 USA.
 #define WEAPONINDEX_PLASMAGUN			8
 #define WEAPONINDEX_BFG					9
 #define WEAPONINDEX_GRAPPLING_HOOK		10
-#define WEAPONINDEX_NAILGUN				11
-#define WEAPONINDEX_PROXLAUNCHER		12
-#define WEAPONINDEX_CHAINGUN			13
+#define WEAPONINDEX_MINIRAIL            11
+#define WEAPONINDEX_AUTOSHOTTY          12
+#define WEAPONINDEX_TAPRIFLE            13

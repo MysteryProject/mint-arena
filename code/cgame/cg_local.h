@@ -374,6 +374,7 @@ typedef struct {
 	int				captures;
 	qboolean	perfect;
 	int				team;
+	int gunGameLevel;
 } score_t;
 
 // each player has an associated playerInfo_t
@@ -449,8 +450,8 @@ typedef struct {
 	animation_t		animations[MAX_TOTALANIMATIONS];
 
 	sfxHandle_t		sounds[MAX_CUSTOM_SOUNDS];
+	int gunGameLevel;
 } playerInfo_t;
-
 
 // each WP_* weapon enum has an associated weaponInfo_t
 // that contains media references necessary to present the
@@ -1794,9 +1795,10 @@ void CG_RailTrailEX(playerInfo_t *pi, vec3_t start, vec3_t end, qhandle_t coreSh
 void CG_GrappleTrail(centity_t *ent, const weaponInfo_t *wi);
 void CG_AddViewWeapon (playerState_t *ps);
 void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team );
-void CG_DrawWeaponSelect( void );
+void CG_DrawWeaponSelect(void);
 
-void CG_OutOfAmmoChange( int localPlayerNum );	// should this be in pmove?
+void CG_GunGameWeaponSwap(int localPlayerNum, weapon_t weapon); // should this be in pmove?
+void CG_OutOfAmmoChange(int localPlayerNum); // should this be in pmove?
 
 //
 // cg_marks.c

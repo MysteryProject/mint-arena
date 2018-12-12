@@ -164,6 +164,7 @@ Suite 120, Rockville, Maryland 20850 USA.
 
 typedef enum {
 	GT_FFA,				// free for all
+	GT_GUNGAME,			// gungame
 	GT_TOURNAMENT,		// one on one tournament
 	GT_SINGLE_PLAYER,	// single player ffa
 
@@ -561,6 +562,7 @@ typedef enum {
 	PERS_ATTACKER,					// playerNum of last damage inflicter
 	PERS_ATTACKEE_ARMOR,			// health/armor of last person we attacked
 	PERS_KILLED,					// count of the number of times you died
+	PERS_GUNGAME_LEVEL,				// progression in gungame
 	// player awards tracking
 	PERS_IMPRESSIVE_COUNT,			// two railgun hits in a row
 	PERS_EXCELLENT_COUNT,			// two successive kills in a short amount of time
@@ -663,6 +665,9 @@ typedef enum
 	WP_NUM_WEAPONS
 } weapon_t;
 
+extern int bg_numweaponLevels;
+extern weapon_t bg_weaponlevels[];
+
 // reward sounds (stored in ps->persistant[PERS_PLAYEREVENTS])
 #define	PLAYEREVENT_DENIEDREWARD		0x0001
 #define	PLAYEREVENT_GAUNTLETREWARD		0x0002
@@ -683,112 +688,113 @@ typedef enum
 
 #define	EVENT_VALID_MSEC	300
 
-typedef enum {
-	EV_NONE,
+	typedef enum {
+		EV_NONE,
 
-	EV_FOOTSTEP,
-	EV_FOOTSTEP_METAL,
-	EV_FOOTSPLASH,
-	EV_FOOTWADE,
-	EV_SWIM,
+		EV_FOOTSTEP,
+		EV_FOOTSTEP_METAL,
+		EV_FOOTSPLASH,
+		EV_FOOTWADE,
+		EV_SWIM,
 
-	EV_STEP_4,
-	EV_STEP_8,
-	EV_STEP_12,
-	EV_STEP_16,
+		EV_STEP_4,
+		EV_STEP_8,
+		EV_STEP_12,
+		EV_STEP_16,
 
-	EV_FALL_SHORT,
-	EV_FALL_MEDIUM,
-	EV_FALL_FAR,
+		EV_FALL_SHORT,
+		EV_FALL_MEDIUM,
+		EV_FALL_FAR,
 
-	EV_JUMP_PAD,			// boing sound at origin, jump sound on player
+		EV_JUMP_PAD, // boing sound at origin, jump sound on player
 
-	EV_JUMP,
-	EV_WATER_TOUCH,	// foot touches
-	EV_WATER_LEAVE,	// foot leaves
-	EV_WATER_UNDER,	// head touches
-	EV_WATER_CLEAR,	// head leaves
+		EV_JUMP,
+		EV_WATER_TOUCH, // foot touches
+		EV_WATER_LEAVE, // foot leaves
+		EV_WATER_UNDER, // head touches
+		EV_WATER_CLEAR, // head leaves
 
-	EV_ITEM_PICKUP,			// normal item pickups are predictable
-	EV_GLOBAL_ITEM_PICKUP,	// powerup / team sounds are broadcast to everyone
+		EV_ITEM_PICKUP,		   // normal item pickups are predictable
+		EV_GLOBAL_ITEM_PICKUP, // powerup / team sounds are broadcast to everyone
 
-	EV_NOAMMO,
-	EV_CHANGE_WEAPON,
-	EV_FIRE_WEAPON,
+		EV_NOAMMO,
+		EV_CHANGE_WEAPON,
+		EV_FIRE_WEAPON,
 
-	EV_USE_ITEM0,
-	EV_USE_ITEM1,
-	EV_USE_ITEM2,
-	EV_USE_ITEM3,
-	EV_USE_ITEM4,
-	EV_USE_ITEM5,
-	EV_USE_ITEM6,
-	EV_USE_ITEM7,
-	EV_USE_ITEM8,
-	EV_USE_ITEM9,
-	EV_USE_ITEM10,
-	EV_USE_ITEM11,
-	EV_USE_ITEM12,
-	EV_USE_ITEM13,
-	EV_USE_ITEM14,
-	EV_USE_ITEM15,
+		EV_USE_ITEM0,
+		EV_USE_ITEM1,
+		EV_USE_ITEM2,
+		EV_USE_ITEM3,
+		EV_USE_ITEM4,
+		EV_USE_ITEM5,
+		EV_USE_ITEM6,
+		EV_USE_ITEM7,
+		EV_USE_ITEM8,
+		EV_USE_ITEM9,
+		EV_USE_ITEM10,
+		EV_USE_ITEM11,
+		EV_USE_ITEM12,
+		EV_USE_ITEM13,
+		EV_USE_ITEM14,
+		EV_USE_ITEM15,
 
-	EV_ITEM_RESPAWN,
-	EV_ITEM_POP,
-	EV_PLAYER_TELEPORT_IN,
-	EV_PLAYER_TELEPORT_OUT,
+		EV_ITEM_RESPAWN,
+		EV_ITEM_POP,
+		EV_PLAYER_TELEPORT_IN,
+		EV_PLAYER_TELEPORT_OUT,
 
-	EV_GRENADE_BOUNCE,		// eventParm will be the soundindex
+		EV_GRENADE_BOUNCE, // eventParm will be the soundindex
 
-	EV_GENERAL_SOUND,
-	EV_GLOBAL_SOUND,		// no attenuation
-	EV_GLOBAL_TEAM_SOUND,
+		EV_GENERAL_SOUND,
+		EV_GLOBAL_SOUND, // no attenuation
+		EV_GLOBAL_TEAM_SOUND,
 
-	EV_BULLET_HIT_FLESH,
-	EV_BULLET_HIT_WALL,
+		EV_BULLET_HIT_FLESH,
+		EV_BULLET_HIT_WALL,
 
-	EV_MISSILE_HIT,
-	EV_MISSILE_MISS,
-	EV_MISSILE_MISS_METAL,
-	EV_RAILTRAIL,
-	EV_MINIRAILTRAIL,
-	EV_SHOTGUN,
-	EV_AUTOSHOTTY,
+		EV_MISSILE_HIT,
+		EV_MISSILE_MISS,
+		EV_MISSILE_MISS_METAL,
+		EV_RAILTRAIL,
+		EV_MINIRAILTRAIL,
+		EV_SHOTGUN,
+		EV_AUTOSHOTTY,
 
-	EV_PAIN,
-	EV_DEATH1,
-	EV_DEATH2,
-	EV_DEATH3,
-	EV_OBITUARY,
+		EV_PAIN,
+		EV_DEATH1,
+		EV_DEATH2,
+		EV_DEATH3,
+		EV_OBITUARY,
 
-	EV_POWERUP_QUAD,
-	EV_POWERUP_BATTLESUIT,
-	EV_POWERUP_REGEN,
+		EV_POWERUP_QUAD,
+		EV_POWERUP_BATTLESUIT,
+		EV_POWERUP_REGEN,
 
-	EV_SCOREPLUM,			// score plum
+		EV_SCOREPLUM, // score plum
 
-//#ifdef MISSIONPACK
-	EV_PROXIMITY_MINE_STICK,
-	EV_PROXIMITY_MINE_TRIGGER,
-	EV_KAMIKAZE,			// kamikaze explodes
-	EV_OBELISKEXPLODE,		// obelisk explodes
-	EV_OBELISKPAIN,			// obelisk is in pain
-	EV_INVUL_IMPACT,		// invulnerability sphere impact
-	EV_JUICED,				// invulnerability juiced effect
-	EV_LIGHTNINGBOLT,		// lightning bolt bounced of invulnerability sphere
-//#endif
+		//#ifdef MISSIONPACK
+		EV_PROXIMITY_MINE_STICK,
+		EV_PROXIMITY_MINE_TRIGGER,
+		EV_KAMIKAZE,	   // kamikaze explodes
+		EV_OBELISKEXPLODE, // obelisk explodes
+		EV_OBELISKPAIN,	// obelisk is in pain
+		EV_INVUL_IMPACT,   // invulnerability sphere impact
+		EV_JUICED,		   // invulnerability juiced effect
+		EV_LIGHTNINGBOLT,  // lightning bolt bounced of invulnerability sphere
+						   //#endif
 
-	EV_DEBUG_LINE,
-	EV_STOPLOOPINGSOUND,
-	EV_TAUNT,
-	EV_TAUNT_YES,
-	EV_TAUNT_NO,
-	EV_TAUNT_FOLLOWME,
-	EV_TAUNT_GETFLAG,
-	EV_TAUNT_GUARDBASE,
-	EV_TAUNT_PATROL
+		EV_DEBUG_LINE,
+		EV_STOPLOOPINGSOUND,
+		EV_TAUNT,
+		EV_TAUNT_YES,
+		EV_TAUNT_NO,
+		EV_TAUNT_FOLLOWME,
+		EV_TAUNT_GETFLAG,
+		EV_TAUNT_GUARDBASE,
+		EV_TAUNT_PATROL,
 
-} entity_event_t;
+		EV_GUNGAMESWAP
+	} entity_event_t;
 
 
 typedef enum {

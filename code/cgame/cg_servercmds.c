@@ -98,26 +98,28 @@ static void CG_ParseScores( int start ) {
 	memset( cg.scores, 0, sizeof( cg.scores ) );
 	for ( i = 0 ; i < cg.numScores ; i++ ) {
 		//
-		cg.scores[i].playerNum = atoi( CG_Argv( i * 14 + 4 + start) );
-		cg.scores[i].score = atoi( CG_Argv( i * 14 + 5 + start) );
-		cg.scores[i].ping = atoi( CG_Argv( i * 14 + 6 + start) );
-		cg.scores[i].time = atoi( CG_Argv( i * 14 + 7 + start) );
-		cg.scores[i].scoreFlags = atoi( CG_Argv( i * 14 + 8 + start) );
-		powerups = atoi( CG_Argv( i * 14 + 9 + start) );
-		cg.scores[i].accuracy = atoi(CG_Argv(i * 14 + 10 + start));
-		cg.scores[i].impressiveCount = atoi(CG_Argv(i * 14 + 11 + start));
-		cg.scores[i].excellentCount = atoi(CG_Argv(i * 14 + 12 + start));
-		cg.scores[i].guantletCount = atoi(CG_Argv(i * 14 + 13 + start));
-		cg.scores[i].defendCount = atoi(CG_Argv(i * 14 + 14 + start));
-		cg.scores[i].assistCount = atoi(CG_Argv(i * 14 + 15 + start));
-		cg.scores[i].perfect = atoi(CG_Argv(i * 14 + 16 + start));
-		cg.scores[i].captures = atoi(CG_Argv(i * 14 + 17 + start));
+		cg.scores[i].playerNum = atoi( CG_Argv( i * 15 + 4 + start) );
+		cg.scores[i].score = atoi( CG_Argv( i * 15 + 5 + start) );
+		cg.scores[i].ping = atoi( CG_Argv( i * 15 + 6 + start) );
+		cg.scores[i].time = atoi( CG_Argv( i * 15 + 7 + start) );
+		cg.scores[i].scoreFlags = atoi( CG_Argv( i * 15 + 8 + start) );
+		powerups = atoi( CG_Argv( i * 15 + 9 + start) );
+		cg.scores[i].accuracy = atoi(CG_Argv(i * 15 + 10 + start));
+		cg.scores[i].impressiveCount = atoi(CG_Argv(i * 15 + 11 + start));
+		cg.scores[i].excellentCount = atoi(CG_Argv(i * 15 + 12 + start));
+		cg.scores[i].guantletCount = atoi(CG_Argv(i * 15 + 13 + start));
+		cg.scores[i].defendCount = atoi(CG_Argv(i * 15 + 14 + start));
+		cg.scores[i].assistCount = atoi(CG_Argv(i * 15 + 15 + start));
+		cg.scores[i].perfect = atoi(CG_Argv(i * 15 + 16 + start));
+		cg.scores[i].captures = atoi(CG_Argv(i * 15 + 17 + start));
+		cg.scores[i].gunGameLevel = atoi(CG_Argv(i * 15 + 18 + start));
 
 		if ( cg.scores[i].playerNum < 0 || cg.scores[i].playerNum >= MAX_CLIENTS ) {
 			cg.scores[i].playerNum = 0;
 		}
 		cgs.playerinfo[ cg.scores[i].playerNum ].score = cg.scores[i].score;
-		cgs.playerinfo[ cg.scores[i].playerNum ].powerups = powerups;
+		cgs.playerinfo[cg.scores[i].playerNum].powerups = powerups;
+		cgs.playerinfo[cg.scores[i].playerNum].gunGameLevel = cg.scores[i].gunGameLevel;
 
 		cg.scores[i].team = cgs.playerinfo[cg.scores[i].playerNum].team;
 
@@ -183,7 +185,7 @@ static void CG_ParseTeamInfo( int start ) {
 		cgs.playerinfo[ playerNum ].health = atoi( CG_Argv( i * 6 + 5 + start ) );
 		cgs.playerinfo[ playerNum ].armor = atoi( CG_Argv( i * 6 + 6 + start ) );
 		cgs.playerinfo[ playerNum ].curWeapon = atoi( CG_Argv( i * 6 + 7 + start ) );
-		cgs.playerinfo[ playerNum ].powerups = atoi( CG_Argv( i * 6 + 8 + start ) );
+		cgs.playerinfo[playerNum].powerups = atoi(CG_Argv(i * 6 + 8 + start));
 	}
 }
 

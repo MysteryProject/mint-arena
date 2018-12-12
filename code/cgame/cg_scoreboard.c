@@ -138,7 +138,7 @@ static void CG_DrawPlayerScore( int y, score_t *score, float *color, float fade,
 			}
 		} else if ( pi->handicap < 100 ) {
 			Com_sprintf( string, sizeof( string ), "%i", pi->handicap );
-			if ( cgs.gametype == GT_TOURNAMENT ) {
+			if ( cgs.gametype == GT_TOURNAMENT || cgs.gametype == GT_GUNGAME ) {
 				CG_DrawString( iconx, y - SMALLCHAR_HEIGHT/2, string, UI_SMALLFONT|UI_NOSCALE, color );
 			}
 			else {
@@ -154,6 +154,18 @@ static void CG_DrawPlayerScore( int y, score_t *score, float *color, float fade,
 			}
 			else {
 				CG_DrawString( iconx, y, string, UI_SMALLFONT|UI_NOSCALE, color );
+			}
+		}
+		else if (cgs.gametype == GT_GUNGAME)
+		{
+			Com_sprintf(string, sizeof(string), "%i/%i", pi->gunGameLevel+1, bg_numweaponLevels);
+			if (pi->handicap < 100 && !pi->botSkill)
+			{
+				CG_DrawString(iconx, y + SMALLCHAR_HEIGHT / 2, string, UI_SMALLFONT | UI_NOSCALE, color);
+			}
+			else
+			{
+				CG_DrawString(iconx, y, string, UI_SMALLFONT | UI_NOSCALE, color);
 			}
 		}
 	}
@@ -198,13 +210,19 @@ static void CG_DrawPlayerScore( int y, score_t *score, float *color, float fade,
 	}
 #endif
 
-	if (cg.cur_ps) {
-		if (score->playerNum == cg.cur_ps->playerNum) {
+	if (cg.cur_ps)
+	{
+		if (score->playerNum == cg.cur_ps->playerNum)
+		{
 			ps = cg.cur_ps;
-		} else {
+		}
+		else
+		{
 			ps = NULL;
 		}
-	} else {
+	}
+	else
+	{
 		ps = CG_LocalPlayerState(score->playerNum);
 	}
 
@@ -358,7 +376,18 @@ qboolean CG_DrawOldScoreboard( void ) {
 	}
 
 	// current rank
-	if ( cgs.gametype < GT_TEAM) {
+	if (cgs.gametype == GT_GUNGAME)
+	{
+		if (cg.cur_ps && cg.cur_ps->persistant[PERS_TEAM] != TEAM_SPECTATOR)
+		{
+			s = va("%s place with %i",
+				   CG_PlaceString(cg.cur_ps->persistant[PERS_RANK] + 1),
+				   cg.cur_ps->persistant[PERS_GUNGAME_LEVEL] + 1);
+			y = SB_HEADER - 6 - CG_DrawStringLineHeight(UI_BIGFONT);
+			CG_DrawString(SCREEN_WIDTH / 2, y, s, UI_CENTER | UI_DROPSHADOW | UI_BIGFONT, NULL);
+		}
+	}
+	else if ( cgs.gametype < GT_TEAM) {
 		if (cg.cur_ps && cg.cur_ps->persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
 			s = va("%s place with %i",
 				CG_PlaceString( cg.cur_ps->persistant[PERS_RANK] + 1 ),
@@ -536,25 +565,56 @@ void CG_DrawTourneyScoreboard( void ) {
 		CG_DrawString( 8, y, "Blue Team", UI_LEFT|UI_DROPSHADOW|UI_GIANTFONT|UI_NOSCALE, NULL );
 		s = va("%i", cg.teamScores[1] );
 		CG_DrawString( 632, y, s, UI_RIGHT|UI_DROPSHADOW|UI_GIANTFONT|UI_NOSCALE, NULL );
-	} else if ( cgs.gametype == GT_TOURNAMENT ) {
+	}
+	else if (cgs.gametype == GT_TOURNAMENT)
+	{
 		//
 		// tournament scoreboard
 		//
-		for ( i = 0 ; i < MAX_CLIENTS ; i++ ) {
+		for (i = 0; i < MAX_CLIENTS; i++)
+		{
 			pi = &cgs.playerinfo[i];
-			if ( !pi->infoValid ) {
+			if (!pi->infoValid)
+			{
 				continue;
 			}
-			if ( pi->team != TEAM_FREE ) {
+			if (pi->team != TEAM_FREE)
+			{
 				continue;
 			}
 
-			CG_DrawString( 8, y, pi->name, UI_LEFT|UI_DROPSHADOW|UI_GIANTFONT|UI_NOSCALE, NULL );
-			s = va("%i", pi->score );
-			CG_DrawString( 632, y, s, UI_RIGHT|UI_DROPSHADOW|UI_GIANTFONT|UI_NOSCALE, NULL );
+			CG_DrawString(8, y, pi->name, UI_LEFT | UI_DROPSHADOW | UI_GIANTFONT | UI_NOSCALE, NULL);
+			s = va("%i", pi->score);
+			CG_DrawString(632, y, s, UI_RIGHT | UI_DROPSHADOW | UI_GIANTFONT | UI_NOSCALE, NULL);
 			y += GIANTCHAR_HEIGHT + 16;
 		}
-	} else {
+	}
+	else if (cgs.gametype == GT_GUNGAME)
+	{
+		
+		//
+		// gungame scoreboard
+		//
+		for (i = 0; i < MAX_CLIENTS; i++)
+		{
+			pi = &cgs.playerinfo[i];
+			if (!pi->infoValid)
+			{
+				continue;
+			}
+			if (pi->team != TEAM_FREE)
+			{
+				continue;
+			}
+
+			CG_DrawString(8, y, pi->name, UI_LEFT | UI_DROPSHADOW | UI_GIANTFONT | UI_NOSCALE, NULL);
+			s = va("%i", pi->gunGameLevel);
+			CG_DrawString(632, y, s, UI_RIGHT | UI_DROPSHADOW | UI_GIANTFONT | UI_NOSCALE, NULL);
+			y += GIANTCHAR_HEIGHT + 16;
+		}
+	}
+	else
+	{
 		//
 		// free for all scoreboard (players sorted by score)
 		//

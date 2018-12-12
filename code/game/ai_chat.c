@@ -277,6 +277,9 @@ char *BotWeaponNameForMeansOfDeath(int mod) {
 	case MOD_MACHINEGUN:
 		weapon = WP_MACHINEGUN;
 		break;
+	case MOD_TAPRIFLE:
+		weapon = WP_TAPRIFLE;
+		break;
 	case MOD_GRENADE:
 	case MOD_GRENADE_SPLASH:
 		weapon = WP_GRENADE_LAUNCHER;

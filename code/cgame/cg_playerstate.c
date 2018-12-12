@@ -598,7 +598,7 @@ void CG_CheckGameSounds( void ) {
 	}
 
 	// fraglimit warnings
-	if ( cgs.fraglimit > 0 && cgs.gametype < GT_CTF) {
+	if ( cgs.fraglimit > 0 && cgs.gametype < GT_CTF && cgs.gametype != GT_GUNGAME) {
 		highScore = cgs.scores1;
 
 		if (cgs.gametype == GT_TEAM && cgs.scores2 > highScore) {

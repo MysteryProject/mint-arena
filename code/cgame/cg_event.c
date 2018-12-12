@@ -231,7 +231,13 @@ static void CG_Obituary( entityState_t *ent ) {
 
 			ps = &cg.snap->pss[i];
 
-			if ( cgs.gametype < GT_TEAM ) {
+			if (cgs.gametype == GT_GUNGAME)
+			{
+				s = va("You fragged %s\n%s place with %i", targetName,
+					   CG_PlaceString(ps->persistant[PERS_RANK] + 1),
+					   ps->persistant[PERS_GUNGAME_LEVEL]);
+			}
+			else if ( cgs.gametype < GT_TEAM ) {
 				s = va("You fragged %s\n%s place with %i", targetName, 
 					CG_PlaceString( ps->persistant[PERS_RANK] + 1 ),
 					ps->persistant[PERS_SCORE] );
@@ -845,6 +851,16 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 	//
 	// weapon events
 	//
+	case EV_GUNGAMESWAP:
+		DEBUGNAME("EV_GUNGAMESWAP");
+		for (i = 0; i < CG_MaxSplitView(); i++)
+		{
+			if (es->number == cg.snap->pss[i].playerNum)
+			{
+				CG_GunGameWeaponSwap(i, es->eventParm);
+			}
+		}
+		break;
 	case EV_NOAMMO:
 		DEBUGNAME("EV_NOAMMO");
 //		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.noAmmoSound );
