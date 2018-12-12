@@ -467,7 +467,7 @@ static void CG_DrawStatusBar( void ) {
 
 		s = va("%d/%d", cg.cur_ps->persistant[PERS_GUNGAME_LEVEL] + 1, bg_numweaponLevels);
 
-		CG_DrawString(0 + BIGCHAR_WIDTH * 5, SCREEN_HEIGHT, s, UI_VA_BOTTOM | UI_RIGHT | UI_GRADIENT | UI_GIANTFONT | UI_NOSCALE, colors[3]);
+		CG_DrawString(0 + BIGCHAR_WIDTH * 5, SCREEN_HEIGHT, s, UI_VA_BOTTOM | UI_RIGHT | UI_GRADIENT | UI_BIGFONT | UI_NOSCALE, colors[3]);
 
 		icon = cg_weapons[cg.cur_lc->predictedPlayerState.weapon].weaponIcon;
 		
