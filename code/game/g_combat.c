@@ -610,17 +610,30 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		} else {
 			AddScore( attacker, self->r.currentOrigin, 1 );
 
-			if (g_gametype.integer == GT_GUNGAME && attacker->player->ps.weapon == bg_weaponlevels[attacker->player->ps.persistant[PERS_GUNGAME_LEVEL]])
+			if (meansOfDeath == MOD_BFG_SPLASH)
+				weapon = WP_BFG;
+			else if (meansOfDeath == MOD_GRENADE_SPLASH)
+				weapon = WP_GRENADE_LAUNCHER;
+			else if (meansOfDeath == MOD_PLASMA_SPLASH)
+				weapon = WP_PLASMAGUN;
+			else if (meansOfDeath == MOD_ROCKET_SPLASH)
+				weapon = WP_ROCKET_LAUNCHER;
+			else
+				weapon = attacker->player->ps.weapon;
+
+			if (g_gametype.integer == GT_GUNGAME && weapon == bg_gunGameInfo.levels[attacker->player->ps.persistant[PERS_GUNGAME_LEVEL]])
 			{
 				attacker->player->ps.persistant[PERS_GUNGAME_LEVEL]++;
 
 				// only chose another weapon if we dont finish the game
-				if (attacker->player->ps.persistant[PERS_GUNGAME_LEVEL] < bg_numweaponLevels)
+				if (attacker->player->ps.persistant[PERS_GUNGAME_LEVEL] < bg_gunGameInfo.numLevels)
 				{
-					weapon = bg_weaponlevels[attacker->player->ps.persistant[PERS_GUNGAME_LEVEL]];
+					weapon = bg_gunGameInfo.levels[attacker->player->ps.persistant[PERS_GUNGAME_LEVEL]];
 					attacker->player->ps.stats[STAT_WEAPONS] = (1 << weapon);
 					attacker->player->ps.ammo[weapon] = -1;
 					G_AddEvent(attacker, EV_GUNGAMESWAP, weapon);
+					if (attacker->parent)
+						G_AddEvent(attacker->parent, EV_GUNGAMESWAP, weapon);
 				}
 			}
 

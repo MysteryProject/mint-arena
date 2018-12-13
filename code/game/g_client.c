@@ -1176,7 +1176,7 @@ void PlayerSpawn(gentity_t *ent) {
 
 	if (g_gametype.integer == GT_GUNGAME)
 	{
-		int weapon = bg_weaponlevels[player->ps.persistant[PERS_GUNGAME_LEVEL]];
+		int weapon = bg_gunGameInfo.levels[player->ps.persistant[PERS_GUNGAME_LEVEL]];
 		player->ps.stats[STAT_WEAPONS] = (1 << weapon);
 
 		for (i = WP_NUM_WEAPONS - 1; i > 0; i--)
@@ -1184,7 +1184,6 @@ void PlayerSpawn(gentity_t *ent) {
 	}
 	else
 	{
-		player->ps.stats[STAT_WEAPONS] |= (1 << WP_GAUNTLET);
 		if (g_instagib.integer)
 		{
 			it = BG_FindItemByClassname(g_instagibWeapon.string);
@@ -1212,6 +1211,7 @@ void PlayerSpawn(gentity_t *ent) {
 				player->ps.ammo[WP_MACHINEGUN] = 100;
 			}
 		}
+		player->ps.stats[STAT_WEAPONS] |= (1 << WP_GAUNTLET);
 	}
 
 	// health will count down towards max_health

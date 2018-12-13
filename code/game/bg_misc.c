@@ -33,23 +33,6 @@ Suite 120, Rockville, Maryland 20850 USA.
 #include "../qcommon/q_shared.h"
 #include "bg_public.h"
 
-weapon_t bg_weaponlevels[] =
-{
-	WP_TAPRIFLE,
-	WP_SHOTGUN,
-	WP_MACHINEGUN,
-	WP_LIGHTNING,
-	WP_BFG,
-	WP_ROCKET_LAUNCHER,
-	WP_AUTOSHOTTY,
-	WP_GRENADE_LAUNCHER,
-	WP_PLASMAGUN,
-	WP_MINIRAIL,
-	WP_GAUNTLET
-};
-
-int bg_numweaponLevels = ARRAY_LEN(bg_weaponlevels);
-
 /*QUAKED item_***** ( 0 0 0 ) (-16 -16 -16) (16 16 16) suspended
 DO NOT USE THIS CLASS, IT JUST HOLDS GENERAL INFORMATION.
 The suspended flag will allow items to hang in the air, otherwise they are dropped to the next surface.
@@ -2420,3 +2403,113 @@ void RemoveColorEscapeSequences(char *text)
 	text[l] = '\0';
 }
 
+char **str_split(char *str, char delim, int *numSplits)
+{
+	char **ret;
+	int retLen;
+	char *c;
+
+	if ((str == NULL) ||
+		(delim == '\0'))
+	{
+		/* Either of those will cause problems */
+		ret = NULL;
+		retLen = -1;
+	}
+	else
+	{
+		retLen = 0;
+		c = str;
+
+		/* Pre-calculate number of elements */
+		do
+		{
+			if (*c == delim)
+			{
+				retLen++;
+			}
+
+			c++;
+		} while (*c != '\0');
+
+		ret = trap_HeapMalloc((retLen + 1) * sizeof(*ret));
+		ret[retLen] = NULL;
+
+		c = str;
+		retLen = 1;
+		ret[0] = str;
+
+		do
+		{
+			if (*c == delim)
+			{
+				ret[retLen++] = &c[1];
+				*c = '\0';
+			}
+
+			c++;
+		} while (*c != '\0');
+	}
+
+	if (numSplits != NULL)
+	{
+		*numSplits = retLen;
+	}
+
+	return ret;
+}
+
+gunGameInfo_t bg_gunGameInfo;
+
+void BG_GunGameInfoFromString(const char *info)
+{
+	char *strCpy;
+	char **split;
+	int num;
+	int i;
+
+	strCpy = trap_HeapMalloc(strlen(info) * sizeof(*strCpy));
+	strcpy(strCpy, info);
+
+	split = str_split(strCpy, '/', &num);
+
+	bg_gunGameInfo.numLevels = num;
+
+	if (split == NULL)
+		trap_Print("str_split returned NULL");
+	else
+	{
+		for (i = 0; i < num; i++)
+		{
+			if (Q_stricmp(split[i], "mg") == 0)
+				bg_gunGameInfo.levels[i] = WP_MACHINEGUN;
+			else if (Q_stricmp(split[i], "sg") == 0)
+				bg_gunGameInfo.levels[i] = WP_SHOTGUN;
+			else if (Q_stricmp(split[i], "gl") == 0)
+				bg_gunGameInfo.levels[i] = WP_GRENADE_LAUNCHER;
+			else if (Q_stricmp(split[i], "rl") == 0)
+				bg_gunGameInfo.levels[i] = WP_ROCKET_LAUNCHER;
+			else if (Q_stricmp(split[i], "lg") == 0)
+				bg_gunGameInfo.levels[i] = WP_LIGHTNING;
+			else if (Q_stricmp(split[i], "rg") == 0)
+				bg_gunGameInfo.levels[i] = WP_RAILGUN;
+			else if (Q_stricmp(split[i], "pg") == 0)
+				bg_gunGameInfo.levels[i] = WP_PLASMAGUN;
+			else if (Q_stricmp(split[i], "bfg") == 0)
+				bg_gunGameInfo.levels[i] = WP_BFG;
+			else if (Q_stricmp(split[i], "mr") == 0)
+				bg_gunGameInfo.levels[i] = WP_MINIRAIL;
+			else if (Q_stricmp(split[i], "as") == 0)
+				bg_gunGameInfo.levels[i] = WP_AUTOSHOTTY;
+			else if (Q_stricmp(split[i], "tr") == 0)
+				bg_gunGameInfo.levels[i] = WP_TAPRIFLE;
+			else if (Q_stricmp(split[i], "g") == 0)
+				bg_gunGameInfo.levels[i] = WP_GAUNTLET;
+			else
+				bg_gunGameInfo.levels[i] = WP_MACHINEGUN;
+		}
+	}
+
+	trap_HeapFree(split);
+	trap_HeapFree(strCpy);
+}

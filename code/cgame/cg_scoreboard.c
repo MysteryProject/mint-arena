@@ -158,14 +158,14 @@ static void CG_DrawPlayerScore( int y, score_t *score, float *color, float fade,
 		}
 		else if (cgs.gametype == GT_GUNGAME)
 		{
-			Com_sprintf(string, sizeof(string), "%i/%i", pi->gunGameLevel+1, bg_numweaponLevels);
+			Com_sprintf(string, sizeof(string), "%i/%i", pi->gunGameLevel + 1, bg_gunGameInfo.numLevels);
 			if (pi->handicap < 100 && !pi->botSkill)
 			{
-				CG_DrawString(iconx, y + SMALLCHAR_HEIGHT / 2, string, UI_SMALLFONT | UI_NOSCALE, color);
+				CG_DrawString(iconx, y + SMALLCHAR_HEIGHT / 2, string, UI_CENTER | UI_SMALLFONT | UI_NOSCALE, color);
 			}
 			else
 			{
-				CG_DrawString(iconx, y, string, UI_SMALLFONT | UI_NOSCALE, color);
+				CG_DrawString(iconx, y, string, UI_CENTER | UI_SMALLFONT | UI_NOSCALE, color);
 			}
 		}
 	}

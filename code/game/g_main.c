@@ -117,6 +117,7 @@ vmCvar_t	g_playerCapsule;
 vmCvar_t	g_instagib;
 vmCvar_t 	g_instagibWeapon;
 vmCvar_t g_nextmapmode;
+vmCvar_t g_gunGameWeapons;
 
 static cvarTable_t gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -131,6 +132,7 @@ static cvarTable_t gameCvarTable[] = {
 	{&g_gametype, "g_gametype", "0", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH, GCF_DO_RESTART, RANGE_INT(0, GT_MAX_GAME_TYPE - 1)},
 	{&g_instagib, "g_instagib", "0", CVAR_LATCH, GCF_DO_RESTART, RANGE_BOOL},
 	{&g_instagibWeapon, "g_instagibWeapon", "weapon_railgun", CVAR_LATCH, GCF_DO_RESTART, RANGE_ALL},
+	{&g_gunGameWeapons, "g_gunGameWeapons", "tr/sg/mg/lg/bfg/rl/as/gl/pg/mr/rg/g", CVAR_SERVERINFO | CVAR_LATCH, GCF_DO_RESTART, RANGE_ALL},
 
 	{&g_maxplayers, "sv_maxclients", "8", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, RANGE_ALL},
 	{&g_maxGamePlayers, "g_maxGameClients", "0", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, RANGE_INT(0, MAX_CLIENTS - 1)},
@@ -173,9 +175,9 @@ static cvarTable_t gameCvarTable[] = {
 	{&g_debugMove, "g_debugMove", "0", 0, 0, RANGE_BOOL},
 	{&g_debugDamage, "g_debugDamage", "0", 0, 0, RANGE_BOOL},
 	{&g_motd, "g_motd", "", 0, 0, RANGE_ALL},
-	{&g_nextmapmode, "g_nextmapmode", "", CVAR_ARCHIVE, 0, RANGE_ALL}, 	// "" - default, use nextmap command
-																		// "random" - randomly choses a map from arenas list (currently just a random map)
-																		// "file" - loads from mapycylce.txt (TODO)
+	{&g_nextmapmode, "g_nextmapmode", "", CVAR_ARCHIVE, 0, RANGE_ALL}, // "" - default, use nextmap command
+																	   // "random" - randomly choses a map from arenas list (currently just a random map)
+																	   // "file" - loads from mapycylce.txt (TODO)
 
 	{&g_podiumDist, "g_podiumDist", "80", 0, 0, RANGE_ALL},
 	{&g_podiumDrop, "g_podiumDrop", "70", 0, 0, RANGE_ALL},
@@ -605,8 +607,10 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 
 	G_RemapTeamShaders();
 
+	BG_GunGameInfoFromString(g_gunGameWeapons.string);
+
 	// clear ready players from intermission
-	trap_SetConfigstring( CS_PLAYERS_READY, "" );
+	trap_SetConfigstring(CS_PLAYERS_READY, "");
 	trap_SetConfigstring( CS_INTERMISSION, "" );
 }
 
@@ -1622,7 +1626,7 @@ void CheckExitRules( void ) {
 		}
 	}
 
-	if ( g_gametype.integer < GT_CTF && g_fraglimit.integer ) {
+	if ( g_gametype.integer < GT_CTF ) {
 		if (g_gametype.integer == GT_GUNGAME)
 		{
 			for (i = 0; i < g_maxplayers.integer; i++)
@@ -1637,7 +1641,7 @@ void CheckExitRules( void ) {
 					continue;
 				}
 
-				if (cl->ps.persistant[PERS_GUNGAME_LEVEL] >= bg_numweaponLevels)
+				if (cl->ps.persistant[PERS_GUNGAME_LEVEL] >= bg_gunGameInfo.numLevels)
 				{
 					LogExit("Max gun level complete.");
 					trap_SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " won the gungame.\n\"",
@@ -1646,7 +1650,7 @@ void CheckExitRules( void ) {
 				}
 			}
 		}
-		else
+		else if (g_fraglimit.integer)
 		{
 			if (level.teamScores[TEAM_RED] >= g_fraglimit.integer)
 			{

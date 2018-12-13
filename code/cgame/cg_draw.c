@@ -435,6 +435,8 @@ static void CG_DrawStatusBar( void ) {
 			value = ps->ammo[WP_SHOTGUN];
 		else if (cent->currentState.weapon == WP_MINIRAIL)
 			value = ps->ammo[WP_RAILGUN];
+		else if (cent->currentState.weapon == WP_TAPRIFLE)
+			value = ps->ammo[WP_TAPRIFLE];
 		else
 			value = ps->ammo[cent->currentState.weapon];
 
@@ -465,9 +467,9 @@ static void CG_DrawStatusBar( void ) {
 		qhandle_t icon;
 		char *s;
 
-		s = va("%d/%d", cg.cur_ps->persistant[PERS_GUNGAME_LEVEL] + 1, bg_numweaponLevels);
+		s = va("%d/%d", cg.cur_ps->persistant[PERS_GUNGAME_LEVEL] + 1, bg_gunGameInfo.numLevels);
 
-		CG_DrawString(0 + BIGCHAR_WIDTH * 5, SCREEN_HEIGHT, s, UI_VA_BOTTOM | UI_RIGHT | UI_GRADIENT | UI_BIGFONT | UI_NOSCALE, colors[3]);
+		CG_DrawString(0 + BIGCHAR_WIDTH * 5, SCREEN_HEIGHT, s, UI_VA_BOTTOM | UI_RIGHT | UI_GRADIENT | UI_GIANTFONT | UI_NOSCALE, colors[3]);
 
 		icon = cg_weapons[cg.cur_lc->predictedPlayerState.weapon].weaponIcon;
 		
@@ -909,9 +911,16 @@ static float CG_DrawScores( float y ) {
 		return y;
 	}
 
-	s1 = cgs.scores1;
-	s2 = cgs.scores2;
-
+	if (cgs.gametype == GT_GUNGAME)
+	{
+		s1 = cgs.scores1 == SCORE_NOT_PRESENT ? SCORE_NOT_PRESENT : cgs.scores1 + 1;
+		s2 = cgs.scores2 == SCORE_NOT_PRESENT ? SCORE_NOT_PRESENT : cgs.scores2 + 1;
+	}
+	else
+	{
+		s1 = cgs.scores1;
+		s2 = cgs.scores2;
+	}
 	scoreHeight = CG_DrawStringLineHeight( UI_BIGFONT ) + 6;
 	y -= scoreHeight;
 
@@ -2867,8 +2876,8 @@ static void CG_Draw2D(stereoFrame_t stereoFrame, qboolean *voiceMenuOpen)
 #else
 			CG_DrawStatusBar();
 #endif
-      
-			CG_DrawAmmoWarning();
+			if (cgs.gametype != GT_GUNGAME)
+				CG_DrawAmmoWarning();
 
 #ifdef MISSIONPACK
 			CG_DrawProxWarning();

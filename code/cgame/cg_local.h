@@ -1306,6 +1306,7 @@ typedef struct {
 	// media
 	cgMedia_t		media;
 
+	int numGunGameLevels;
 } cgs_t;
 
 //==============================================================================

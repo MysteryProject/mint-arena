@@ -1565,7 +1565,7 @@ void BotChooseWeapon(bot_state_t *bs) {
 	}
 	else {
 		if (g_gametype.integer == GT_GUNGAME)
-			newweaponnum = bg_weaponlevels[bs->cur_ps.persistant[PERS_GUNGAME_LEVEL]];
+			newweaponnum = bg_gunGameInfo.levels[bs->cur_ps.persistant[PERS_GUNGAME_LEVEL]];
 		else
 			newweaponnum = BotChooseBestFightWeapon(bs->ws, bs->inventory);
 
@@ -5831,7 +5831,7 @@ void BotSetupDeathmatchAI(void) {
 	int ent, modelnum;
 	char model[128];
 
-	gametype = trap_Cvar_VariableIntegerValue("g_gametype");
+	gametype = g_gametype.integer; //trap_Cvar_VariableIntegerValue("g_gametype");
 
 	trap_Cvar_Register(&bot_rocketjump, "bot_rocketjump", "1", 0);
 	trap_Cvar_Register(&bot_grapple, "bot_grapple", "1", 0);

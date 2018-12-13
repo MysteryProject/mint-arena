@@ -665,9 +665,6 @@ typedef enum
 	WP_NUM_WEAPONS
 } weapon_t;
 
-extern int bg_numweaponLevels;
-extern weapon_t bg_weaponlevels[];
-
 // reward sounds (stored in ps->persistant[PERS_PLAYEREVENTS])
 #define	PLAYEREVENT_DENIEDREWARD		0x0001
 #define	PLAYEREVENT_GAUNTLETREWARD		0x0002
@@ -1125,9 +1122,14 @@ typedef enum {
 							// this avoids having to set eFlags and eventNum
 } entityType_t;
 
+typedef struct {
+	int numLevels;
+	weapon_t levels[WP_NUM_WEAPONS];
+} gunGameInfo_t;
+extern gunGameInfo_t bg_gunGameInfo;
+void BG_GunGameInfoFromString(const char *info);
 
-
-void	BG_EvaluateTrajectory( const trajectory_t *tr, int atTime, vec3_t result );
+void BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result);
 void	BG_EvaluateTrajectoryDelta( const trajectory_t *tr, int atTime, vec3_t result );
 
 void	BG_AddPredictableEventToPlayerstate( int newEvent, int eventParm, playerState_t *ps );

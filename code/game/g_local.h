@@ -814,3 +814,4 @@ extern	vmCvar_t	g_playerCapsule;
 extern	vmCvar_t	g_instagib;
 extern vmCvar_t g_instagibWeapon;
 extern vmCvar_t g_nextmapmode;
+extern vmCvar_t g_gunGameWeapons;

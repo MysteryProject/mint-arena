@@ -778,11 +778,19 @@ ClearRegisteredItems
 ==============
 */
 void ClearRegisteredItems( void ) {
-	memset( itemRegistered, 0, sizeof( itemRegistered ) );
+	gitem_t *it;
+	memset(itemRegistered, 0, sizeof(itemRegistered));
 
 	// players always start with the base weapon
 	if ( g_instagib.integer ) {
-		RegisterItem( BG_FindItemForWeapon( WP_RAILGUN ) );
+		it = BG_FindItemByClassname(g_instagibWeapon.string);
+
+		if (it == NULL)
+		{
+			RegisterItem(it);
+		}
+		else
+			RegisterItem(BG_FindItemForWeapon(WP_RAILGUN));
 	} else {
 		RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 	}
