@@ -1122,9 +1122,10 @@ typedef enum {
 							// this avoids having to set eFlags and eventNum
 } entityType_t;
 
+#define MAX_GUNGAME_LEVELS 32
 typedef struct {
 	int numLevels;
-	weapon_t levels[WP_NUM_WEAPONS];
+	weapon_t levels[MAX_GUNGAME_LEVELS];
 } gunGameInfo_t;
 extern gunGameInfo_t bg_gunGameInfo;
 void BG_GunGameInfoFromString(const char *info);

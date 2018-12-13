@@ -2473,6 +2473,9 @@ void BG_GunGameInfoFromString(const char *info)
 
 	split = str_split(strCpy, '/', &num);
 
+	if (num > MAX_GUNGAME_LEVELS)
+		num = MAX_GUNGAME_LEVELS; // limit this for now
+
 	bg_gunGameInfo.numLevels = num;
 
 	if (split == NULL)
