@@ -621,6 +621,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 	char			path[MAX_QPATH];
 	vec3_t			mins, maxs;
 	int				i;
+	char *weaponModel;
 
 	weaponInfo = &cg_weapons[weaponNum];
 
@@ -642,8 +643,19 @@ void CG_RegisterWeapon( int weaponNum ) {
 	CG_RegisterItemVisuals( BG_ItemNumForItem( item ) );
 
 	// load cmodel before model so filecache works
-	weaponInfo->weaponModel = trap_R_RegisterModel( item->world_model[0] );
+	if (cg_newWeaponModels[cg.cur_localPlayerNum].integer == 1 && item->world_model[1])
+		weaponModel = item->world_model[1];
+	else
+		weaponModel = item->world_model[0];
 
+	weaponInfo->weaponModel = trap_R_RegisterModel(weaponModel);
+
+	if (!weaponInfo->weaponModel)
+	{
+		weaponModel = item->world_model[0];
+		weaponInfo->weaponModel = trap_R_RegisterModel(weaponModel);
+	}
+	
 	// calc midpoint for rotation
 	trap_R_ModelBounds( weaponInfo->weaponModel, mins, maxs, 0, 0, 0 );
 	for ( i = 0 ; i < 3 ; i++ ) {
@@ -658,11 +670,11 @@ void CG_RegisterWeapon( int weaponNum ) {
 		weaponInfo->ammoModel = trap_R_RegisterModel( ammo->world_model[0] );
 	}
 
-	COM_StripExtension( item->world_model[0], path, sizeof(path) );
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash.md3" );
 	weaponInfo->flashModel = trap_R_RegisterModel( path );
 
-	COM_StripExtension( item->world_model[0], path, sizeof(path) );
+	COM_StripExtension(weaponModel, path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_barrel.md3" );
 	weaponInfo->barrelModel = trap_R_RegisterModel( path );
 
@@ -867,8 +879,9 @@ void CG_RegisterItemVisuals( int itemNum ) {
 
 	//
 	// powerups have an accompanying ring or sphere
+	// weapons may have alternate version
 	//
-	if ( item->giType == IT_POWERUP || item->giType == IT_HEALTH ) {
+	if ( item->giType == IT_POWERUP || item->giType == IT_HEALTH || item->giType == IT_WEAPON) {
 		if ( item->world_model[1] ) {
 			itemInfo->models[1] = trap_R_RegisterModel( item->world_model[1] );
 		}

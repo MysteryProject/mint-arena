@@ -1503,6 +1503,7 @@ extern vmCvar_t cg_obituaryFadetime[MAX_SPLITVIEW];
 
 //
 extern vmCvar_t cg_showLowAmmoPerWeapon[MAX_SPLITVIEW];
+extern vmCvar_t cg_newWeaponModels[MAX_SPLITVIEW];
 
 //
 // cg_main.c
