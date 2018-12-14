@@ -1662,6 +1662,9 @@ static void PM_Weapon( void ) {
 		case WP_MINIRAIL:
 			pm->ps->ammo[WP_RAILGUN]--;
 			break;
+		case WP_TAPRIFLE:
+			pm->ps->ammo[WP_MACHINEGUN]--;
+			break;
 		default:
 			pm->ps->ammo[pm->ps->weapon]--;
 			break;

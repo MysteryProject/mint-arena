@@ -1173,7 +1173,14 @@ BG_FindItemForAmmo
 */
 gitem_t	*BG_FindItemForAmmo( weapon_t weapon ) {
 	gitem_t	*it;
-	
+
+	if (weapon == WP_AUTOSHOTTY)
+		return BG_FindItemForAmmo(WP_SHOTGUN);
+	else if (weapon == WP_MINIRAIL)
+		return BG_FindItemForAmmo(WP_RAILGUN);
+	else if (weapon == WP_TAPRIFLE)
+		return BG_FindItemForAmmo(WP_MACHINEGUN);
+
 	for ( it = bg_itemlist + 1 ; it->classname ; it++) {
 		if ( it->giType == IT_AMMO && it->giTag == weapon ) {
 			return it;
