@@ -2461,6 +2461,39 @@ char **str_split(char *str, char delim, int *numSplits)
 
 gunGameInfo_t bg_gunGameInfo;
 
+gunGameInfo_t bg_classicGunGameInfo = {
+	9,
+	{
+		WP_MACHINEGUN,
+		WP_SHOTGUN,
+		WP_GRENADE_LAUNCHER,
+		WP_ROCKET_LAUNCHER,
+		WP_LIGHTNING,
+		WP_RAILGUN,
+		WP_PLASMAGUN,
+		WP_BFG,
+		WP_GAUNTLET
+	}
+};
+
+gunGameInfo_t bg_newGunGameInfo = {
+	12,
+	{
+		WP_MACHINEGUN,
+		WP_AUTOSHOTTY,
+		WP_SHOTGUN,
+		WP_GRENADE_LAUNCHER,
+		WP_ROCKET_LAUNCHER,
+		WP_LIGHTNING,
+		WP_TAPRIFLE,
+		WP_RAILGUN,
+		WP_MINIRAIL,
+		WP_PLASMAGUN,
+		WP_BFG,
+		WP_GAUNTLET
+	}
+};
+
 void BG_GunGameInfoFromString(const char *info)
 {
 	char *strCpy;
@@ -2468,51 +2501,62 @@ void BG_GunGameInfoFromString(const char *info)
 	int num;
 	int i;
 
-	strCpy = trap_HeapMalloc(strlen(info) * sizeof(*strCpy));
-	strcpy(strCpy, info);
-
-	split = str_split(strCpy, '/', &num);
-
-	if (num > MAX_GUNGAME_LEVELS)
-		num = MAX_GUNGAME_LEVELS; // limit this for now
-
-	bg_gunGameInfo.numLevels = num;
-
-	if (split == NULL)
-		trap_Print("str_split returned NULL");
+	if (Q_stricmp(info, "classic") == 0)
+	{
+		bg_gunGameInfo = bg_classicGunGameInfo;
+	}
+	else if (Q_stricmp(info, "new") == 0)
+	{
+		bg_gunGameInfo = bg_newGunGameInfo;
+	}
 	else
 	{
-		for (i = 0; i < num; i++)
-		{
-			if (Q_stricmp(split[i], "mg") == 0)
-				bg_gunGameInfo.levels[i] = WP_MACHINEGUN;
-			else if (Q_stricmp(split[i], "sg") == 0)
-				bg_gunGameInfo.levels[i] = WP_SHOTGUN;
-			else if (Q_stricmp(split[i], "gl") == 0)
-				bg_gunGameInfo.levels[i] = WP_GRENADE_LAUNCHER;
-			else if (Q_stricmp(split[i], "rl") == 0)
-				bg_gunGameInfo.levels[i] = WP_ROCKET_LAUNCHER;
-			else if (Q_stricmp(split[i], "lg") == 0)
-				bg_gunGameInfo.levels[i] = WP_LIGHTNING;
-			else if (Q_stricmp(split[i], "rg") == 0)
-				bg_gunGameInfo.levels[i] = WP_RAILGUN;
-			else if (Q_stricmp(split[i], "pg") == 0)
-				bg_gunGameInfo.levels[i] = WP_PLASMAGUN;
-			else if (Q_stricmp(split[i], "bfg") == 0)
-				bg_gunGameInfo.levels[i] = WP_BFG;
-			else if (Q_stricmp(split[i], "mr") == 0)
-				bg_gunGameInfo.levels[i] = WP_MINIRAIL;
-			else if (Q_stricmp(split[i], "as") == 0)
-				bg_gunGameInfo.levels[i] = WP_AUTOSHOTTY;
-			else if (Q_stricmp(split[i], "tr") == 0)
-				bg_gunGameInfo.levels[i] = WP_TAPRIFLE;
-			else if (Q_stricmp(split[i], "g") == 0)
-				bg_gunGameInfo.levels[i] = WP_GAUNTLET;
-			else
-				bg_gunGameInfo.levels[i] = WP_MACHINEGUN;
-		}
-	}
+		strCpy = trap_HeapMalloc(strlen(info) * sizeof(*strCpy));
+		strcpy(strCpy, info);
 
-	trap_HeapFree(split);
-	trap_HeapFree(strCpy);
+		split = str_split(strCpy, '/', &num);
+
+		if (num > MAX_GUNGAME_LEVELS)
+			num = MAX_GUNGAME_LEVELS; // limit this for now
+
+		bg_gunGameInfo.numLevels = num;
+
+		if (split == NULL)
+			trap_Print("str_split returned NULL");
+		else
+		{
+			for (i = 0; i < num; i++)
+			{
+				if (Q_stricmp(split[i], "mg") == 0)
+					bg_gunGameInfo.levels[i] = WP_MACHINEGUN;
+				else if (Q_stricmp(split[i], "sg") == 0)
+					bg_gunGameInfo.levels[i] = WP_SHOTGUN;
+				else if (Q_stricmp(split[i], "gl") == 0)
+					bg_gunGameInfo.levels[i] = WP_GRENADE_LAUNCHER;
+				else if (Q_stricmp(split[i], "rl") == 0)
+					bg_gunGameInfo.levels[i] = WP_ROCKET_LAUNCHER;
+				else if (Q_stricmp(split[i], "lg") == 0)
+					bg_gunGameInfo.levels[i] = WP_LIGHTNING;
+				else if (Q_stricmp(split[i], "rg") == 0)
+					bg_gunGameInfo.levels[i] = WP_RAILGUN;
+				else if (Q_stricmp(split[i], "pg") == 0)
+					bg_gunGameInfo.levels[i] = WP_PLASMAGUN;
+				else if (Q_stricmp(split[i], "bfg") == 0)
+					bg_gunGameInfo.levels[i] = WP_BFG;
+				else if (Q_stricmp(split[i], "mr") == 0)
+					bg_gunGameInfo.levels[i] = WP_MINIRAIL;
+				else if (Q_stricmp(split[i], "as") == 0)
+					bg_gunGameInfo.levels[i] = WP_AUTOSHOTTY;
+				else if (Q_stricmp(split[i], "tr") == 0)
+					bg_gunGameInfo.levels[i] = WP_TAPRIFLE;
+				else if (Q_stricmp(split[i], "g") == 0)
+					bg_gunGameInfo.levels[i] = WP_GAUNTLET;
+				else
+					bg_gunGameInfo.levels[i] = WP_MACHINEGUN;
+			}
+		}
+
+		trap_HeapFree(split);
+		trap_HeapFree(strCpy);
+	}
 }

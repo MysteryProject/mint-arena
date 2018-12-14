@@ -380,7 +380,7 @@ qboolean G_SelectRandomArenaName(char *oldmap, char *newmap, qboolean limit)
 
 	if (numMaps < 2)
 	{
-		G_Printf("G_SelectRandomArenaName: Could not find maps, return current\n");
+		G_Printf("G_SelectRandomArenaName: Could not find maps\n");
 		newmap = oldmap;
 		return qfalse;
 	}

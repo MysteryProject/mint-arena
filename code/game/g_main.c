@@ -132,7 +132,7 @@ static cvarTable_t gameCvarTable[] = {
 	{&g_gametype, "g_gametype", "0", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH, GCF_DO_RESTART, RANGE_INT(0, GT_MAX_GAME_TYPE - 1)},
 	{&g_instagib, "g_instagib", "0", CVAR_LATCH, GCF_DO_RESTART, RANGE_BOOL},
 	{&g_instagibWeapon, "g_instagibWeapon", "weapon_railgun", CVAR_LATCH, GCF_DO_RESTART, RANGE_ALL},
-	{&g_gunGameWeapons, "g_gunGameWeapons", "tr/sg/mg/lg/bfg/rl/as/gl/pg/mr/rg/g", CVAR_SERVERINFO | CVAR_LATCH, GCF_DO_RESTART, RANGE_ALL},
+	{&g_gunGameWeapons, "g_gunGameWeapons", "classic", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, GCF_DO_RESTART, RANGE_ALL},
 
 	{&g_maxplayers, "sv_maxclients", "8", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, RANGE_ALL},
 	{&g_maxGamePlayers, "g_maxGameClients", "0", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, RANGE_INT(0, MAX_CLIENTS - 1)},

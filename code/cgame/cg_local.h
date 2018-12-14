@@ -1751,7 +1751,7 @@ void CG_LoadDeferredPlayers( void );
 // cg_events.c
 //
 void CG_CheckEvents( centity_t *cent );
-const char	*CG_PlaceString( int rank );
+const char *CG_PlaceString(int rank, qboolean scoreboard);
 void CG_EntityEvent( centity_t *cent, vec3_t position );
 void CG_PainEvent( centity_t *cent, int health );
 

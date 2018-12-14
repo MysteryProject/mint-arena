@@ -343,14 +343,14 @@ void CG_ParseObituary(entityState_t *ent)
 
             if (cgs.gametype == GT_GUNGAME)
             {
-                s = va("You killed %s\n%s place with %i", targetName,
-                       CG_PlaceString(ps->persistant[PERS_RANK] + 1),
-                       ps->persistant[PERS_GUNGAME_LEVEL]);
+                s = va(S_COLOR_GREEN "%s" S_COLOR_WHITE " complete\nYou are %s place",
+                       BG_FindItemForWeapon(bg_gunGameInfo.levels[ps->persistant[PERS_GUNGAME_LEVEL] - 1])->pickup_name,
+                       CG_PlaceString(ps->persistant[PERS_RANK] + 1, qfalse));
             }
             else if (cgs.gametype < GT_TEAM)
             {
                 s = va("You killed %s\n%s place with %i", targetName,
-                       CG_PlaceString(ps->persistant[PERS_RANK] + 1),
+                       CG_PlaceString(ps->persistant[PERS_RANK] + 1, qfalse),
                        ps->persistant[PERS_SCORE]);
             }
             else

@@ -138,7 +138,7 @@ static void CG_DrawPlayerScore( int y, score_t *score, float *color, float fade,
 			}
 		} else if ( pi->handicap < 100 ) {
 			Com_sprintf( string, sizeof( string ), "%i", pi->handicap );
-			if ( cgs.gametype == GT_TOURNAMENT || cgs.gametype == GT_GUNGAME ) {
+			if ( cgs.gametype == GT_TOURNAMENT/* || cgs.gametype == GT_GUNGAME*/ ) {
 				CG_DrawString( iconx, y - SMALLCHAR_HEIGHT/2, string, UI_SMALLFONT|UI_NOSCALE, color );
 			}
 			else {
@@ -156,7 +156,7 @@ static void CG_DrawPlayerScore( int y, score_t *score, float *color, float fade,
 				CG_DrawString( iconx, y, string, UI_SMALLFONT|UI_NOSCALE, color );
 			}
 		}
-		else if (cgs.gametype == GT_GUNGAME)
+		/*else if (cgs.gametype == GT_GUNGAME)
 		{
 			Com_sprintf(string, sizeof(string), "%i/%i", pi->gunGameLevel + 1, bg_gunGameInfo.numLevels);
 			if (pi->handicap < 100 && !pi->botSkill)
@@ -167,7 +167,7 @@ static void CG_DrawPlayerScore( int y, score_t *score, float *color, float fade,
 			{
 				CG_DrawString(iconx, y, string, UI_CENTER | UI_SMALLFONT | UI_NOSCALE, color);
 			}
-		}
+		}*/
 	}
 
 	// draw the face
@@ -380,9 +380,8 @@ qboolean CG_DrawOldScoreboard( void ) {
 	{
 		if (cg.cur_ps && cg.cur_ps->persistant[PERS_TEAM] != TEAM_SPECTATOR)
 		{
-			s = va("%s place with %i",
-				   CG_PlaceString(cg.cur_ps->persistant[PERS_RANK] + 1),
-				   cg.cur_ps->persistant[PERS_GUNGAME_LEVEL] + 1);
+			s = va("%s place",
+				   CG_PlaceString(cg.cur_ps->persistant[PERS_RANK] + 1, qtrue));
 			y = SB_HEADER - 6 - CG_DrawStringLineHeight(UI_BIGFONT);
 			CG_DrawString(SCREEN_WIDTH / 2, y, s, UI_CENTER | UI_DROPSHADOW | UI_BIGFONT, NULL);
 		}
@@ -390,7 +389,7 @@ qboolean CG_DrawOldScoreboard( void ) {
 	else if ( cgs.gametype < GT_TEAM) {
 		if (cg.cur_ps && cg.cur_ps->persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
 			s = va("%s place with %i",
-				CG_PlaceString( cg.cur_ps->persistant[PERS_RANK] + 1 ),
+				CG_PlaceString( cg.cur_ps->persistant[PERS_RANK] + 1, qtrue),
 				cg.cur_ps->persistant[PERS_SCORE] );
 			y = SB_HEADER - 6 - CG_DrawStringLineHeight( UI_BIGFONT );
 			CG_DrawString( SCREEN_WIDTH / 2, y, s, UI_CENTER|UI_DROPSHADOW|UI_BIGFONT, NULL );

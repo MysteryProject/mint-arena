@@ -1077,7 +1077,7 @@ static float CG_DrawScores( float y ) {
 			CG_DrawBigString( x + 4, y, s, 1.0F);
 		}
 
-		if ( cgs.fraglimit ) {
+		if ( cgs.gametype != GT_GUNGAME && cgs.fraglimit ) {
 			s = va( "%2i", cgs.fraglimit );
 			w = CG_DrawStrlen( s, UI_BIGFONT ) + 8;
 			x -= w;
