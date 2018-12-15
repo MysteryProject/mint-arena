@@ -292,6 +292,10 @@ char *BotWeaponNameForMeansOfDeath(int mod) {
 	case MOD_PLASMA_SPLASH:
 		weapon = WP_PLASMAGUN;
 		break;
+	case MOD_IMPACTCANNON:
+	case MOD_IMPACTCANNON_SPLASH:
+		weapon = WP_IMPACT_CANNON;
+		break;
 	case MOD_RAILGUN:
 		weapon = WP_RAILGUN;
 		break;

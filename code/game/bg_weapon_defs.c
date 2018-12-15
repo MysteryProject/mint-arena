@@ -118,6 +118,13 @@ bgweapon_defs_t bg_weapons[] =
         750,
         qtrue,
         qfalse
+    },
+    {
+        WP_IMPACT_CANNON,
+        WP_PLASMAGUN,
+        700,
+        qtrue,
+        qfalse
     }
 };
 

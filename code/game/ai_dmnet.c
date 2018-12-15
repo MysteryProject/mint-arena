@@ -1584,6 +1584,8 @@ int BotSelectActivateWeapon(bot_state_t *bs)
 		return WEAPONINDEX_MINIRAIL;
 	else if (bs->inventory[INVENTORY_AUTOSHOTTY] > 0 && bs->inventory[INVENTORY_SHELLS] > 0)
 		return WEAPONINDEX_AUTOSHOTTY;
+	else if (bs->inventory[INVENTORY_IMPACTCANNON] > 0 && bs->inventory[INVENTORY_CELLS] > 0)
+		return WEAPONINDEX_IMPACTCANNON;
 	else
 	{
 		return -1;

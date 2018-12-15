@@ -568,6 +568,56 @@ gentity_t *fire_plasma (gentity_t *self, vec3_t start, vec3_t dir) {
 
 //=============================================================================
 
+/*
+=================
+fire_impactcannon
+
+=================
+*/
+gentity_t *fire_impactcannon(gentity_t *self, vec3_t start, vec3_t dir)
+{
+	gentity_t *bolt;
+
+	VectorNormalize(dir);
+
+	bolt = G_Spawn();
+	bolt->classname = "impactcannon";
+	bolt->nextthink = level.time + 10000;
+	bolt->think = G_ExplodeMissile;
+	bolt->s.eType = ET_MISSILE;
+	bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+	bolt->s.weapon = WP_IMPACT_CANNON;
+	bolt->r.ownerNum = self->s.number;
+	bolt->parent = self;
+	bolt->damage = 100;
+	bolt->splashDamage = 80;
+	bolt->splashRadius = 100;
+	bolt->methodOfDeath = MOD_IMPACTCANNON;
+	bolt->splashMethodOfDeath = MOD_IMPACTCANNON_SPLASH;
+	bolt->clipmask = MASK_SHOT;
+	bolt->target_ent = NULL;
+
+	bolt->s.pos.trType = TR_GRAVITY;
+	bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
+	VectorCopy(start, bolt->s.pos.trBase);
+	VectorScale(dir, 1000, bolt->s.pos.trDelta);
+	SnapVector(bolt->s.pos.trDelta); // save net bandwidth
+
+	VectorCopy(start, bolt->r.currentOrigin);
+
+	if (self->player)
+	{
+		bolt->s.team = self->player->sess.sessionTeam;
+	}
+	else
+	{
+		bolt->s.team = TEAM_FREE;
+	}
+
+	return bolt;
+}
+
+//=============================================================================
 
 /*
 =================

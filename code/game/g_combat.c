@@ -362,7 +362,7 @@ void body_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int d
 
 
 // these are just for logging, the client prints its own messages
-char	*modNames[] = {
+char *modNames[] = {
 	"MOD_UNKNOWN",
 	"MOD_SHOTGUN",
 	"MOD_AUTOSHOTTY",
@@ -375,6 +375,8 @@ char	*modNames[] = {
 	"MOD_ROCKET_SPLASH",
 	"MOD_PLASMA",
 	"MOD_PLASMA_SPLASH",
+	"MOD_IMPACTCANNON",
+	"MOD_IMPACTCANNON_SPLASH",
 	"MOD_RAILGUN",
 	"MOD_MINIRAIL",
 	"MOD_LIGHTNING",
@@ -397,8 +399,7 @@ char	*modNames[] = {
 	"MOD_JUICED",
 #endif
 	"MOD_GRAPPLE",
-	"MOD_SUICIDE_TEAM_CHANGE"
-};
+	"MOD_SUICIDE_TEAM_CHANGE"};
 
 #ifdef MISSIONPACK
 /*
@@ -614,6 +615,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				weapon = WP_BFG;
 			else if (meansOfDeath == MOD_GRENADE_SPLASH)
 				weapon = WP_GRENADE_LAUNCHER;
+			else if (meansOfDeath == MOD_IMPACTCANNON_SPLASH)
+				weapon = WP_IMPACT_CANNON;
 			else if (meansOfDeath == MOD_PLASMA_SPLASH)
 				weapon = WP_PLASMAGUN;
 			else if (meansOfDeath == MOD_ROCKET_SPLASH)

@@ -787,6 +787,15 @@ void CG_RegisterWeapon( int weaponNum ) {
 		cgs.media.grenadeExplosionShader = trap_R_RegisterShader( "grenadeExplosion" );
 		break;
 
+	case WP_IMPACT_CANNON:
+		weaponInfo->missileTrailFunc = CG_PlasmaTrail;
+		weaponInfo->missileSound = trap_S_RegisterSound("sound/weapons/impactcannon/rockfly.wav", qfalse);
+		MAKERGB(weaponInfo->flashDlightColor, 1, 0.75f, 0);
+		weaponInfo->flashSound[0] = trap_S_RegisterSound("sound/weapons/impactcannon/rocklf1a.wav", qfalse);
+		cgs.media.plasmaExplosionShader = trap_R_RegisterShader("plasmaExplosion");
+		cgs.media.railRingsShader = trap_R_RegisterShader("railDisc");
+		break;
+
 #ifdef MISSIONPACK
 	case WP_NAILGUN:
 		weaponInfo->ejectBrassFunc = CG_NailgunEjectBrass;
@@ -2004,6 +2013,13 @@ void CG_MissileHitWall( int weapon, int playerNum, vec3_t origin, vec3_t dir, im
 		mark = cgs.media.energyMarkShader;
 		radius = 24;
 		break;
+	case WP_IMPACT_CANNON:
+		mod = cgs.media.ringFlashModel;
+		shader = cgs.media.plasmaExplosionShader;
+		sfx = cgs.media.sfx_plasmaexp;
+		mark = cgs.media.energyMarkShader;
+		radius = 16;
+		break;
 	case WP_PLASMAGUN:
 		mod = cgs.media.ringFlashModel;
 		shader = cgs.media.plasmaExplosionShader;
@@ -2116,6 +2132,7 @@ void CG_MissileHitPlayer( int weapon, vec3_t origin, vec3_t dir, int entityNum )
 	case WP_ROCKET_LAUNCHER:
 	case WP_PLASMAGUN:
 	case WP_BFG:
+	case WP_IMPACT_CANNON:
 #ifdef MISSIONPACK
 	case WP_NAILGUN:
 	case WP_CHAINGUN:

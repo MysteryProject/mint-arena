@@ -85,6 +85,7 @@ Suite 120, Rockville, Maryland 20850 USA.
 #define INVENTORY_TAPRIFLE          50
 #define INVENTORY_MINIRAIL          51
 #define INVENTORY_AUTOSHOTTY        52
+#define INVENTORY_IMPACTCANNON      53
 
 //enemy stuff
 #define ENEMY_HORIZONTAL_DIST		200
@@ -178,3 +179,4 @@ Suite 120, Rockville, Maryland 20850 USA.
 #define WEAPONINDEX_MINIRAIL            11
 #define WEAPONINDEX_AUTOSHOTTY          12
 #define WEAPONINDEX_TAPRIFLE            13
+#define WEAPONINDEX_IMPACTCANNON        14

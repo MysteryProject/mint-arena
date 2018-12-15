@@ -330,6 +330,20 @@ gitem_t bg_itemlist[] =
 			WP_PLASMAGUN,
 			/* sounds */ ""},
 
+		/*QUAKED weapon_plasmagun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
+*/
+		{
+			"weapon_impactcannon",
+			"sound/misc/w_pkup.wav",
+			{"models/weapons/impactcannon/impactcannon.md3",
+			 NULL, NULL, NULL},
+			/* icon */ "icons/iconw_impactcannon",
+			/* pickup */ "Impact Cannon",
+			25,
+			IT_WEAPON,
+			WP_IMPACT_CANNON,
+			/* sounds */ ""},
+
 		/*QUAKED weapon_bfg (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
 */
 		{
@@ -1180,6 +1194,8 @@ gitem_t	*BG_FindItemForAmmo( weapon_t weapon ) {
 		return BG_FindItemForAmmo(WP_RAILGUN);
 	else if (weapon == WP_TAPRIFLE)
 		return BG_FindItemForAmmo(WP_MACHINEGUN);
+	else if (weapon == WP_IMPACT_CANNON)
+		return BG_FindItemForAmmo(WP_PLASMAGUN);
 
 	for ( it = bg_itemlist + 1 ; it->classname ; it++) {
 		if ( it->giType == IT_AMMO && it->giTag == weapon ) {
@@ -2484,12 +2500,13 @@ gunGameInfo_t bg_classicGunGameInfo = {
 };
 
 gunGameInfo_t bg_newGunGameInfo = {
-	12,
+	13,
 	{
 		WP_MACHINEGUN,
 		WP_AUTOSHOTTY,
 		WP_SHOTGUN,
 		WP_GRENADE_LAUNCHER,
+		WP_IMPACT_CANNON,
 		WP_ROCKET_LAUNCHER,
 		WP_LIGHTNING,
 		WP_TAPRIFLE,
@@ -2556,6 +2573,8 @@ void BG_GunGameInfoFromString(const char *info)
 					bg_gunGameInfo.levels[i] = WP_AUTOSHOTTY;
 				else if (Q_stricmp(split[i], "tr") == 0)
 					bg_gunGameInfo.levels[i] = WP_TAPRIFLE;
+				else if (Q_stricmp(split[i], "ic") == 0)
+					bg_gunGameInfo.levels[i] = WP_IMPACT_CANNON;
 				else if (Q_stricmp(split[i], "g") == 0)
 					bg_gunGameInfo.levels[i] = WP_GAUNTLET;
 				else

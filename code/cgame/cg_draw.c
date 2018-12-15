@@ -436,7 +436,9 @@ static void CG_DrawStatusBar( void ) {
 		else if (cent->currentState.weapon == WP_MINIRAIL)
 			value = ps->ammo[WP_RAILGUN];
 		else if (cent->currentState.weapon == WP_TAPRIFLE)
-			value = ps->ammo[WP_TAPRIFLE];
+			value = ps->ammo[WP_MACHINEGUN];
+		else if (cent->currentState.weapon == WP_IMPACT_CANNON)
+			value = ps->ammo[WP_PLASMAGUN];
 		else
 			value = ps->ammo[cent->currentState.weapon];
 

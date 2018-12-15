@@ -371,18 +371,42 @@ GRENADE LAUNCHER
 ======================================================================
 */
 
-void weapon_grenadelauncher_fire (gentity_t *ent) {
-	gentity_t	*m;
+void weapon_grenadelauncher_fire(gentity_t *ent)
+{
+	gentity_t *m;
 
 	// extra vertical velocity
 	forward[2] += 0.2f;
-	VectorNormalize( forward );
+	VectorNormalize(forward);
 
-	m = fire_grenade (ent, muzzle, forward);
+	m = fire_grenade(ent, muzzle, forward);
 	m->damage *= s_quadFactor;
 	m->splashDamage *= s_quadFactor;
 
-//	VectorAdd( m->s.pos.trDelta, ent->player->ps.velocity, m->s.pos.trDelta );	// "real" physics
+	//	VectorAdd( m->s.pos.trDelta, ent->player->ps.velocity, m->s.pos.trDelta );	// "real" physics
+}
+
+/*
+======================================================================
+
+IMPACT CANNON
+
+======================================================================
+*/
+
+void weapon_impactcannon_fire(gentity_t *ent)
+{
+	gentity_t *m;
+
+	// extra vertical velocity
+	forward[2] += 0.2f;
+	VectorNormalize(forward);
+
+	m = fire_impactcannon(ent, muzzle, forward);
+	m->damage *= s_quadFactor;
+	m->splashDamage *= s_quadFactor;
+
+	//	VectorAdd( m->s.pos.trDelta, ent->player->ps.velocity, m->s.pos.trDelta );	// "real" physics
 }
 
 /*
@@ -878,7 +902,10 @@ void FireWeapon( gentity_t *ent ) {
 		Bullet_Fire(ent, 5, 35, MOD_TAPRIFLE);
 		break;
 	case WP_GRENADE_LAUNCHER:
-		weapon_grenadelauncher_fire( ent );
+		weapon_grenadelauncher_fire(ent);
+		break;
+	case WP_IMPACT_CANNON:
+		weapon_impactcannon_fire(ent);
 		break;
 	case WP_ROCKET_LAUNCHER:
 		Weapon_RocketLauncher_Fire( ent );
