@@ -70,6 +70,13 @@ bgweapon_defs_t bg_weapons[] =
         qfalse,
     },
     {
+        WP_LIGHTNING,
+        WP_LIGHTNING,
+        50,
+        qtrue,
+        qfalse
+    },
+    {
         WP_PLASMAGUN,
         WP_PLASMAGUN,
         100,
