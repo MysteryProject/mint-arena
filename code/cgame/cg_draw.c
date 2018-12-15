@@ -431,16 +431,7 @@ static void CG_DrawStatusBar( void ) {
 	// ammo
 	//
 	if ( cent->currentState.weapon ) {
-		if (cent->currentState.weapon == WP_AUTOSHOTTY)
-			value = ps->ammo[WP_SHOTGUN];
-		else if (cent->currentState.weapon == WP_MINIRAIL)
-			value = ps->ammo[WP_RAILGUN];
-		else if (cent->currentState.weapon == WP_TAPRIFLE)
-			value = ps->ammo[WP_MACHINEGUN];
-		else if (cent->currentState.weapon == WP_IMPACT_CANNON)
-			value = ps->ammo[WP_PLASMAGUN];
-		else
-			value = ps->ammo[cent->currentState.weapon];
+		value = ps->ammo[BG_GetWeaponDefinition(cent->currentState.weapon)->ammoType];
 
 		if ( value > -1 ) {
 			if ( cg.cur_lc->predictedPlayerState.weaponstate == WEAPON_FIRING

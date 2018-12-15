@@ -1171,16 +1171,13 @@ void PlayerSpawn(gentity_t *ent) {
 
 	player->ps.playerNum = index;
 
-	player->ps.ammo[WP_GAUNTLET] = -1;
-	player->ps.ammo[WP_GRAPPLING_HOOK] = -1;
-
 	if (g_gametype.integer == GT_GUNGAME)
 	{
 		int weapon = bg_gunGameInfo.levels[player->ps.persistant[PERS_GUNGAME_LEVEL]];
 		player->ps.stats[STAT_WEAPONS] = (1 << weapon);
 
-		for (i = WP_NUM_WEAPONS - 1; i > 0; i--)
-			player->ps.ammo[i] = 99999;
+		for (i = WP_NUM_WEAPONS - 1; i > WP_GAUNTLET; i--)
+			player->ps.ammo[BG_GetWeaponDefinition(i)->ammoType] = 99999;
 	}
 	else
 	{
@@ -1191,7 +1188,7 @@ void PlayerSpawn(gentity_t *ent) {
 			if (it != NULL)
 			{
 				player->ps.stats[STAT_WEAPONS] = (1 << it->giTag);
-				player->ps.ammo[it->giTag] = 999;
+				player->ps.ammo[BG_GetWeaponDefinition(it->giTag)->ammoType] = 999;
 			}
 			else
 			{
@@ -1213,6 +1210,9 @@ void PlayerSpawn(gentity_t *ent) {
 		}
 		player->ps.stats[STAT_WEAPONS] |= (1 << WP_GAUNTLET);
 	}
+
+	player->ps.ammo[WP_GAUNTLET] = -1;
+	player->ps.ammo[WP_GRAPPLING_HOOK] = -1;
 
 	// health will count down towards max_health
 	ent->health = player->ps.stats[STAT_HEALTH] = player->ps.stats[STAT_MAX_HEALTH] + 25;

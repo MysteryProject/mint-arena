@@ -396,8 +396,9 @@ static void CG_TouchItem( centity_t *cent ) {
 	// if it's a weapon, give them some predicted ammo so the autoswitch will work
 	if ( item->giType == IT_WEAPON ) {
 		cg.cur_lc->predictedPlayerState.stats[ STAT_WEAPONS ] |= 1 << item->giTag;
-		if ( !cg.cur_lc->predictedPlayerState.ammo[ item->giTag ] ) {
-			cg.cur_lc->predictedPlayerState.ammo[ item->giTag ] = 1;
+		if (!cg.cur_lc->predictedPlayerState.ammo[BG_GetWeaponDefinition(item->giTag)->ammoType])
+		{
+			cg.cur_lc->predictedPlayerState.ammo[BG_GetWeaponDefinition(item->giTag)->ammoType] = 1;
 		}
 	}
 }

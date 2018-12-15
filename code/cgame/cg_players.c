@@ -1103,6 +1103,8 @@ void CG_NewPlayerInfo( int playerNum ) {
 	const char	*configstring;
 	const char	*v;
 	char		*slash;
+	int i;
+	qboolean localPlayer = qfalse;
 
 	pi = &cgs.playerinfo[playerNum];
 
@@ -1171,19 +1173,51 @@ void CG_NewPlayerInfo( int playerNum ) {
 	Q_strncpyz(newInfo.blueTeam, cg_blueTeamName.string, MAX_TEAMNAME);
 #endif
 
+	for(i = 0; i < MAX_SPLITVIEW; i++)
+	{
+		if (cg.localPlayers[i].playerNum == playerNum)
+		{
+			localPlayer = qtrue;
+			break;
+		}
+	}
+
 	// model
-	v = Info_ValueForKey( configstring, "model" );
-	if ( cg_forceModel.integer ) {
+	v = Info_ValueForKey(configstring, "model");
+	if (!Q_stricmp(cg_forceModel.string, "0") || !cg_forceModel.string || localPlayer)
+	{
+		Q_strncpyz(newInfo.modelName, v, sizeof(newInfo.modelName));
+
+		slash = strchr(newInfo.modelName, '/');
+		if (!slash)
+		{
+			// modelName didn not include a skin name
+			Q_strncpyz(newInfo.skinName, "default", sizeof(newInfo.skinName));
+		}
+		else
+		{
+			Q_strncpyz(newInfo.skinName, slash + 1, sizeof(newInfo.skinName));
+			// truncate modelName
+			*slash = 0;
+		}
+	}
+	else
+	{
 		// forcemodel makes everyone use a single model
 		// to prevent load hitches
 		char modelStr[MAX_QPATH];
 		char *skin;
 
-		if( cgs.gametype >= GT_TEAM ) {
-			trap_Cvar_VariableStringBuffer( "team_model", modelStr, sizeof( modelStr ) );
-		} else {
-			trap_Cvar_VariableStringBuffer( "model", modelStr, sizeof( modelStr ) );
+		if (!Q_stricmp(cg_forceModel.string, "1"))
+		{
+			if (cgs.gametype >= GT_TEAM)
+				trap_Cvar_VariableStringBuffer("team_model", modelStr, sizeof(modelStr));
+			else
+				trap_Cvar_VariableStringBuffer("model", modelStr, sizeof(modelStr));
 		}
+		else
+			Q_strncpyz(modelStr, cg_forceModel.string, sizeof(modelStr));
+
 		if ( ( skin = strchr( modelStr, '/' ) ) == NULL) {
 			skin = "default";
 		} else {
@@ -1200,33 +1234,44 @@ void CG_NewPlayerInfo( int playerNum ) {
 				Q_strncpyz( newInfo.skinName, slash + 1, sizeof( newInfo.skinName ) );
 			}
 		}
-	} else {
-		Q_strncpyz( newInfo.modelName, v, sizeof( newInfo.modelName ) );
-
-		slash = strchr( newInfo.modelName, '/' );
-		if ( !slash ) {
-			// modelName didn not include a skin name
-			Q_strncpyz( newInfo.skinName, "default", sizeof( newInfo.skinName ) );
-		} else {
-			Q_strncpyz( newInfo.skinName, slash + 1, sizeof( newInfo.skinName ) );
-			// truncate modelName
-			*slash = 0;
-		}
 	}
 
 	// head model
 	v = Info_ValueForKey( configstring, "hmodel" );
-	if ( cg_forceModel.integer ) {
+	if (!Q_stricmp(cg_forceModel.string, "0") || !cg_forceModel.string || localPlayer)
+	{
+		Q_strncpyz(newInfo.headModelName, v, sizeof(newInfo.headModelName));
+
+		slash = strchr(newInfo.headModelName, '/');
+		if (!slash)
+		{
+			// modelName didn not include a skin name
+			Q_strncpyz(newInfo.headSkinName, "default", sizeof(newInfo.headSkinName));
+		}
+		else
+		{
+			Q_strncpyz(newInfo.headSkinName, slash + 1, sizeof(newInfo.headSkinName));
+			// truncate modelName
+			*slash = 0;
+		}
+	}
+	else
+	{
 		// forcemodel makes everyone use a single model
 		// to prevent load hitches
 		char modelStr[MAX_QPATH];
 		char *skin;
 
-		if( cgs.gametype >= GT_TEAM ) {
-			trap_Cvar_VariableStringBuffer( "team_headmodel", modelStr, sizeof( modelStr ) );
-		} else {
-			trap_Cvar_VariableStringBuffer( "headmodel", modelStr, sizeof( modelStr ) );
+		if (!Q_stricmp(cg_forceModel.string, "1"))
+		{
+			if (cgs.gametype >= GT_TEAM)
+				trap_Cvar_VariableStringBuffer("team_headmodel", modelStr, sizeof(modelStr));
+			else
+				trap_Cvar_VariableStringBuffer("headmodel", modelStr, sizeof(modelStr));
 		}
+		else
+			Q_strncpyz(modelStr, cg_forceModel.string, sizeof(modelStr));
+		
 		if ( ( skin = strchr( modelStr, '/' ) ) == NULL) {
 			skin = "default";
 		} else {
@@ -1242,18 +1287,6 @@ void CG_NewPlayerInfo( int playerNum ) {
 			if ( slash ) {
 				Q_strncpyz( newInfo.headSkinName, slash + 1, sizeof( newInfo.headSkinName ) );
 			}
-		}
-	} else {
-		Q_strncpyz( newInfo.headModelName, v, sizeof( newInfo.headModelName ) );
-
-		slash = strchr( newInfo.headModelName, '/' );
-		if ( !slash ) {
-			// modelName didn not include a skin name
-			Q_strncpyz( newInfo.headSkinName, "default", sizeof( newInfo.headSkinName ) );
-		} else {
-			Q_strncpyz( newInfo.headSkinName, slash + 1, sizeof( newInfo.headSkinName ) );
-			// truncate modelName
-			*slash = 0;
 		}
 	}
 

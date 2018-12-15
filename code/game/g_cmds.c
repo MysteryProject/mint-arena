@@ -286,7 +286,7 @@ void Cmd_Give_f (gentity_t *ent)
 	if (give_all || Q_stricmp(name, "ammo") == 0)
 	{
 		for ( i = 0 ; i < MAX_WEAPONS ; i++ ) {
-			ent->player->ps.ammo[i] = 999;
+			ent->player->ps.ammo[BG_GetWeaponDefinition(i)->ammoType] = 999;
 		}
 		if (!give_all)
 			return;

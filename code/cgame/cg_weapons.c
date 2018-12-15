@@ -1576,7 +1576,8 @@ void CG_DrawWeaponSelect( void ) {
 		}
 
 		// no ammo cross on top
-		if ( !cg.cur_ps->ammo[ i ] ) {
+		if (!cg.cur_ps->ammo[BG_GetWeaponDefinition(i)->ammoType])
+		{
 			CG_DrawPic( x, y, 32, 32, cgs.media.noammoShader );
 		}
 
@@ -1600,7 +1601,8 @@ CG_WeaponSelectable
 ===============
 */
 static qboolean CG_WeaponSelectable( playerState_t *ps, int i ) {
-	if ( !ps->ammo[i] ) {
+	if (!ps->ammo[BG_GetWeaponDefinition(i)->ammoType])
+	{
 		return qfalse;
 	}
 	if ( ! (ps->stats[ STAT_WEAPONS ] & ( 1 << i ) ) ) {
