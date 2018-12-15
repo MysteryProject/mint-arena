@@ -665,6 +665,19 @@ typedef enum
 	WP_NUM_WEAPONS
 } weapon_t;
 
+typedef struct
+{
+	weapon_t weapon;
+	weapon_t ammoType;
+	int attackDelay;
+	qboolean autoAttack;
+	qboolean oneHanded;
+} bgweapon_defs_t;
+
+extern bgweapon_defs_t bg_weapons[];
+extern int bg_numWeapons;
+bgweapon_defs_t *BG_GetWeaponDefinition(weapon_t weapon);
+
 // reward sounds (stored in ps->persistant[PERS_PLAYEREVENTS])
 #define	PLAYEREVENT_DENIEDREWARD		0x0001
 #define	PLAYEREVENT_GAUNTLETREWARD		0x0002

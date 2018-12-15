@@ -170,12 +170,13 @@ static gentity_t *SpawnModelOnVictoryPad( gentity_t *pad, vec3_t offset, gentity
 	body->s.groundEntityNum = ENTITYNUM_WORLD;
 	body->s.legsAnim = LEGS_IDLE;
 	body->s.torsoAnim = TORSO_STAND;
-	if( body->s.weapon == WP_NONE ) {
+	
+	if( body->s.weapon == WP_NONE )
 		body->s.weapon = WP_MACHINEGUN;
-	}
-	if( body->s.weapon == WP_GAUNTLET) {
+
+	if (BG_GetWeaponDefinition(body->s.weapon)->oneHanded)
 		body->s.torsoAnim = TORSO_STAND2;
-	}
+
 	body->s.event = 0;
 	body->r.svFlags = ent->r.svFlags;
 	VectorCopy (ent->s.mins, body->s.mins);

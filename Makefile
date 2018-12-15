@@ -1057,6 +1057,7 @@ Q3CGOBJ = \
   $(B)/$(BASEGAME)/cgame/bg_slidemove.o \
   $(B)/$(BASEGAME)/cgame/bg_lib.o \
   $(B)/$(BASEGAME)/cgame/bg_tracemap.o \
+  $(B)/$(BASEGAME)/cgame/bg_weapon_defs.o \
   $(B)/$(BASEGAME)/cgame/cg_atmospheric.o \
   $(B)/$(BASEGAME)/cgame/cg_console.o \
   $(B)/$(BASEGAME)/cgame/cg_consolecmds.o \
@@ -1279,6 +1280,7 @@ Q3GOBJ = \
   $(B)/$(BASEGAME)/game/bg_slidemove.o \
   $(B)/$(BASEGAME)/game/bg_lib.o \
   $(B)/$(BASEGAME)/game/bg_tracemap.o \
+  $(B)/$(BASEGAME)/game/bg_weapon_defs.o \
   $(B)/$(BASEGAME)/game/g_active.o \
   $(B)/$(BASEGAME)/game/g_arenas.o \
   $(B)/$(BASEGAME)/game/g_bot.o \

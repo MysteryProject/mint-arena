@@ -1528,17 +1528,17 @@ PM_TorsoAnimation
 
 ==============
 */
-static void PM_TorsoAnimation( void ) {
-	if ( pm->ps->weaponstate == WEAPON_READY ) {
-		if ( pm->ps->weapon == WP_GAUNTLET ) {
-			PM_ContinueTorsoAnim( TORSO_STAND2 );
-		} else {
-			PM_ContinueTorsoAnim( TORSO_STAND );
-		}
+static void PM_TorsoAnimation(void)
+{
+	if (pm->ps->weaponstate == WEAPON_READY)
+	{
+		if (BG_GetWeaponDefinition(pm->ps->weapon)->oneHanded)
+			PM_ContinueTorsoAnim(TORSO_STAND2);
+		else
+			PM_ContinueTorsoAnim(TORSO_STAND);
 		return;
 	}
 }
-
 
 /*
 ==============
@@ -1550,9 +1550,11 @@ Generates weapon events and modifes the weapon counter
 static void PM_Weapon( void ) {
 	int		addTime;
 	int		newWeapon;
+	bgweapon_defs_t *weaponInfo;
 
 	// don't allow attack until all buttons are up
-	if ( pm->ps->pm_flags & PMF_RESPAWNED ) {
+	if (pm->ps->pm_flags & PMF_RESPAWNED)
+	{
 		return;
 	}
 
@@ -1610,13 +1612,14 @@ static void PM_Weapon( void ) {
 		return;
 	}
 
+	weaponInfo = BG_GetWeaponDefinition(pm->ps->weapon);
+
 	if ( pm->ps->weaponstate == WEAPON_RAISING ) {
 		pm->ps->weaponstate = WEAPON_READY;
-		if ( pm->ps->weapon == WP_GAUNTLET ) {
+		if (weaponInfo->oneHanded)
 			PM_StartTorsoAnim( TORSO_STAND2 );
-		} else {
-			PM_StartTorsoAnim( TORSO_STAND );
-		}
+		else
+			PM_StartTorsoAnim( TORSO_STAND );		
 		return;
 	}
 
@@ -1635,99 +1638,35 @@ static void PM_Weapon( void ) {
 			pm->ps->weaponstate = WEAPON_READY;
 			return;
 		}
-		PM_StartTorsoAnim( TORSO_ATTACK2 );
-	} else {
-		PM_StartTorsoAnim( TORSO_ATTACK );
 	}
+
+	if (weaponInfo->oneHanded)
+		PM_StartTorsoAnim(TORSO_ATTACK2);
+	else
+		PM_StartTorsoAnim( TORSO_ATTACK );
 
 	if (pm->ps->weaponstate == WEAPON_FIRED)
 		return;
 
 	pm->ps->weaponstate = WEAPON_FIRING;
 
+
 	// check for out of ammo
-	if ( ! pm->ps->ammo[ pm->ps->weapon ] ) {
+	if (!pm->ps->ammo[weaponInfo->ammoType])
+	{
 		PM_AddEvent( EV_NOAMMO );
 		pm->ps->weaponTime += 500;
 		return;
 	}
 
 	// take an ammo away if not infinite
-	if ( pm->ps->ammo[ pm->ps->weapon ] != -1 ) {
-		switch (pm->ps->weapon)
-		{
-		case WP_AUTOSHOTTY:
-			pm->ps->ammo[WP_SHOTGUN]--;
-			break;
-		case WP_MINIRAIL:
-			pm->ps->ammo[WP_RAILGUN]--;
-			break;
-		case WP_TAPRIFLE:
-			pm->ps->ammo[WP_MACHINEGUN]--;
-			break;
-		default:
-			pm->ps->ammo[pm->ps->weapon]--;
-			break;
-		}
-		
-	}
+	if (pm->ps->ammo[weaponInfo->ammoType] != -1)
+		pm->ps->ammo[weaponInfo->ammoType]--;
 
 	// fire weapon
 	PM_AddEvent( EV_FIRE_WEAPON );
 
-	switch( pm->ps->weapon ) {
-	default:
-	case WP_GAUNTLET:
-		addTime = 400;
-		break;
-	case WP_LIGHTNING:
-		addTime = 50;
-		break;
-	case WP_SHOTGUN:
-		addTime = 1000;
-		break;
-	case WP_AUTOSHOTTY:
-		addTime = 280;
-		break;
-	case WP_MACHINEGUN:
-		addTime = 100;
-		break;
-	case WP_TAPRIFLE:
-		addTime = 1;
-		break;
-	case WP_GRENADE_LAUNCHER:
-		addTime = 800;
-		break;
-	case WP_ROCKET_LAUNCHER:
-		addTime = 800;
-		break;
-	case WP_PLASMAGUN:
-		addTime = 100;
-		break;
-	case WP_RAILGUN:
-		addTime = 1500;
-		break;
-	case WP_MINIRAIL:
-		addTime = 750;
-		break;
-	case WP_BFG:
-		addTime = 200;
-		break;
-	case WP_GRAPPLING_HOOK:
-		addTime = 400;
-		break;
-#ifdef MISSIONPACK
-	case WP_NAILGUN:
-		addTime = 1000;
-		break;
-	case WP_PROX_LAUNCHER:
-		addTime = 800;
-		break;
-	case WP_CHAINGUN:
-		addTime = 30;
-		break;
-#endif
-	}
+	addTime = weaponInfo->attackDelay;
 
 #ifdef MISSIONPACK
 	if( BG_ItemForItemNum( pm->ps->stats[STAT_PERSISTANT_POWERUP] )->giTag == PW_SCOUT ) {
@@ -1745,7 +1684,7 @@ static void PM_Weapon( void ) {
 
 	pm->ps->weaponTime += addTime;
 
-	if (pm->ps->weapon == WP_TAPRIFLE)
+	if (!weaponInfo->autoAttack)
 		pm->ps->weaponstate = WEAPON_FIRED;
 }
 
