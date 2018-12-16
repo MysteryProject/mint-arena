@@ -1451,7 +1451,7 @@ static void CG_DrawReward( void ) {
 	count = cg.cur_lc->rewardCount[0] - count*10;		// number of small rewards to draw
 	*/
 
-	if ( cg.cur_lc->rewardCount[0] >= 10 ) {
+	if ( cg.cur_lc->rewardCount[0] > 1 ) {
 		y = 56;
 		x = 320 - ICON_SIZE/2 + 2;
 		CG_DrawPic( x, y, ICON_SIZE-4, ICON_SIZE-4, cg.cur_lc->rewardShader[0] );
