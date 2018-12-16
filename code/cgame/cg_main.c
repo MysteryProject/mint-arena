@@ -315,6 +315,8 @@ vmCvar_t	cg_defaultMaleTeamHeadModel;
 vmCvar_t	cg_defaultFemaleTeamModel;
 vmCvar_t	cg_defaultFemaleTeamHeadModel;
 
+vmCvar_t cg_oldAwards;
+
 vmCvar_t	cg_color1[MAX_SPLITVIEW];
 vmCvar_t	cg_color2[MAX_SPLITVIEW];
 vmCvar_t	cg_handicap[MAX_SPLITVIEW];
@@ -544,6 +546,8 @@ static cvarTable_t cgameCvarTable[] = {
 	{&cg_defaultMaleTeamHeadModel, "default_male_team_headmodel", DEFAULT_TEAM_HEAD_MALE, CVAR_ARCHIVE, RANGE_ALL},
 	{&cg_defaultFemaleTeamModel, "default_female_team_model", DEFAULT_TEAM_MODEL_FEMALE, CVAR_ARCHIVE, RANGE_ALL},
 	{&cg_defaultFemaleTeamHeadModel, "default_female_team_headmodel", DEFAULT_TEAM_HEAD_FEMALE, CVAR_ARCHIVE, RANGE_ALL},
+
+	{&cg_oldAwards, "cg_oldAwards", "0", CVAR_ARCHIVE, RANGE_BOOL},
 
 	{&cg_introPlayed, "com_introPlayed", "0", CVAR_ARCHIVE, RANGE_BOOL},
 	{&cg_joystickDebug, "in_joystickDebug", "0", CVAR_TEMP, RANGE_BOOL},
@@ -1481,8 +1485,21 @@ static void CG_RegisterSounds( void ) {
 	}
 #endif
 
+	// new awards
+	cgs.media.multikill_2 = trap_S_RegisterSound("sound/award/multikill_2.wav", qtrue);
+	cgs.media.multikill_3 = trap_S_RegisterSound("sound/award/multikill_3.wav", qtrue);
+	cgs.media.multikill_4 = trap_S_RegisterSound("sound/award/multikill_4.wav", qtrue);
+	cgs.media.multikill_5 = trap_S_RegisterSound("sound/award/multikill_5.wav", qtrue);
+	cgs.media.multikill_6 = trap_S_RegisterSound("sound/award/multikill_6.wav", qtrue);
+	cgs.media.multikill_7 = trap_S_RegisterSound("sound/award/multikill_7.wav", qtrue);
+	cgs.media.multikill_8 = trap_S_RegisterSound("sound/award/multikill_8.wav", qtrue);
+	cgs.media.killstreak_5 = trap_S_RegisterSound("sound/award/killstreak_5.wav", qtrue);
+	cgs.media.killstreak_10 = trap_S_RegisterSound("sound/award/killstreak_10.wav", qtrue);
+	cgs.media.killstreak_15 = trap_S_RegisterSound("sound/award/killstreak_15.wav", qtrue);
+	cgs.media.killstreak_20 = trap_S_RegisterSound("sound/award/killstreak_20.wav", qtrue);
+	cgs.media.killstreak_25 = trap_S_RegisterSound("sound/award/killstreak_25.wav", qtrue);
+	cgs.media.killstreak_30 = trap_S_RegisterSound("sound/award/killstreak_30.wav", qtrue);
 }
-
 
 //===================================================================================
 
@@ -1764,6 +1781,21 @@ static void CG_RegisterGraphics( void ) {
 		CG_CachePlayerModels( cg_defaultFemaleTeamModel.string, cg_defaultFemaleTeamHeadModel.string );
 	}
 #endif
+
+	// new awards
+	cgs.media.medalmultikill_2 = trap_R_RegisterShaderNoMip("medal_mk2");
+	cgs.media.medalmultikill_3 = trap_R_RegisterShaderNoMip("medal_mk3");
+	cgs.media.medalmultikill_4 = trap_R_RegisterShaderNoMip("medal_mk4");
+	cgs.media.medalmultikill_5 = trap_R_RegisterShaderNoMip("medal_mk5");
+	cgs.media.medalmultikill_6 = trap_R_RegisterShaderNoMip("medal_mk6");
+	cgs.media.medalmultikill_7 = trap_R_RegisterShaderNoMip("medal_mk7");
+	cgs.media.medalmultikill_8 = trap_R_RegisterShaderNoMip("medal_mk8");
+	cgs.media.medalkillstreak_5 = trap_R_RegisterShaderNoMip("medal_ks5");
+	cgs.media.medalkillstreak_10 = trap_R_RegisterShaderNoMip("medal_ks10");
+	cgs.media.medalkillstreak_15 = trap_R_RegisterShaderNoMip("medal_ks15");
+	cgs.media.medalkillstreak_20 = trap_R_RegisterShaderNoMip("medal_ks20");
+	cgs.media.medalkillstreak_25 = trap_R_RegisterShaderNoMip("medal_ks25");
+	cgs.media.medalkillstreak_30 = trap_R_RegisterShaderNoMip("medal_ks30");
 
 	CG_ClearParticles ();
 /*

@@ -1383,6 +1383,75 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 		CG_Beam( cent );
 		break;
 
+	// killstreaks
+	case EV_KILLSTREAK:
+		DEBUGNAME("EV_KILLSTREAK5");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.killstreak_5);
+		break;
+	case EV_KILLSTREAK + 1:
+		DEBUGNAME("EV_KILLSTREAK10");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.killstreak_10);
+		break;
+	case EV_KILLSTREAK + 2:
+		DEBUGNAME("EV_KILLSTREAK15");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.killstreak_15);
+		break;
+	case EV_KILLSTREAK + 3:
+		DEBUGNAME("EV_KILLSTREAK20");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.killstreak_20);
+		break;
+	case EV_KILLSTREAK + 4:
+		DEBUGNAME("EV_KILLSTREAK25");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.killstreak_25);
+		break;
+	case EV_KILLSTREAK + 5:
+		DEBUGNAME("EV_KILLSTREAK30");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.killstreak_30);
+		break;
+	
+	// multikills
+	case EV_MULTIKILL:
+		DEBUGNAME("EV_MULTIKILL2");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.multikill_2);
+		break;
+	case EV_MULTIKILL + 1:
+		DEBUGNAME("EV_MULTIKILL3");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.multikill_3);
+		break;
+	case EV_MULTIKILL + 2:
+		DEBUGNAME("EV_MULTIKILL4");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.multikill_4);
+		break;
+	case EV_MULTIKILL + 3:
+		DEBUGNAME("EV_MULTIKILL5");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.multikill_5);
+		break;
+	case EV_MULTIKILL + 4:
+		DEBUGNAME("EV_MULTIKILL6");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.multikill_6);
+		break;
+	case EV_MULTIKILL + 5:
+		DEBUGNAME("EV_MULTIKILL7");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.multikill_7);
+		break;
+	case EV_MULTIKILL + 6:
+		DEBUGNAME("EV_MULTIKILL8");
+		if (!cg_oldAwards.integer)
+			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.multikill_8);
+		break;
+		
 	default:
 		DEBUGNAME("UNKNOWN");
 		CG_Error( "Unknown event: %i", event );

@@ -2286,12 +2286,12 @@ static void CG_PlayerSprites( centity_t *cent, const refEntity_t *parent ) {
 		return;
 	}
 
-	if ( cent->currentState.eFlags & EF_AWARD_IMPRESSIVE ) {
+	if (cg_oldAwards.integer && (cent->currentState.eFlags & EF_AWARD_IMPRESSIVE) ) {
 		CG_PlayerFloatSprite( origin, awardFlags, cgs.media.medalImpressive );
 		return;
 	}
 
-	if ( cent->currentState.eFlags & EF_AWARD_EXCELLENT ) {
+	if (cg_oldAwards.integer && ( cent->currentState.eFlags & EF_AWARD_EXCELLENT) ) {
 		CG_PlayerFloatSprite( origin, awardFlags, cgs.media.medalExcellent );
 		return;
 	}

@@ -664,9 +664,33 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				attacker->player->ps.eFlags &= ~(EF_AWARD_IMPRESSIVE | EF_AWARD_EXCELLENT | EF_AWARD_GAUNTLET | EF_AWARD_ASSIST | EF_AWARD_DEFEND | EF_AWARD_CAP );
 				attacker->player->ps.eFlags |= EF_AWARD_EXCELLENT;
 				attacker->player->rewardTime = level.time + REWARD_SPRITE_TIME;
+				attacker->player->ps.stats[STAT_MULTIKILL]++;
 			}
+			else
+				attacker->player->ps.stats[STAT_MULTIKILL] = 0;
+
+			attacker->player->ps.stats[STAT_KILLSTREAK]++;
 			attacker->player->lastKillTime = level.time;
 
+			if (attacker->player->ps.stats[STAT_MULTIKILL] > 0)
+			{
+				int streak = attacker->player->ps.stats[STAT_MULTIKILL];
+				
+				if (streak > 7)
+					streak = 7;
+
+				G_AddEvent(attacker, EV_MULTIKILL + streak - 1, attacker->player->ps.stats[STAT_MULTIKILL]);
+			}
+
+			if (attacker->player->ps.stats[STAT_KILLSTREAK] % 5 == 0)
+			{
+				int killstreak = attacker->player->ps.stats[STAT_KILLSTREAK];
+				
+				if (killstreak > 30)
+					killstreak = 30;
+
+				G_AddEvent(attacker, EV_KILLSTREAK + (killstreak / 5) - 1, attacker->player->ps.stats[STAT_KILLSTREAK]);
+			}
 		}
 	} else {
 		AddScore( self, self->r.currentOrigin, -1 );

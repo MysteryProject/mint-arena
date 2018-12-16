@@ -1209,6 +1209,35 @@ typedef struct {
 	sfxHandle_t	wstbimpdSound;
 	sfxHandle_t	wstbactvSound;
 
+	// new award sounds
+	sfxHandle_t multikill_2;
+	sfxHandle_t multikill_3;
+	sfxHandle_t multikill_4;
+	sfxHandle_t multikill_5;
+	sfxHandle_t multikill_6;
+	sfxHandle_t multikill_7;
+	sfxHandle_t multikill_8;
+	sfxHandle_t killstreak_5;
+	sfxHandle_t killstreak_10;
+	sfxHandle_t killstreak_15;
+	sfxHandle_t killstreak_20;
+	sfxHandle_t killstreak_25;
+	sfxHandle_t killstreak_30;
+
+	// new award medals
+	qhandle_t medalmultikill_2;
+	qhandle_t medalmultikill_3;
+	qhandle_t medalmultikill_4;
+	qhandle_t medalmultikill_5;
+	qhandle_t medalmultikill_6;
+	qhandle_t medalmultikill_7;
+	qhandle_t medalmultikill_8;
+	qhandle_t medalkillstreak_5;
+	qhandle_t medalkillstreak_10;
+	qhandle_t medalkillstreak_15;
+	qhandle_t medalkillstreak_20;
+	qhandle_t medalkillstreak_25;
+	qhandle_t medalkillstreak_30;
 } cgMedia_t;
 
 #define MAX_STATIC_GAMEMODELS   1024
@@ -1474,6 +1503,8 @@ extern	vmCvar_t		cg_defaultMaleTeamModel;
 extern	vmCvar_t		cg_defaultMaleTeamHeadModel;
 extern	vmCvar_t		cg_defaultFemaleTeamModel;
 extern	vmCvar_t		cg_defaultFemaleTeamHeadModel;
+
+extern vmCvar_t cg_oldAwards;
 
 extern	vmCvar_t		cg_color1[MAX_SPLITVIEW];
 extern	vmCvar_t		cg_color2[MAX_SPLITVIEW];
