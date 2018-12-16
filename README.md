@@ -1,4 +1,14 @@
-**Spearmint Quake 3** and **Team Arena** game code.
+**Changes**
+
+  * Unreal tournament kill awards (`cg_oldAwards 1` to disable)
+  * Instagib weapon server command (`g_instagibWeapon weapon_railgun` is default)
+  * New obituary feed similar to battlefield 4 (`cg_obituaryX`, `cg_obituaryY`, `cg_obituaryGap`, `cg_obituarySpacing`)
+  * New mapcycle config server command (`g_nextmapmode random|file` or `g_nextmapmode ""` for default)
+  * New weapons: Mini-Railgun, Auto-Shotty, Tap-Rifle, Impact Cannon
+  * New game mode: Gun Game
+  * Gun game progression server command (`g_gunGameWeapons`, can be `classic`, `new`, or list of weapons ex: `mg/sg/rg/bfg/g`)
+
+**Custom Spearmint Q3** game code.
 
 To use this you'll need the [Spearmint engine](https://github.com/zturtleman/spearmint).
 
