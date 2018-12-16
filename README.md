@@ -1,12 +1,11 @@
 **Changes**
 
-  * Unreal tournament kill awards (`cg_oldAwards 1` to disable)
-  * Instagib weapon server command (`g_instagibWeapon weapon_railgun` is default)
-  * New obituary feed similar to battlefield 4 (`cg_obituaryX`, `cg_obituaryY`, `cg_obituaryGap`, `cg_obituarySpacing`)
-  * New mapcycle config server command (`g_nextmapmode random|file` or `g_nextmapmode ""` for default)
+  * Unreal tournament kill awards, see [New Client CVARS](New-Cvars#other)
+  * Instagib weapon server command, see [New Server CVARS](New-Cvars#misc)
+  * New obituary feed similar to battlefield 4, see [Obituary Feed CVARS](New-Cvars#obituary-feed)
+  * New mapcycle config server command, see [New Server CVARS](New-Cvars#misc)
   * New weapons: Mini-Railgun, Auto-Shotty, Tap-Rifle, Impact Cannon
-  * New game mode: Gun Game
-  * Gun game progression server command (`g_gunGameWeapons`, can be `classic`, `new`, or list of weapons ex: `mg/sg/rg/bfg/g`)
+  * New [Game Modes](Game-Modes)
 
 **Custom Spearmint Q3** game code.
 
