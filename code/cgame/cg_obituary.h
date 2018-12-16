@@ -19,6 +19,8 @@ typedef struct
     char weapon[MAX_NAME_LENGTH];
     team_t attackerTeam;
     team_t targetTeam;
+    int attackerPlayerNum;
+    int targetPlayerNum;
     int time;
 } obituary_t;
 

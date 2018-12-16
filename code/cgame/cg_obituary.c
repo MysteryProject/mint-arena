@@ -131,7 +131,7 @@ char *modNames2[] = {
 CG_AddObituary
 ===================
 */
-static void CG_AddObituary(char *attackerName, char *targetName, team_t attackerTeam, team_t targetTeam, int mod)
+static void CG_AddObituary(char *attackerName, char *targetName, team_t attackerTeam, team_t targetTeam, int attacker, int target, int mod)
 {
     char *weapString = "Unk";
 
@@ -258,6 +258,8 @@ static void CG_AddObituary(char *attackerName, char *targetName, team_t attacker
 
     obitStack[0].attackerTeam = attackerTeam;
     obitStack[0].targetTeam = targetTeam;
+    obitStack[0].attackerPlayerNum = attacker;
+    obitStack[0].targetPlayerNum = attacker;
 
     obitStack[0].time = cg.time;
 }
@@ -333,7 +335,7 @@ void CG_ParseObituary(entityState_t *ent)
 
     if ((attacker == ENTITYNUM_WORLD) || (attacker == target))
     {
-        CG_AddObituary(NULL, targetName, -1, targetpi->team, (attacker == target) ? MOD_SUICIDE : mod);
+        CG_AddObituary(NULL, targetName, -1, targetpi->team, attacker, target, (attacker == target) ? MOD_SUICIDE : mod);
         return;
     }
 
@@ -394,17 +396,18 @@ void CG_ParseObituary(entityState_t *ent)
         //else if (ent->eFlags & EF_HEADSHOT)
         //    mod = MI_HEADSHOT;
 
-        CG_AddObituary(attackerName, targetName, attackerpi->team, targetpi->team, mod);
+        CG_AddObituary(attackerName, targetName, attackerpi->team, targetpi->team, attacker, target, mod);
         return;
     }
 
-    CG_AddObituary(NULL, targetName, -1, targetpi->team, MI_NONE);
+    CG_AddObituary(NULL, targetName, -1, targetpi->team, attacker, target, MI_NONE);
 }
 
 static float obitRedColor[4] = {1.0f, 0.1f, 0.1f, 1.0f};
 static float obitBlueColor[4] = {0.1f, 0.1f, 1.0f, 1.0f};
 static float obitEnemyColor[4] = {0.1f, 1.0f, 1.0f, 1.0f};
 static float obitNormalColor[4] = {1.0f, 0.5f, 0.1f, 1.0f};
+static float obitMyColor[4] = {1.0f, 0.9f, 0.2f, 1.0f};
 
 /*
 ===================
@@ -420,6 +423,12 @@ void CG_DrawObituary(void)
     float *teamColor2;
     float x, y;
     char *weapString;
+    float space = cg_obituarySpacing[cg.cur_localPlayerNum].integer;
+
+    if (cg.numViewports != 1)
+        space *= cg_splitviewTextScale.value;
+    else
+        space *= cg_hudTextScale.value;
 
     if (!obitInit)
         CG_InitObituary();
@@ -450,10 +459,15 @@ void CG_DrawObituary(void)
             teamColor1 = teamColor2 = obitEnemyColor;
         }
 
+        if (obitStack[i].attackerPlayerNum == cg.cur_lc->playerNum)
+            teamColor1 = obitMyColor;
+        else if (obitStack[i].targetPlayerNum == cg.cur_lc->playerNum)
+            teamColor2 = obitMyColor;
+
         RemoveColorEscapeSequences(obitStack[i].attacker);
         RemoveColorEscapeSequences(obitStack[i].target);
 
-        y = 480 - (cg_obituaryY[cg.cur_localPlayerNum].integer + ((OBIT_MAX_VISABLE - 1 - i) * cg_obituarySpacing[cg.cur_localPlayerNum].integer));
+        y = 480 - (cg_obituaryY[cg.cur_localPlayerNum].integer + ((OBIT_MAX_VISABLE - 1 - i) * space));
         x = 640 - cg_obituaryX[cg.cur_localPlayerNum].integer;
 
         weapString = va("[%s]", obitStack[i].weapon);
@@ -461,7 +475,7 @@ void CG_DrawObituary(void)
         if (obitStack[i].attacker[0] != '\0')
         {
             // center
-            x -= ((CG_DrawStrlen(va("%s[%s]%s", obitStack[i].attacker, weapString, obitStack[i].target), fontFlags)) / 2) + (cg_obituarySpacing[cg.cur_localPlayerNum].integer);
+            x -= ((CG_DrawStrlen(va("%s %s %s", obitStack[i].attacker, weapString, obitStack[i].target), fontFlags)) / 2) + space;
 
             drawColor[0] = color[0] * teamColor1[0];
             drawColor[1] = color[1] * teamColor1[1];
@@ -478,10 +492,13 @@ void CG_DrawObituary(void)
         else
         {
             // center
-            x -= ((CG_DrawStrlen(va("[%s]%s", weapString, obitStack[i].target), fontFlags)) / 2) + (cg_obituaryGap[cg.cur_localPlayerNum].integer);
+            x -= ((CG_DrawStrlen(va("%s %s", weapString, obitStack[i].target), fontFlags)) / 2) + space;
         }
 
-        x += cg_obituaryGap[cg.cur_localPlayerNum].integer;
+        if (cg.numViewports != 1)
+            x += cg_obituaryGap[cg.cur_localPlayerNum].integer * cg_splitviewTextScale.value;
+        else
+            x += cg_obituaryGap[cg.cur_localPlayerNum].integer * cg_hudTextScale.value;
 
         drawColor[0] = color[0] * 255;
         drawColor[1] = color[1] * 255;
@@ -492,7 +509,10 @@ void CG_DrawObituary(void)
         CG_DrawString(x, y, weapString, fontFlags, drawColor);
         x += CG_DrawStrlen(weapString, fontFlags);
 
-        x += cg_obituaryGap[cg.cur_localPlayerNum].integer;
+        if (cg.numViewports != 1)
+            x += cg_obituaryGap[cg.cur_localPlayerNum].integer * cg_splitviewTextScale.value;
+        else
+            x += cg_obituaryGap[cg.cur_localPlayerNum].integer * cg_hudTextScale.value;
 
         drawColor[0] = color[0] * teamColor2[0];
         drawColor[1] = color[1] * teamColor2[1];
