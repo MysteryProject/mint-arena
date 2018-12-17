@@ -73,17 +73,17 @@ char *weaponStrings[] =
     "Gauntlet",
     "Machinegun",
     "Shotgun",
-    "GrenadeL",
-    "RocketL",
-    "Lightning",
-    "Rail",
-    "Plasma",
-    "BGK",
+    "Grenade Launcher",
+    "Rocket Launcher",
+    "Lightning Gun",
+    "Railgun",
+    "Plasmagun",
+    "BFG10K",
     "GPHook",
-    "Mini-Rail",
-    "AutoShotty",
-    "TapRifle",
-    "ICannon"
+    "Mini-Railgun",
+    "Auto-Shotty",
+    "Tap-Rifle",
+    "Impact Cannon"
 };
 
 // these are just for logging, the client prints its own messages
