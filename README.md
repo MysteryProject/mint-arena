@@ -1,4 +1,13 @@
-**Spearmint Quake 3** and **Team Arena** game code.
+**Changes**
+
+  * Unreal tournament kill awards, see [New Client CVARS](New-Cvars#other)
+  * Instagib weapon server command, see [New Server CVARS](New-Cvars#misc)
+  * New obituary feed similar to battlefield 4, see [Obituary Feed CVARS](New-Cvars#obituary-feed)
+  * New mapcycle config server command, see [New Server CVARS](New-Cvars#misc)
+  * New weapons: Mini-Railgun, Auto-Shotty, Tap-Rifle, Impact Cannon
+  * New [Game Modes](Game-Modes)
+
+**Custom Spearmint Q3** game code.
 
 To use this you'll need the [Spearmint engine](https://github.com/zturtleman/spearmint).
 
