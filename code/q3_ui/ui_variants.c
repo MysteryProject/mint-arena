@@ -38,22 +38,32 @@ CONTROLS MENU
 
 #include "ui_local.h"
 
-#define ID_VARIANT1 10
-#define ID_VARIANT2 11
+#define ART_BACK0 "menu/art/back_0"
+#define ART_BACK1 "menu/art/back_1"
+
+#define ID_WEAPON 10
+#define ID_WEAPON_END (ID_WEAPON + WP_NUM_WEAPONS)
+
+#define ID_VARIANT1 (ID_WEAPON_END + 1)
+#define ID_VARIANT2 (ID_VARIANT1 + 1)
+#define ID_VARIANT3 (ID_VARIANT2 + 1)
+#define ID_VARIANT4 (ID_VARIANT3 + 1)
+#define ID_BACK 100
 
 typedef struct
 {
     menuframework_s menu;
-    menutext_s variant1;
-    menutext_s variant2;
+    menutext_s weaponNames[WP_NUM_WEAPONS];
+    menutext_s variant[4];
     menubitmap_s playerfront;
     menubitmap_s playerback;
+    menubitmap_s back;
 
     uiPlayerInfo_t playerinfo;
     uiPlayerInfo_t playerinfo2;
     weapon_t weapon;
     int localPlayerNum;
-    int variant;
+    int variantNum;
 
     char playerHead[MAX_QPATH];
     char playerModel[MAX_QPATH];
@@ -67,6 +77,10 @@ static void Variants_UpdateModel(void)
     vec3_t viewangles2;
     vec3_t moveangles;
     vec3_t moveangles2;
+    qboolean oneHanded = BG_GetWeaponDefinition(s_variants.weapon)->oneHanded;
+    int anim = TORSO_STAND;
+    int i;
+    gitem_t *item;
 
     memset(&s_variants.playerinfo, 0, sizeof(uiPlayerInfo_t));
     memset(&s_variants.playerinfo2, 0, sizeof(uiPlayerInfo_t));
@@ -84,11 +98,32 @@ static void Variants_UpdateModel(void)
     UI_PlayerInfo_SetModel(&s_variants.playerinfo, s_variants.playerModel, s_variants.playerHead, NULL);
     UI_PlayerInfo_SetModel(&s_variants.playerinfo2, s_variants.playerModel, s_variants.playerHead, NULL);
 
-    s_variants.playerinfo.variant = s_variants.variant;
-    s_variants.playerinfo2.variant = s_variants.variant;
+    s_variants.playerinfo.variant = s_variants.variantNum;
+    s_variants.playerinfo2.variant = s_variants.variantNum;
 
-    UI_PlayerInfo_SetInfo(&s_variants.playerinfo, LEGS_IDLE, TORSO_STAND, viewangles, moveangles, s_variants.weapon, qfalse);
-    UI_PlayerInfo_SetInfo(&s_variants.playerinfo2, LEGS_IDLE, TORSO_STAND, viewangles2, moveangles2, s_variants.weapon, qfalse);
+    if (oneHanded)
+        anim = TORSO_STAND2;
+
+    UI_PlayerInfo_SetInfo(&s_variants.playerinfo, LEGS_IDLE, anim, viewangles, moveangles, s_variants.weapon, qfalse);
+    UI_PlayerInfo_SetInfo(&s_variants.playerinfo2, LEGS_IDLE, anim, viewangles2, moveangles2, s_variants.weapon, qfalse);
+
+    item = BG_FindItemForWeapon(s_variants.weapon);
+    for (i = 0; i < 4; i++)
+    {
+        s_variants.variant[i].generic.flags |= (QMF_GRAYED | QMF_INACTIVE);
+
+        if (item->world_model[i] != NULL)
+            s_variants.variant[i].generic.flags &= ~(QMF_GRAYED | QMF_INACTIVE);
+    }
+}
+
+static void VariantsMenu_Save(void)
+{
+    gitem_t *item;
+
+    item = BG_FindItemForWeapon(s_variants.weapon);
+
+    trap_Cvar_SetValue(Com_LocalPlayerCvarName(s_variants.localPlayerNum, va("variant_%s", item->classname)), s_variants.variantNum);
 }
 
 void VariantsMenu_Event(void *ptr, int event)
@@ -101,22 +136,48 @@ void VariantsMenu_Event(void *ptr, int event)
     switch (((menucommon_s *)ptr)->id)
     {
     case ID_VARIANT1:
-        s_variants.variant = 0;
+        s_variants.variantNum = 0;
         //trap_Cvar_SetValue(Com_LocalPlayerCvarName(s_variants.localPlayerNum, "variant_weapon_machinegun"), 0);
         Variants_UpdateModel();
         break;
 
     case ID_VARIANT2:
-        s_variants.variant = 1;
+        s_variants.variantNum = 1;
         //trap_Cvar_SetValue(Com_LocalPlayerCvarName(s_variants.localPlayerNum, "variant_weapon_machinegun"), 1);
         Variants_UpdateModel();
         break;
-    }
-}
+    case ID_VARIANT3:
+        s_variants.variantNum = 2;
+        //trap_Cvar_SetValue(Com_LocalPlayerCvarName(s_variants.localPlayerNum, "variant_weapon_machinegun"), 1);
+        Variants_UpdateModel();
+        break;
+    case ID_VARIANT4:
+        s_variants.variantNum = 3;
+        //trap_Cvar_SetValue(Com_LocalPlayerCvarName(s_variants.localPlayerNum, "variant_weapon_machinegun"), 1);
+        Variants_UpdateModel();
+        break;
+    case ID_BACK:
+        VariantsMenu_Save();
+        UI_PopMenu();
+        break;
+    default:
+    {
+        weapon_t weaponNum = ((menucommon_s *)ptr)->id - ID_WEAPON;
+        gitem_t *item;
 
-static void VariantsMenu_Save(void)
-{
-    trap_Cvar_SetValue(Com_LocalPlayerCvarName(s_variants.localPlayerNum, "variant_weapon_machinegun"), s_variants.variant);
+        VariantsMenu_Save(); // save the old one first
+
+        if (weaponNum <= WP_NONE || weaponNum >= WP_NUM_WEAPONS)
+            break;
+
+        item = BG_FindItemForWeapon(weaponNum);
+
+        s_variants.weapon = weaponNum;
+        s_variants.variantNum = trap_Cvar_VariableValue(Com_LocalPlayerCvarName(s_variants.localPlayerNum, va("variant_%s", item->classname)));
+        Variants_UpdateModel();
+        }
+        break;
+    }
 }
 
 static sfxHandle_t VariantsMenu_Key(int key)
@@ -180,49 +241,38 @@ static void Variants_DrawModel2(void *self)
     UI_DrawPlayer(b->generic.x, b->generic.y, b->width, b->height, &s_variants.playerinfo2, uis.realtime / 2);
 }
 
-void Setup_MenuText(menutext_s *mtext, char *string, int x, int y, int id)
+void Setup_MenuText(menutext_s *mtext, char *string, int x, int y, int flags, int style, int id)
 {
     mtext->generic.type = MTYPE_PTEXT;
-    mtext->generic.flags = QMF_LEFT_JUSTIFY | QMF_PULSEIFFOCUS;
+    mtext->generic.flags = flags | QMF_PULSEIFFOCUS;
     mtext->generic.x = x;
     mtext->generic.y = y;
     mtext->generic.id = id;
     mtext->generic.callback = VariantsMenu_Event;
     mtext->string = string;
     mtext->color = text_big_color;
-    mtext->style = UI_CENTER | UI_DROPSHADOW;
+    mtext->style = style | UI_DROPSHADOW | UI_SMALLFONT;
 }
 
 void Variants_Cache(void)
 {
-    gitem_t *item;
-    int i, j;
-
-    for (i = WP_NONE+1; i < WP_NUM_WEAPONS; i++)
-    {
-        item = BG_FindItemForWeapon(i);
-
-        if (!item)
-            continue;
-
-        for (j = 0; j < 4; j++)
-        {
-            //if (item->world_model[j] != NULL)
-                //trap_R_RegisterModel(item->world_model[j]);
-        }
-    }
+    trap_R_RegisterShaderNoMip(ART_BACK0);
+    trap_R_RegisterShaderNoMip(ART_BACK1);
 }
 
-#define VERTICAL_SPACING 34
-#define VARIANTS_X (SCREEN_WIDTH / 8)
+#define VERTICAL_SPACING 24
+#define VARIANT_TEXT_WIDTH 140
 
 static void VariantsMenu_Init(int localPlayerNum)
 {
-    int y;
+    int y, i, x;
+    gitem_t *item;
+    char *variantStrings[4] = {"Variant 1", "Variant 2", "Variant 3", "Variant 4"};
 
     memset(&s_variants, 0, sizeof(s_variants));
 
     s_variants.weapon = WP_MACHINEGUN;
+    s_variants.variantNum = trap_Cvar_VariableValue(Com_LocalPlayerCvarName(s_variants.localPlayerNum, "variant_weapon_machinegun"));
     s_variants.localPlayerNum = localPlayerNum;
 
     Variants_Cache();
@@ -230,11 +280,30 @@ static void VariantsMenu_Init(int localPlayerNum)
     s_variants.menu.fullscreen = qtrue;
     s_variants.menu.wrapAround = qtrue;
 
-    y = 134;
-    Setup_MenuText(&s_variants.variant1, "Variant 1", VARIANTS_X, y, ID_VARIANT1);
+    y = SCREEN_HEIGHT/2 - ((VERTICAL_SPACING * (WP_NUM_WEAPONS - 3)) / 2);
 
-    y += VERTICAL_SPACING;
-    Setup_MenuText(&s_variants.variant2, "Variant 2", VARIANTS_X, y, ID_VARIANT2);
+    for (i = WP_NONE + 1; i < WP_NUM_WEAPONS; i++)
+    {
+        if (i == WP_GRAPPLING_HOOK)
+            continue;
+
+        item = BG_FindItemForWeapon(i);
+
+        if (item == NULL)
+            continue;
+
+        Setup_MenuText(&s_variants.weaponNames[i], item->pickup_name, -60, y, QMF_LEFT_JUSTIFY, UI_LEFT, ID_WEAPON + i);
+        y += VERTICAL_SPACING;
+    }
+
+    item = BG_FindItemForWeapon(s_variants.weapon);
+
+    x = 460 - (VARIANT_TEXT_WIDTH * 3) / 2;
+
+    for (i = 0; i < 4; i++)
+    {
+        Setup_MenuText(&s_variants.variant[i], variantStrings[i], x + (VARIANT_TEXT_WIDTH * i), SCREEN_HEIGHT - 50, QMF_CENTER_JUSTIFY, UI_CENTER, ID_VARIANT1 + i);
+    }
 
     s_variants.playerfront.generic.type = MTYPE_BITMAP;
     s_variants.playerfront.generic.flags = QMF_INACTIVE;
@@ -252,10 +321,33 @@ static void VariantsMenu_Init(int localPlayerNum)
     s_variants.playerback.width = 320;
     s_variants.playerback.height = 560;
 
-    Menu_AddItem(&s_variants.menu, &s_variants.variant1);
-    Menu_AddItem(&s_variants.menu, &s_variants.variant2);
+    s_variants.back.generic.type = MTYPE_BITMAP;
+    s_variants.back.generic.name = ART_BACK0;
+    s_variants.back.generic.flags = QMF_LEFT_JUSTIFY | QMF_PULSEIFFOCUS;
+    s_variants.back.generic.x = 0;
+    s_variants.back.generic.y = 480 - 64;
+    s_variants.back.generic.id = ID_BACK;
+    s_variants.back.generic.callback = VariantsMenu_Event;
+    s_variants.back.width = 128;
+    s_variants.back.height = 64;
+    s_variants.back.focuspic = ART_BACK1;
+
+    for (i = WP_NONE + 1; i < WP_NUM_WEAPONS; i++)
+    {
+        if (i == WP_GRAPPLING_HOOK)
+            continue;
+
+        Menu_AddItem(&s_variants.menu, &s_variants.weaponNames[i]);
+    }
+
+    for (i = 0; i < 4; i++)
+    {
+        Menu_AddItem(&s_variants.menu, &s_variants.variant[i]);
+    }
+
     Menu_AddItem(&s_variants.menu, &s_variants.playerfront);
     Menu_AddItem(&s_variants.menu, &s_variants.playerback);
+    Menu_AddItem(&s_variants.menu, &s_variants.back);
 
     Variants_UpdateModel();
 }
