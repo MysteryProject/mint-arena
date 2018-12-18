@@ -71,6 +71,24 @@ typedef struct
 
 static variants_t s_variants;
 
+static char *variantNames[WP_NUM_WEAPONS][4] = {
+    {NULL, NULL, NULL, NULL}, // wp_none
+    {"Classic", "Arcade", "NONE", "NONE"},
+    {"Classic", "Arcade", "NONE", "NONE"},
+    {"Classic", "Arcade", "NONE", "NONE"},
+    {"Classic", "Arcade", "NONE", "NONE"},
+    {"Classic", "Arcade", "NONE", "NONE"},
+    {"Classic", "Arcade", "NONE", "NONE"},
+    {"Classic", "Arcade", "NONE", "NONE"},
+    {"Classic", "Arcade", "NONE", "NONE"},
+    {"Classic", "Arcade", "NONE", "NONE"},
+    {NULL, NULL, NULL, NULL}, // wp_grapple
+    {"Variant 1", "NONE", "NONE", "NONE"},
+    {"Variant 1", "NONE", "NONE", "NONE"},
+    {"Variant 1", "NONE", "NONE", "NONE"},
+    {"Variant 1", "NONE", "NONE", "NONE"}
+};
+
 static void Variants_UpdateModel(void)
 {
     vec3_t viewangles;
@@ -110,6 +128,7 @@ static void Variants_UpdateModel(void)
     item = BG_FindItemForWeapon(s_variants.weapon);
     for (i = 0; i < 4; i++)
     {
+        s_variants.variant[i].string = variantNames[s_variants.weapon][i];
         s_variants.variant[i].generic.flags |= (QMF_GRAYED | QMF_INACTIVE);
 
         if (item->world_model[i] != NULL)
@@ -302,7 +321,7 @@ static void VariantsMenu_Init(int localPlayerNum)
 
     for (i = 0; i < 4; i++)
     {
-        Setup_MenuText(&s_variants.variant[i], variantStrings[i], x + (VARIANT_TEXT_WIDTH * i), SCREEN_HEIGHT - 50, QMF_CENTER_JUSTIFY, UI_CENTER, ID_VARIANT1 + i);
+        Setup_MenuText(&s_variants.variant[i], variantNames[s_variants.weapon][i], x + (VARIANT_TEXT_WIDTH * i), SCREEN_HEIGHT - 50, QMF_CENTER_JUSTIFY, UI_CENTER, ID_VARIANT1 + i);
     }
 
     s_variants.playerfront.generic.type = MTYPE_BITMAP;
