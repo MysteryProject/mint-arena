@@ -387,6 +387,11 @@ extern void Controls_Cache( void );
 extern qboolean Controls_WantsBindKeys( void );
 
 //
+// ui_variants.c
+//
+extern void UI_VariantsMenu(int localPlayerNum);
+
+//
 // ui_joystick.c
 //
 void UI_JoystickMenu( int localPlayerNum );
@@ -521,6 +526,7 @@ typedef struct {
 	int				barrelTime;
 
 	int				realWeapon;
+	int variant;
 } uiPlayerInfo_t;
 
 void UI_DrawPlayer( float x, float y, float w, float h, uiPlayerInfo_t *pi, int time );

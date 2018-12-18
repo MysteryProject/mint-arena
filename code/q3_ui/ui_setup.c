@@ -49,12 +49,13 @@ SETUP MENU
 
 #define ID_CUSTOMIZEPLAYER		10
 #define ID_CUSTOMIZECONTROLS	11
-#define ID_SYSTEMCONFIG			12
-#define ID_GAME					13
-#define ID_LOAD					14
-#define ID_SAVE					15
-#define ID_DEFAULTS				16
-#define ID_BACK					17
+#define ID_VARIANTS				12
+#define ID_SYSTEMCONFIG			13
+#define ID_GAME					14
+#define ID_LOAD					15
+#define ID_SAVE					16
+#define ID_DEFAULTS				17
+#define ID_BACK					18
 
 
 typedef struct {
@@ -65,6 +66,7 @@ typedef struct {
 	menubitmap_s	framer;
 	menutext_s		setupplayers;
 	menutext_s		setupcontrols;
+	menutext_s		variants;
 	menutext_s		setupsystem;
 	menutext_s		game;
 //	menutext_s		load;
@@ -119,6 +121,10 @@ static void UI_SetupMenu_Event( void *ptr, int event ) {
 
 	case ID_CUSTOMIZECONTROLS:
 		UI_SelectPlayerMenu(UI_ControlsMenu, "CONTROLS");
+		break;
+
+	case ID_VARIANTS:
+		UI_SelectPlayerMenu(UI_VariantsMenu, "Variants");
 		break;
 
 	case ID_SYSTEMCONFIG:
@@ -215,6 +221,17 @@ static void UI_SetupMenu_Init( void ) {
 	setupMenuInfo.setupcontrols.style				= UI_CENTER;
 
 	y += SETUP_MENU_VERTICAL_SPACING;
+	setupMenuInfo.variants.generic.type = MTYPE_PTEXT;
+	setupMenuInfo.variants.generic.flags = QMF_CENTER_JUSTIFY | QMF_PULSEIFFOCUS;
+	setupMenuInfo.variants.generic.x = 320;
+	setupMenuInfo.variants.generic.y = y;
+	setupMenuInfo.variants.generic.id = ID_VARIANTS;
+	setupMenuInfo.variants.generic.callback = UI_SetupMenu_Event;
+	setupMenuInfo.variants.string = "Variants";
+	setupMenuInfo.variants.color = text_big_color;
+	setupMenuInfo.variants.style = UI_CENTER;
+
+	y += SETUP_MENU_VERTICAL_SPACING;
 	setupMenuInfo.setupsystem.generic.type			= MTYPE_PTEXT;
 	setupMenuInfo.setupsystem.generic.flags			= QMF_CENTER_JUSTIFY|QMF_PULSEIFFOCUS;
 	setupMenuInfo.setupsystem.generic.x				= 320;
@@ -289,6 +306,7 @@ static void UI_SetupMenu_Init( void ) {
 	Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.framer );
 	Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.setupplayers );
 	Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.setupcontrols );
+	Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.variants );
 	Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.setupsystem );
 	Menu_AddItem( &setupMenuInfo.menu, &setupMenuInfo.game );
 	if( !trap_Cvar_VariableValue( "cl_paused" ) ) {

@@ -1129,6 +1129,7 @@ Q3CGOBJ = \
   $(B)/$(BASEGAME)/ui/ui_startserver.o \
   $(B)/$(BASEGAME)/ui/ui_team.o \
   $(B)/$(BASEGAME)/ui/ui_teamorders.o \
+  $(B)/$(BASEGAME)/ui/ui_variants.o \
   $(B)/$(BASEGAME)/ui/ui_video.o \
   \
   $(B)/$(BASEGAME)/qcommon/q_math.o \

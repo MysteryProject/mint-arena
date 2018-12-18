@@ -61,6 +61,7 @@ UI_PlayerInfo_SetWeapon
 static void UI_PlayerInfo_SetWeapon( uiPlayerInfo_t *pi, weapon_t weaponNum ) {
 	gitem_t *	item;
 	char		path[MAX_QPATH];
+	char *model;
 
 	pi->currentWeapon = weaponNum;
 tryagain:
@@ -74,8 +75,18 @@ tryagain:
 	}
 
 	item = BG_FindItemForWeapon( weaponNum );
+
 	if ( item ) {
-		pi->weaponModel = trap_R_RegisterModel( item->world_model[0] );
+		if ((model = item->world_model[pi->variant]) == NULL)
+			model = item->world_model[0];
+	}
+
+	pi->weaponModel = trap_R_RegisterModel(model);
+
+	if (!pi->weaponModel)
+	{
+		model = item->world_model[0];
+		pi->weaponModel = trap_R_RegisterModel(model);
 	}
 
 	if( pi->weaponModel == 0 ) {
@@ -87,11 +98,11 @@ tryagain:
 		goto tryagain;
 	}
 
-	COM_StripExtension( item->world_model[0], path, sizeof(path) );
+	COM_StripExtension(model, path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_barrel.md3" );
 	pi->barrelModel = trap_R_RegisterModel( path );
 
-	COM_StripExtension( item->world_model[0], path, sizeof(path) );
+	COM_StripExtension(model, path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash.md3" );
 	pi->flashModel = trap_R_RegisterModel( path );
 
