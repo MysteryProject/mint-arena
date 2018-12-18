@@ -342,6 +342,7 @@ vmCvar_t cg_obituaryMaxVisable[MAX_SPLITVIEW];
 //
 vmCvar_t cg_showLowAmmoPerWeapon[MAX_SPLITVIEW];
 vmCvar_t cg_newWeaponModels[MAX_SPLITVIEW];
+vmCvar_t cg_variants[MAX_SPLITVIEW][WP_NUM_WEAPONS];
 
 #ifdef MISSIONPACK
 vmCvar_t cg_currentSelectedPlayer[MAX_SPLITVIEW];
@@ -667,6 +668,13 @@ void CG_RegisterUserCvars( void ) {
 
 		trap_Cvar_Register( NULL, Com_LocalPlayerCvarName(i, "team_model"), teamModelNames[i], userInfo[i] | CVAR_ARCHIVE );
 		trap_Cvar_Register( NULL, Com_LocalPlayerCvarName(i, "team_headmodel"), teamHeadModelNames[i], userInfo[i] | CVAR_ARCHIVE );
+
+		for(j = WP_NONE+1; j < WP_NUM_WEAPONS; j++)
+		{
+			char *classname = BG_FindItemForWeapon(j)->classname;
+
+			CG_RegisterCvar(&cg_variants[i][j], Com_LocalPlayerCvarName(i, va("variant_%s", classname)), "0", userInfo[i] | CVAR_ARCHIVE, RANGE_INT(0, 3));
+		}
 	}
 }
 
@@ -747,6 +755,14 @@ void CG_UpdateUserCvars( void ) {
 
 		for ( j = 0; j < CG_MaxSplitView(); j++ ) {
 			trap_Cvar_Update( &uservar->vmCvars[j] );
+		}
+	}
+
+	for (i = 0; i < CG_MaxSplitView(); i++)
+	{
+		for (j = WP_NONE + 1; j < WP_NUM_WEAPONS; j++)
+		{
+			trap_Cvar_Update(&cg_variants[i][j]);
 		}
 	}
 }

@@ -643,10 +643,15 @@ void CG_RegisterWeapon( int weaponNum ) {
 	CG_RegisterItemVisuals( BG_ItemNumForItem( item ) );
 
 	// load cmodel before model so filecache works
+	if ((weaponModel = item->world_model[cg_variants[cg.cur_localPlayerNum][weaponNum].integer]) == NULL)
+		weaponModel = item->world_model[0];
+
+	/*
 	if (cg_newWeaponModels[cg.cur_localPlayerNum].integer == 1 && item->world_model[1])
 		weaponModel = item->world_model[1];
 	else
 		weaponModel = item->world_model[0];
+	*/
 
 	weaponInfo->weaponModel = trap_R_RegisterModel(weaponModel);
 
