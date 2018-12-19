@@ -634,9 +634,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 					weapon = bg_gunGameInfo.levels[attacker->player->ps.persistant[PERS_GUNGAME_LEVEL]];
 					attacker->player->ps.stats[STAT_WEAPONS] = (1 << weapon);
 					attacker->player->ps.ammo[BG_GetWeaponDefinition(weapon)->ammoType] = 99999;
-					G_AddEvent(attacker, EV_GUNGAMESWAP, weapon);
-					if (attacker->parent)
-						G_AddEvent(attacker->parent, EV_GUNGAMESWAP, weapon);
+					G_AddPredictableEvent(attacker, EV_GUNGAMESWAP, weapon);
 				}
 			}
 
