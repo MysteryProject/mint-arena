@@ -3,6 +3,11 @@ Makefile.local
 *.swp
 *tags
 misc/code_blocks/*.layout
+copy.sh
+final.sh
+NOTES.txt
+promode.zip
+.vscode
 
 # OS X
 ####################
