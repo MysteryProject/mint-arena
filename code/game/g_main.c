@@ -428,10 +428,10 @@ void G_RegisterCvars( void ) {
 	}
 
 	// Don't allow instagib in single player mode.
-	if ( g_singlePlayer.integer && g_instagib.integer) {
-		trap_Cvar_SetValue( "g_instagib", 0 );
-		trap_Cvar_Update( &g_instagib );
-	}
+	//if ( g_singlePlayer.integer && g_instagib.integer) {
+	//	trap_Cvar_SetValue( "g_instagib", 0 );
+	//	trap_Cvar_Update( &g_instagib );
+	//}
 
 	if ( g_instagib.integer ) {
 		trap_Cvar_Set( "sv_gametypeName", va( "Instagib %s", bg_displayGametypeNames[g_gametype.integer] ) );
