@@ -420,12 +420,13 @@ static void CG_DrawStatusBar( void ) {
 	}
 
 	if ( ps->stats[ STAT_ARMOR ] ) {
+		qhandle_t model = ps->stats[STAT_ARMOR_LEVEL] == 2 ? cgs.media.armorModel[1] : cgs.media.armorModel[0];
 		origin[0] = 90;
 		origin[1] = 0;
 		origin[2] = -10;
 		angles[YAW] = ( cg.time & 2047 ) * 360 / 2048.0;
-		CG_Draw3DModel( 370 + CHAR_WIDTH*3 + TEXT_ICON_SPACE, SCREEN_HEIGHT - ICON_SIZE, ICON_SIZE, ICON_SIZE,
-					   cgs.media.armorModel, NULL, origin, angles );
+		CG_Draw3DModel(370 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE, SCREEN_HEIGHT - ICON_SIZE, ICON_SIZE, ICON_SIZE,
+					   model, NULL, origin, angles);
 	}
 	//
 	// ammo
@@ -497,7 +498,8 @@ static void CG_DrawStatusBar( void ) {
 
 		// if we didn't draw a 3D icon, draw a 2D icon for armor
 		if ( !cg_draw3dIcons.integer && cg_drawIcons.integer ) {
-			CG_DrawPic( 370 + CHAR_WIDTH*3 + TEXT_ICON_SPACE, SCREEN_HEIGHT - ICON_SIZE, ICON_SIZE, ICON_SIZE, cgs.media.armorIcon );
+			qhandle_t icon = ps->stats[STAT_ARMOR_LEVEL] == 2 ? cgs.media.armorIcon[1] : cgs.media.armorIcon[0];
+			CG_DrawPic(370 + CHAR_WIDTH * 3 + TEXT_ICON_SPACE, SCREEN_HEIGHT - ICON_SIZE, ICON_SIZE, ICON_SIZE, icon);
 		}
 
 	}

@@ -912,8 +912,8 @@ typedef struct {
 	qhandle_t	harvesterNeutralModel;
 #endif
 
-	qhandle_t	armorModel;
-	qhandle_t	armorIcon;
+	qhandle_t	armorModel[2];
+	qhandle_t	armorIcon[2];
 
 	qhandle_t	teamStatusBar;
 

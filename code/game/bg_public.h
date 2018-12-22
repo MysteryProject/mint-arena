@@ -62,7 +62,14 @@ Suite 120, Rockville, Maryland 20850 USA.
 
 #define	DEFAULT_GRAVITY		800
 #define	GIB_HEALTH			-40
-#define	ARMOR_PROTECTION	0.66
+
+#define	ARMOR_LVL1_PROTECTION	0.66
+#define ARMOR_LVL1_MAX 150
+#define ARMOR_LVL1_THRESHOLD 100 // point at which red breaks down to yellow
+
+#define ARMOR_LVL2_PROTECTION 0.75
+#define ARMOR_LVL2_MAX 200
+#define ARMOR_LVL2_THRESHOLD 150 // max we can repair to with yellow armor
 
 #define	MAX_LOCATIONS		64
 
@@ -546,6 +553,7 @@ typedef enum {
 	STAT_MAX_HEALTH,				// health / armor limit, changeable by handicap
 	STAT_KILLSTREAK,
 	STAT_MULTIKILL,
+	STAT_ARMOR_LEVEL,
 //#ifdef MISSIONPACK
 	STAT_PERSISTANT_POWERUP
 //#endif

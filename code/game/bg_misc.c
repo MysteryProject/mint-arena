@@ -1282,6 +1282,7 @@ This needs to be the same for client side prediction and server use.
 qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const playerState_t *ps ) {
 	gitem_t	*item;
 	int		upperBound;
+	qboolean redArmor = qfalse;
 
 	if ( ent->modelindex < 1 || ent->modelindex >= BG_NumItems() ) {
 		Com_Error( ERR_DROP, "BG_CanItemBeGrabbed: index out of range" );
@@ -1312,11 +1313,21 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 		else
 #endif
 		{
-			upperBound = ps->stats[STAT_MAX_HEALTH] * 2;
+			if (item->quantity == 100) // lvl2 (red)
+			{
+				upperBound = ARMOR_LVL2_MAX;
+				redArmor = qtrue;
+			}
+			else if (item->quantity == 50) // lvl1 (yellow)
+			{
+				upperBound = ARMOR_LVL1_MAX;
+			}
+			else
+				upperBound = ARMOR_LVL2_MAX;
 		}
 
 		// we also clamp armor to the maxhealth for handicapping
-		if ( ps->stats[STAT_ARMOR] >= upperBound ) {
+		if ( ps->stats[STAT_ARMOR] >= upperBound && !(redArmor && ps->stats[STAT_ARMOR_LEVEL] != 2)) {
 			return qfalse;
 		}
 		return qtrue;

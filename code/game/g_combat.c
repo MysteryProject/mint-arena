@@ -825,6 +825,7 @@ int CheckArmor (gentity_t *ent, int damage, int dflags)
 	gplayer_t	*player;
 	int			save;
 	int			count;
+	float protection;
 
 	if (!damage)
 		return 0;
@@ -839,7 +840,13 @@ int CheckArmor (gentity_t *ent, int damage, int dflags)
 
 	// armor
 	count = player->ps.stats[STAT_ARMOR];
-	save = ceil( damage * ARMOR_PROTECTION );
+
+	if (player->ps.stats[STAT_ARMOR_LEVEL] == 2)
+		protection = ARMOR_LVL2_PROTECTION;
+	else
+		protection = ARMOR_LVL1_PROTECTION;
+
+	save = ceil(damage * protection);
 	if (save >= count)
 		save = count;
 
@@ -847,6 +854,9 @@ int CheckArmor (gentity_t *ent, int damage, int dflags)
 		return 0;
 
 	player->ps.stats[STAT_ARMOR] -= save;
+
+	if (player->ps.stats[STAT_ARMOR] < ARMOR_LVL1_THRESHOLD)
+		player->ps.stats[STAT_ARMOR_LEVEL] = 1; // "break" armor when below the threshold
 
 	return save;
 }

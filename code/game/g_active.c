@@ -455,7 +455,7 @@ void PlayerTimerActions( gentity_t *ent, int msec ) {
 		}
 
 		// count down armor when over max
-		if ( player->ps.stats[STAT_ARMOR] > player->ps.stats[STAT_MAX_HEALTH] ) {
+		if ( player->ps.stats[STAT_ARMOR] > ARMOR_LVL2_MAX ) {
 			player->ps.stats[STAT_ARMOR]--;
 		}
 	}

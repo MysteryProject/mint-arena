@@ -293,21 +293,37 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 //======================================================================
 
 int Pickup_Armor( gentity_t *ent, gentity_t *other ) {
-	int		upperBound;
 
-#ifdef MISSIONPACK
-	if( BG_ItemForItemNum( other->player->ps.stats[STAT_PERSISTANT_POWERUP] )->giTag == PW_GUARD ) {
-		upperBound = other->player->ps.stats[STAT_MAX_HEALTH];
-	}
-	else
-#endif
+	if (ent->item->quantity == 100) // lvl2 (red)
 	{
-		upperBound = other->player->ps.stats[STAT_MAX_HEALTH] * 2;
+		other->player->ps.stats[STAT_ARMOR] = ARMOR_LVL2_MAX; // always give full armor when picking up lvl2
+		other->player->ps.stats[STAT_ARMOR_LEVEL] = 2;
 	}
-
-	other->player->ps.stats[STAT_ARMOR] += ent->item->quantity;
-	if ( other->player->ps.stats[STAT_ARMOR] > upperBound ) {
-		other->player->ps.stats[STAT_ARMOR] = upperBound;
+	else if (ent->item->quantity == 50) // lvl1 (yellow)
+	{
+		if (other->player->ps.stats[STAT_ARMOR_LEVEL] == 2)
+		{
+			other->player->ps.stats[STAT_ARMOR] += 50;
+			if (other->player->ps.stats[STAT_ARMOR] > ARMOR_LVL1_MAX)
+				other->player->ps.stats[STAT_ARMOR] = ARMOR_LVL1_MAX;
+		}
+		else
+		{
+			other->player->ps.stats[STAT_ARMOR] += 100;
+			if (other->player->ps.stats[STAT_ARMOR] > ARMOR_LVL1_MAX)
+				other->player->ps.stats[STAT_ARMOR] = ARMOR_LVL1_MAX;
+		}
+	}
+	else // shard
+	{
+		if (other->player->ps.stats[STAT_ARMOR_LEVEL] == 2)
+		{
+			other->player->ps.stats[STAT_ARMOR] += 2; // only give have the amount if armor is lvl2
+		}
+		else
+		{
+			other->player->ps.stats[STAT_ARMOR] += ent->item->quantity;
+		}
 	}
 
 	return RESPAWN_ARMOR;
