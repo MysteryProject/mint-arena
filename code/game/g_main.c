@@ -167,10 +167,10 @@ static cvarTable_t gameCvarTable[] = {
 	{&g_speed, "g_speed", "320", 0, GCF_TRACK_CHANGE, RANGE_ALL},
 	{&g_gravity, "g_gravity", "800", 0, GCF_TRACK_CHANGE, RANGE_ALL},
 	{&g_knockback, "g_knockback", "1000", 0, GCF_TRACK_CHANGE, RANGE_ALL},
-	{&g_quadfactor, "g_quadfactor", "3", 0, GCF_TRACK_CHANGE, RANGE_ALL},
-	{&g_weaponRespawn, "g_weaponrespawn", "5", 0, GCF_TRACK_CHANGE, RANGE_ALL},
+	{&g_quadfactor, "g_quadfactor", "4", 0, GCF_TRACK_CHANGE, RANGE_ALL},
+	{&g_weaponRespawn, "g_weaponrespawn", "15", 0, GCF_TRACK_CHANGE, RANGE_ALL},
 	{&g_weaponTeamRespawn, "g_weaponTeamRespawn", "30", 0, GCF_TRACK_CHANGE, RANGE_ALL},
-	{&g_forcerespawn, "g_forcerespawn", "20", 0, GCF_TRACK_CHANGE, RANGE_ALL},
+	{&g_forcerespawn, "g_forcerespawn", "3", 0, GCF_TRACK_CHANGE, RANGE_ALL},
 	{&g_inactivity, "g_inactivity", "0", 0, GCF_TRACK_CHANGE, RANGE_BOOL},
 	{&g_debugMove, "g_debugMove", "0", 0, 0, RANGE_BOOL},
 	{&g_debugDamage, "g_debugDamage", "0", 0, 0, RANGE_BOOL},
@@ -205,7 +205,8 @@ static cvarTable_t gameCvarTable[] = {
 	{&pmove_fixed, "pmove_fixed", "0", CVAR_SYSTEMINFO, 0, RANGE_BOOL},
 	{&pmove_msec, "pmove_msec", "8", CVAR_SYSTEMINFO, 0, RANGE_ALL},
 
-	{&g_rankings, "g_rankings", "0", 0, 0, RANGE_ALL}};
+	{&g_rankings, "g_rankings", "0", 0, 0, RANGE_ALL}
+};
 
 static int gameCvarTableSize = ARRAY_LEN( gameCvarTable );
 

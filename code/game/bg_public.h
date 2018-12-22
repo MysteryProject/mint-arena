@@ -398,6 +398,8 @@ typedef struct playerState_s {
 	int			pmove_framecount;
 	int			jumppad_frame;
 	int			entityEventSequence;
+
+	int jumpTime;
 } playerState_t;
 
 extern vmNetField_t	bg_entityStateFields[];

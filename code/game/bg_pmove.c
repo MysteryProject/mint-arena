@@ -43,7 +43,7 @@ float	pm_stopspeed = 100.0f;
 float	pm_duckScale = 0.25f;
 float	pm_swimScale = 0.50f;
 
-float	pm_accelerate = 10.0f;
+float	pm_accelerate = 15.0f;
 float	pm_airaccelerate = 1.0f;
 float	pm_wateraccelerate = 4.0f;
 float	pm_flyaccelerate = 8.0f;
@@ -55,6 +55,18 @@ float	pm_spectatorfriction = 5.0f;
 
 int		c_pmove = 0;
 
+// defragr movement
+// https://github.com/ReKTeK/Defragr
+float pm_airstrafaccelerate = 70.0f;
+float pm_airstopaccelerate = 2.5f;
+float pm_aircontrol = 150.0f;
+float pm_airstrafespeed = 30.0f;
+const float pm_aircontrolconstant = 32.0f;
+
+//
+float pm_addtime_weapondrop = 0.0f;
+float pm_addtime_weaponraise = 0.0f;
+float pm_addtime_weaponnoammo = 120.0f;
 
 /*
 ===============
@@ -269,21 +281,16 @@ static void PM_Accelerate( vec3_t wishdir, float wishspeed, float accel ) {
 	vec3_t		pushDir;
 	float		pushLen;
 	float		canPush;
-
 	VectorScale( wishdir, wishspeed, wishVelocity );
 	VectorSubtract( wishVelocity, pm->ps->velocity, pushDir );
 	pushLen = VectorNormalize( pushDir );
-
 	canPush = accel*pml.frametime*wishspeed;
 	if (canPush > pushLen) {
 		canPush = pushLen;
 	}
-
 	VectorMA( pm->ps->velocity, canPush, pushDir, pm->ps->velocity );
 #endif
 }
-
-
 
 /*
 ============
@@ -386,6 +393,13 @@ static qboolean PM_CheckJump( void ) {
 
 	pm->ps->groundEntityNum = ENTITYNUM_NONE;
 	pm->ps->velocity[2] = JUMP_VELOCITY;
+
+	// extra velocity if jumping again within 400msecs
+	if (pm->ps->jumpTime > 0)
+		pm->ps->velocity[2] += 100;
+
+	pm->ps->jumpTime = 400;
+
 	PM_AddEvent( EV_JUMP );
 
 	if ( pm->cmd.forwardmove >= 0 ) {
@@ -606,16 +620,42 @@ static void PM_FlyMove( void ) {
 ===================
 PM_AirMove
 
+defragr movement
+https://github.com/ReKTeK/Defragr
 ===================
 */
+static void PM_AirControl(vec3_t wishDir, float wishSpeed)
+{
+	float speed, dotProd, z, k;
+
+	if ((pm->ps->movementDir != 0 && pm->ps->movementDir != 4) || wishSpeed == 0)
+		return; // only allow control if moving forwards or backwards
+
+	z = pm->ps->velocity[2]; // store z velocity, as it's not affected
+	pm->ps->velocity[2] = 0;
+	speed = VectorNormalize(pm->ps->velocity);
+
+	if ((dotProd = DotProduct(pm->ps->velocity, wishDir)) > 0)
+	{
+		k = pm_aircontrolconstant * pm_aircontrol * dotProd * dotProd * pml.frametime;
+		pm->ps->velocity[0] = pm->ps->velocity[0] * speed + wishDir[0] * k;
+		pm->ps->velocity[1] = pm->ps->velocity[1] * speed + wishDir[1] * k;
+		VectorNormalize(pm->ps->velocity);
+	}
+
+	pm->ps->velocity[0] *= speed;
+	pm->ps->velocity[1] *= speed;
+	pm->ps->velocity[2] = z; // restore z velocity
+}
+
 static void PM_AirMove( void ) {
-	int			i;
 	vec3_t		wishvel;
 	float		fmove, smove;
 	vec3_t		wishdir;
 	float		wishspeed;
 	float		scale;
 	usercmd_t	cmd;
+	float accel, wishSpeed2;
 
 	PM_Friction();
 
@@ -634,17 +674,31 @@ static void PM_AirMove( void ) {
 	VectorNormalize (pml.forward);
 	VectorNormalize (pml.right);
 
-	for ( i = 0 ; i < 2 ; i++ ) {
-		wishvel[i] = pml.forward[i]*fmove + pml.right[i]*smove;
-	}
+	wishvel[0] = pml.forward[0] * fmove + pml.right[0] * smove;
+	wishvel[1] = pml.forward[1] * fmove + pml.right[1] * smove;
 	wishvel[2] = 0;
 
 	VectorCopy (wishvel, wishdir);
 	wishspeed = VectorNormalize(wishdir);
 	wishspeed *= scale;
 
-	// not on ground, so little effect on velocity
-	PM_Accelerate (wishdir, wishspeed, pm_airaccelerate);
+	wishSpeed2 = wishspeed;
+	
+	if (DotProduct(pm->ps->velocity, wishdir) < 0)
+		accel = pm_airstopaccelerate;
+	else
+		accel = pm_airaccelerate;
+
+	if (pm->ps->movementDir == 2 || pm->ps->movementDir == 6)
+	{
+		accel = pm_airstrafaccelerate;
+
+		if (wishspeed > pm_airstrafespeed)
+			wishspeed = pm_airstrafespeed;
+	}
+
+	PM_Accelerate(wishdir, wishspeed, accel);
+	PM_AirControl(wishdir, wishSpeed2);
 
 	// we may have a ground plane that is very steep, even
 	// though we don't have a groundentity
@@ -1493,7 +1547,7 @@ static void PM_BeginWeaponChange( int weapon ) {
 
 	PM_AddEvent( EV_CHANGE_WEAPON );
 	pm->ps->weaponstate = WEAPON_DROPPING;
-	pm->ps->weaponTime += 200;
+	pm->ps->weaponTime += pm_addtime_weapondrop;
 	PM_StartTorsoAnim( TORSO_DROP );
 }
 
@@ -1517,7 +1571,7 @@ static void PM_FinishWeaponChange( void ) {
 
 	pm->ps->weapon = weapon;
 	pm->ps->weaponstate = WEAPON_RAISING;
-	pm->ps->weaponTime += 250;
+	pm->ps->weaponTime += pm_addtime_weaponraise;
 	PM_StartTorsoAnim( TORSO_RAISE );
 }
 
@@ -1655,7 +1709,7 @@ static void PM_Weapon( void ) {
 	if (!pm->ps->ammo[weaponInfo->ammoType])
 	{
 		PM_AddEvent( EV_NOAMMO );
-		pm->ps->weaponTime += 500;
+		pm->ps->weaponTime += pm_addtime_weaponnoammo;
 		return;
 	}
 
@@ -1948,6 +2002,10 @@ void PmoveSingle (pmove_t *pmove) {
 	}
 
 	PM_DropTimers();
+
+	// make double jump function properly
+	if (pm->ps->jumpTime > 0)
+		pm->ps->jumpTime -= pml.msec;
 
 #ifdef MISSIONPACK
 	if ( pm->ps->powerups[PW_INVULNERABILITY] ) {
