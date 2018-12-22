@@ -1238,6 +1238,8 @@ typedef struct {
 	qhandle_t medalkillstreak_20;
 	qhandle_t medalkillstreak_25;
 	qhandle_t medalkillstreak_30;
+
+	cgSkin_t camo_cherryBlossom;
 } cgMedia_t;
 
 #define MAX_STATIC_GAMEMODELS   1024

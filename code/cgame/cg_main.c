@@ -1815,6 +1815,8 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.medalkillstreak_25 = trap_R_RegisterShaderNoMip("medal_ks25");
 	cgs.media.medalkillstreak_30 = trap_R_RegisterShaderNoMip("medal_ks30");
 
+	CG_RegisterSkin("scripts/cherry_blossom.skin", &cgs.media.camo_cherryBlossom, qfalse);
+
 	CG_ClearParticles ();
 /*
 	for (i=1; i<MAX_PARTICLES_AREAS; i++)
