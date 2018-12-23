@@ -1311,7 +1311,10 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	}
 
 	gun.hModel = weapon->weaponModel;
-	gun.customSkin = CG_AddSkinToFrame(&cgs.media.camo_cherryBlossom);
+
+	if (cg_variants[cg.cur_localPlayerNum][weaponNum].integer)
+		gun.customSkin = CG_AddSkinToFrame(&cgs.media.camo_cherryBlossom);
+
 	if (!gun.hModel) {
 		return;
 	}
@@ -1355,7 +1358,10 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		barrel.renderfx = parent->renderfx;
 
 		barrel.hModel = weapon->barrelModel;
-		barrel.customSkin = CG_AddSkinToFrame(&cgs.media.camo_cherryBlossom);
+
+		if (cg_variants[cg.cur_localPlayerNum][weaponNum].integer == 1)
+			barrel.customSkin = CG_AddSkinToFrame(&cgs.media.camo_cherryBlossom);
+
 		angles[YAW] = 0;
 		angles[PITCH] = 0;
 		angles[ROLL] = CG_MachinegunSpinAngle( cent );
