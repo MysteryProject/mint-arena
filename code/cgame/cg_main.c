@@ -673,7 +673,7 @@ void CG_RegisterUserCvars( void ) {
 		{
 			char *classname = BG_FindItemForWeapon(j)->classname;
 
-			CG_RegisterCvar(&cg_variants[i][j], Com_LocalPlayerCvarName(i, va("variant_%s", classname)), "0", userInfo[i] | CVAR_ARCHIVE, RANGE_INT(0, 3));
+			CG_RegisterCvar(&cg_variants[i][j], Com_LocalPlayerCvarName(i, va("variant_%s", classname)), "0", userInfo[i] | CVAR_ARCHIVE, RANGE_INT(0, 8));
 		}
 	}
 }
@@ -1815,7 +1815,7 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.medalkillstreak_25 = trap_R_RegisterShaderNoMip("medal_ks25");
 	cgs.media.medalkillstreak_30 = trap_R_RegisterShaderNoMip("medal_ks30");
 
-	CG_RegisterSkin("scripts/cherry_blossom.skin", &cgs.media.camo_cherryBlossom, qfalse);
+	CG_RegisterCamos();
 
 	CG_ClearParticles ();
 /*
@@ -1832,6 +1832,17 @@ static void CG_RegisterGraphics( void ) {
 */
 }
 
+void CG_RegisterCamos(void)
+{
+	CG_RegisterSkin("scripts/cherry_blossom.skin", &cgs.media.camos[0], qfalse);
+	CG_RegisterSkin("scripts/bacon.skin", &cgs.media.camos[1], qfalse);
+	CG_RegisterSkin("scripts/benjamins.skin", &cgs.media.camos[2], qfalse);
+	CG_RegisterSkin("scripts/jungle.skin", &cgs.media.camos[3], qfalse);
+	CG_RegisterSkin("scripts/yellow_flake.skin", &cgs.media.camos[4], qfalse);
+	CG_RegisterSkin("scripts/uk.skin", &cgs.media.camos[5], qfalse);
+	CG_RegisterSkin("scripts/shattered_glass.skin", &cgs.media.camos[6], qfalse);
+	CG_RegisterSkin("scripts/green_leaf.skin", &cgs.media.camos[7], qfalse);
+}
 
 /*
 ==================

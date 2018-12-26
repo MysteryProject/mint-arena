@@ -1239,7 +1239,7 @@ typedef struct {
 	qhandle_t medalkillstreak_25;
 	qhandle_t medalkillstreak_30;
 
-	cgSkin_t camo_cherryBlossom;
+	cgSkin_t camos[9];
 } cgMedia_t;
 
 #define MAX_STATIC_GAMEMODELS   1024
@@ -1542,7 +1542,8 @@ extern vmCvar_t cg_variants[MAX_SPLITVIEW][WP_NUM_WEAPONS];
 //
 // cg_main.c
 //
-const char *CG_ConfigString( int index );
+void CG_RegisterCamos(void);
+const char *CG_ConfigString(int index);
 const char *CG_Argv( int arg );
 char *CG_Cvar_VariableString( const char *var_name );
 

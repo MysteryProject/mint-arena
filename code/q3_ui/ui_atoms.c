@@ -903,7 +903,12 @@ UI_Init
 */
 void UI_Init( qboolean inGameLoad, int maxSplitView ) {
 	uis.maxSplitView = Com_Clamp(1, MAX_SPLITVIEW, maxSplitView);
-	
+
+	if (!inGameLoad)
+	{
+		CG_RegisterCamos();
+	}
+
 	UI_RegisterCvars();
 
 	UI_InitGameinfo();

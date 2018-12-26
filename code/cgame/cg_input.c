@@ -619,7 +619,7 @@ CG_RegisterInputCvars
 void CG_RegisterInputCvars( void ) {
 	int i;
 
-	trap_Cvar_Register( &cg_freelook, "cl_freelook", "1", CVAR_ARCHIVE ); // ZTM: NOTE: changing name breaks team arena menu scripts
+	trap_Cvar_Register( &cg_freelook, "cg_freelook", "1", CVAR_ARCHIVE ); // ZTM: NOTE: changing name breaks team arena menu scripts
 
 	trap_Cvar_Register( &m_pitch, "m_pitch", "0.022", CVAR_ARCHIVE );
 	trap_Cvar_Register( &m_yaw, "m_yaw", "0.022", CVAR_ARCHIVE );
@@ -632,7 +632,7 @@ void CG_RegisterInputCvars( void ) {
 		trap_Cvar_Register( &cg_yawspeedanalog[i], Com_LocalPlayerCvarName(i, "cg_yawspeedanalog"), "200", CVAR_ARCHIVE );
 		trap_Cvar_Register( &cg_pitchspeedanalog[i], Com_LocalPlayerCvarName(i, "cg_pitchspeedanalog"), "200", CVAR_ARCHIVE );
 		trap_Cvar_Register( &cg_anglespeedkey[i], Com_LocalPlayerCvarName(i, "cg_anglespeedkey"), "1.5", 0 );
-		trap_Cvar_Register( &cg_run[i], Com_LocalPlayerCvarName(i, "cl_run"), "1", CVAR_ARCHIVE ); // ZTM: NOTE: changing name breaks team arena menu scripts
+		trap_Cvar_Register( &cg_run[i], Com_LocalPlayerCvarName(i, "cg_run"), "1", CVAR_ARCHIVE ); // ZTM: NOTE: changing name breaks team arena menu scripts
 		trap_Cvar_Register( &cg_joystickUseAnalog[i], Com_LocalPlayerCvarName(i, "in_joystickUseAnalog"), "1", CVAR_ARCHIVE );
 		trap_Cvar_Register( &cg_joystickThreshold[i], Com_LocalPlayerCvarName(i, "in_joystickThreshold"), "0.15", CVAR_ARCHIVE );
 	}

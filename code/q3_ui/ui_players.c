@@ -61,7 +61,6 @@ UI_PlayerInfo_SetWeapon
 static void UI_PlayerInfo_SetWeapon( uiPlayerInfo_t *pi, weapon_t weaponNum ) {
 	gitem_t *	item;
 	char		path[MAX_QPATH];
-	char *model;
 
 	pi->currentWeapon = weaponNum;
 tryagain:
@@ -77,16 +76,7 @@ tryagain:
 	item = BG_FindItemForWeapon( weaponNum );
 
 	if ( item ) {
-		if ((model = item->world_model[pi->variant]) == NULL)
-			model = item->world_model[0];
-	}
-
-	pi->weaponModel = trap_R_RegisterModel(model);
-
-	if (!pi->weaponModel)
-	{
-		model = item->world_model[0];
-		pi->weaponModel = trap_R_RegisterModel(model);
+		pi->weaponModel = trap_R_RegisterModel(item->world_model[0]);
 	}
 
 	if( pi->weaponModel == 0 ) {
@@ -98,11 +88,11 @@ tryagain:
 		goto tryagain;
 	}
 
-	COM_StripExtension(model, path, sizeof(path));
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_barrel.md3" );
 	pi->barrelModel = trap_R_RegisterModel( path );
 
-	COM_StripExtension(model, path, sizeof(path));
+	COM_StripExtension(item->world_model[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash.md3" );
 	pi->flashModel = trap_R_RegisterModel( path );
 
@@ -761,6 +751,7 @@ void UI_DrawPlayer( float x, float y, float w, float h, uiPlayerInfo_t *pi, int 
 	float			xx;
 	float			xscale;
 	float			yscale;
+	int variant;
 
 	if ( !pi->legsModel || !pi->torsoModel || !pi->headModel || !pi->animations[0].numFrames ) {
 		return;
@@ -892,7 +883,12 @@ void UI_DrawPlayer( float x, float y, float w, float h, uiPlayerInfo_t *pi, int 
 	//
 	if ( pi->currentWeapon != WP_NONE ) {
 		memset( &gun, 0, sizeof(gun) );
+
 		gun.hModel = pi->weaponModel;
+
+		if (pi->variant)
+			gun.customSkin = CG_AddSkinToFrame(&cgs.media.camos[pi->variant - 1]);
+
 		Byte4Copy( pi->c1RGBA, gun.shaderRGBA );
 		VectorCopy( origin, gun.lightingOrigin );
 		UI_PositionEntityOnTag( &gun, &torso, pi->torsoModel, "tag_weapon");
@@ -911,6 +907,10 @@ void UI_DrawPlayer( float x, float y, float w, float h, uiPlayerInfo_t *pi, int 
 		barrel.renderfx = renderfx;
 
 		barrel.hModel = pi->barrelModel;
+
+		if (pi->variant)
+			barrel.customSkin = CG_AddSkinToFrame(&cgs.media.camos[pi->variant - 1]);
+
 		angles[YAW] = 0;
 		angles[PITCH] = 0;
 		angles[ROLL] = UI_MachinegunSpinAngle( pi );

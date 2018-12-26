@@ -643,15 +643,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 	CG_RegisterItemVisuals( BG_ItemNumForItem( item ) );
 
 	// load cmodel before model so filecache works
-	if ((weaponModel = item->world_model[cg_variants[cg.cur_localPlayerNum][weaponNum].integer]) == NULL)
-		weaponModel = item->world_model[0];
-
-	/*
-	if (cg_newWeaponModels[cg.cur_localPlayerNum].integer == 1 && item->world_model[1])
-		weaponModel = item->world_model[1];
-	else
-		weaponModel = item->world_model[0];
-	*/
+	weaponModel = item->world_model[0];
 
 	weaponInfo->weaponModel = trap_R_RegisterModel(weaponModel);
 
@@ -1252,6 +1244,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 	centity_t	*nonPredictedCent;
 	orientation_t	lerped;
 	playerInfo_t *pi;
+	int variant;
 	int		anim;
 
 	weaponNum = cent->currentState.weapon;
@@ -1310,10 +1303,12 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 		}
 	}
 
+	variant = cg_variants[cg.cur_localPlayerNum][weaponNum].integer;
+
 	gun.hModel = weapon->weaponModel;
 
-	if (cg_variants[cg.cur_localPlayerNum][weaponNum].integer)
-		gun.customSkin = CG_AddSkinToFrame(&cgs.media.camo_cherryBlossom);
+	if (variant)
+		gun.customSkin = CG_AddSkinToFrame(&cgs.media.camos[variant - 1]);
 
 	if (!gun.hModel) {
 		return;
@@ -1359,8 +1354,8 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 
 		barrel.hModel = weapon->barrelModel;
 
-		if (cg_variants[cg.cur_localPlayerNum][weaponNum].integer == 1)
-			barrel.customSkin = CG_AddSkinToFrame(&cgs.media.camo_cherryBlossom);
+		if (variant)
+			barrel.customSkin = CG_AddSkinToFrame(&cgs.media.camos[variant - 1]);
 
 		angles[YAW] = 0;
 		angles[PITCH] = 0;
