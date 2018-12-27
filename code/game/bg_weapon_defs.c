@@ -39,28 +39,32 @@ bgweapon_defs_t bg_weapons[] =
         WP_GAUNTLET,
         400,
         qtrue,
-        qtrue
+        qtrue,
+        "gauntlet_fire"
     },
     {
         WP_MACHINEGUN,
         WP_MACHINEGUN,
         100,
         qtrue,
-        qfalse
+        qfalse,
+        "mg_fire"
     },
     {
         WP_SHOTGUN,
         WP_SHOTGUN,
         1000,
         qtrue,
-        qfalse
+        qfalse,
+        "sg_fire"
     },
     {
         WP_GRENADE_LAUNCHER,
         WP_GRENADE_LAUNCHER,
         800,
         qtrue,
-        qfalse
+        qfalse,
+        "grenade_fire"
     },    
     {
         WP_ROCKET_LAUNCHER,
@@ -68,34 +72,39 @@ bgweapon_defs_t bg_weapons[] =
         800,
         qtrue,
         qfalse,
+        "rocket_fire"
     },
     {
         WP_LIGHTNING,
         WP_LIGHTNING,
         50,
         qtrue,
-        qfalse
+        qfalse,
+        "lightning_fire"
     },
     {
         WP_PLASMAGUN,
         WP_PLASMAGUN,
         100,
         qtrue,
-        qfalse
+        qfalse,
+        "plasma_fire"
     },
     {
         WP_RAILGUN,
         WP_RAILGUN,
         1500,
         qtrue,
-        qfalse
+        qfalse,
+        "rail_fire"
     },
     {
         WP_BFG,
         WP_BFG,
         200,
         qtrue,
-        qfalse
+        qfalse,
+        "bfg_fire"
     },
     // new weapons
     {
@@ -103,28 +112,32 @@ bgweapon_defs_t bg_weapons[] =
         WP_MACHINEGUN,
         1,
         qfalse,
-        qfalse
+        qfalse,
+        "mg_fire"
     },
     {
         WP_AUTOSHOTTY,
         WP_SHOTGUN,
         280,
         qtrue,
-        qfalse
+        qfalse,
+        "sg_fire"
     },
     {
         WP_MINIRAIL,
         WP_RAILGUN,
         750,
         qtrue,
-        qfalse
+        qfalse,
+        "minirail_fire"
     },
     {
         WP_IMPACT_CANNON,
         WP_PLASMAGUN,
         700,
         qtrue,
-        qfalse
+        qfalse,
+        "impact_fire"
     }
 };
 

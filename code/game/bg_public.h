@@ -684,6 +684,7 @@ typedef struct
 	int attackDelay;
 	qboolean autoAttack;
 	qboolean oneHanded;
+	char *fireInfo;
 } bgweapon_defs_t;
 
 extern bgweapon_defs_t bg_weapons[];
