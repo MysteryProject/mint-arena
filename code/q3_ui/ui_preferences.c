@@ -61,9 +61,6 @@ enum {
 	ID_FORCEMODEL,
 	ID_DRAWTEAMOVERLAY,
 	ID_ALLOWDOWNLOAD,
-	ID_SPLITVERTICAL,
-	ID_SPLITTEXTSIZE,
-	ID_THIRDSIZE,
 
 	ID_NUM_ITEMS,
 
@@ -93,9 +90,6 @@ typedef struct {
 	menuradiobutton_s	forcemodel;
 	menulist_s			drawteamoverlay;
 	menuradiobutton_s	allowdownload;
-	menulist_s			splitvertical;
-	menulist_s			splittextsize;
-	menulist_s			thirdsize;
 	menubitmap_s		back;
 
 	qhandle_t			crosshairShader[NUM_CROSSHAIRS];
@@ -150,18 +144,6 @@ static void Preferences_SetMenuItems( void ) {
 	s_preferences.forcemodel.curvalue		= trap_Cvar_VariableValue( "cg_forcemodel" ) != 0;
 	s_preferences.drawteamoverlay.curvalue	= Com_Clamp( 0, 3, trap_Cvar_VariableValue( "cg_drawTeamOverlay" ) );
 	s_preferences.allowdownload.curvalue	= trap_Cvar_VariableValue( "cl_allowDownload" ) != 0;
-	s_preferences.splitvertical.curvalue	= trap_Cvar_VariableValue( "cg_splitviewVertical" ) != 0;
-
-	textScale = trap_Cvar_VariableValue( "cg_splitviewTextScale" );
-	if ( textScale <= 1.0f ) {
-		s_preferences.splittextsize.curvalue	= 0;
-	} else if ( textScale <= 1.5f ) {
-		s_preferences.splittextsize.curvalue	= 1;
-	} else {
-		s_preferences.splittextsize.curvalue	= 2;
-	}
-
-	s_preferences.thirdsize.curvalue		= trap_Cvar_VariableValue( "cg_splitviewThirdEqual" ) != 0;
 }
 
 
@@ -225,18 +207,6 @@ static void Preferences_Event( void* ptr, int notification ) {
 	case ID_ALLOWDOWNLOAD:
 		trap_Cvar_SetValue( "cl_allowDownload", s_preferences.allowdownload.curvalue );
 		trap_Cvar_SetValue( "sv_allowDownload", s_preferences.allowdownload.curvalue );
-		break;
-
-	case ID_SPLITVERTICAL:
-		trap_Cvar_SetValue( "cg_splitviewVertical", s_preferences.splitvertical.curvalue );
-		break;
-
-	case ID_SPLITTEXTSIZE:
-		trap_Cvar_SetValue( "cg_splitviewTextScale", 1.0f + (float)s_preferences.splittextsize.curvalue/2.0f );
-		break;
-
-	case ID_THIRDSIZE:
-		trap_Cvar_SetValue( "cg_splitviewThirdEqual", s_preferences.thirdsize.curvalue );
 		break;
 
 	case ID_BACK:
@@ -462,36 +432,6 @@ static void Preferences_MenuInit( void ) {
 	s_preferences.allowdownload.generic.x	       = PREFERENCES_X_POS;
 	s_preferences.allowdownload.generic.y	       = y;
 
-	y += BIGCHAR_HEIGHT+2;
-	s_preferences.splitvertical.generic.type		= MTYPE_SPINCONTROL;
-	s_preferences.splitvertical.generic.name		= "Splitscreen Mode:";
-	s_preferences.splitvertical.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_preferences.splitvertical.generic.callback	= Preferences_Event;
-	s_preferences.splitvertical.generic.id			= ID_SPLITVERTICAL;
-	s_preferences.splitvertical.generic.x			= PREFERENCES_X_POS;
-	s_preferences.splitvertical.generic.y			= y;
-	s_preferences.splitvertical.itemnames			= splitvertical_names;
-
-	y += BIGCHAR_HEIGHT+2;
-	s_preferences.splittextsize.generic.type		= MTYPE_SPINCONTROL;
-	s_preferences.splittextsize.generic.name		= "Splitscreen Text:";
-	s_preferences.splittextsize.generic.flags		= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_preferences.splittextsize.generic.callback	= Preferences_Event;
-	s_preferences.splittextsize.generic.id			= ID_SPLITTEXTSIZE;
-	s_preferences.splittextsize.generic.x			= PREFERENCES_X_POS;
-	s_preferences.splittextsize.generic.y			= y;
-	s_preferences.splittextsize.itemnames			= splittextsize_names;
-
-	y += BIGCHAR_HEIGHT+2;
-	s_preferences.thirdsize.generic.type			= MTYPE_SPINCONTROL;
-	s_preferences.thirdsize.generic.name			= "Third Player View:";
-	s_preferences.thirdsize.generic.flags			= QMF_PULSEIFFOCUS|QMF_SMALLFONT;
-	s_preferences.thirdsize.generic.callback		= Preferences_Event;
-	s_preferences.thirdsize.generic.id				= ID_THIRDSIZE;
-	s_preferences.thirdsize.generic.x				= PREFERENCES_X_POS;
-	s_preferences.thirdsize.generic.y				= y;
-	s_preferences.thirdsize.itemnames				= thirdsize_names;
-
 	s_preferences.back.generic.type	    = MTYPE_BITMAP;
 	s_preferences.back.generic.name     = ART_BACK0;
 	s_preferences.back.generic.flags    = QMF_LEFT_JUSTIFY|QMF_PULSEIFFOCUS;
@@ -520,9 +460,6 @@ static void Preferences_MenuInit( void ) {
 	Menu_AddItem( &s_preferences.menu, &s_preferences.forcemodel );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.drawteamoverlay );
 	Menu_AddItem( &s_preferences.menu, &s_preferences.allowdownload );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.splitvertical );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.splittextsize );
-	Menu_AddItem( &s_preferences.menu, &s_preferences.thirdsize );
 
 	Menu_AddItem( &s_preferences.menu, &s_preferences.back );
 
