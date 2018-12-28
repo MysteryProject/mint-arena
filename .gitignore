@@ -4,9 +4,9 @@ Makefile.local
 *tags
 misc/code_blocks/*.layout
 copy.sh
+small.sh
 final.sh
 NOTES.txt
-promode.zip
 .vscode
 
 # OS X
