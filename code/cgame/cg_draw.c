@@ -503,6 +503,29 @@ static void CG_DrawStatusBar( void ) {
 		}
 
 	}
+
+	CG_DrawString(640, 0, va("%du", (int)floor(cg.xyspeed)), UI_RIGHT | UI_GRADIENT | UI_SMALLFONT | UI_NOSCALE, colors[3]);
+
+	/*
+	color = 3;
+
+	//🠹 🠸 🠻 🠺
+
+	if (ps->stats[STAT_DFX_FLAG] & DFXF_KEYFORWARD)
+		CG_DrawString(316, 228, "W", UI_RIGHT | UI_GRADIENT | UI_BIGFONT | UI_NOSCALE, colors[color]);
+	else if (ps->stats[STAT_DFX_FLAG] & DFXF_KEYBACK)
+		CG_DrawString(316, 244, "S", UI_RIGHT | UI_GRADIENT | UI_BIGFONT | UI_NOSCALE, colors[color]);
+
+	if (ps->stats[STAT_DFX_FLAG] & DFXF_KEYRIGHT)
+		CG_DrawString(324, 236, "D", UI_RIGHT | UI_GRADIENT | UI_BIGFONT | UI_NOSCALE, colors[color]);
+	else if (ps->stats[STAT_DFX_FLAG] & DFXF_KEYLEFT)
+		CG_DrawString(308, 236, "A", UI_RIGHT | UI_GRADIENT | UI_BIGFONT | UI_NOSCALE, colors[color]);
+
+	if (ps->stats[STAT_DFX_FLAG] & DFXF_KEYJUMP)
+		CG_DrawString(316, 220, "J", UI_RIGHT | UI_GRADIENT | UI_BIGFONT | UI_NOSCALE, colors[color]);
+	else if (ps->stats[STAT_DFX_FLAG] & DFXF_KEYCROUCH)
+		CG_DrawString(316, 252, "C", UI_RIGHT | UI_GRADIENT | UI_BIGFONT | UI_NOSCALE, colors[color]);
+	*/
 }
 #endif // MISSIONPACK_HUD
 

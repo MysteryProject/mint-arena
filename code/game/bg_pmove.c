@@ -63,10 +63,20 @@ float pm_aircontrol = 150.0f;
 float pm_airstrafespeed = 30.0f;
 const float pm_aircontrolconstant = 32.0f;
 
+// crouch slide
+float pm_crouch_friction = 1.2f;
+float pm_crouch_accelerate = 10.0f;
+
+float pm_slickaccelerate = 15.0f;
+
 //
 float pm_addtime_weapondrop = 0.0f;
 float pm_addtime_weaponraise = 0.0f;
 float pm_addtime_weaponnoammo = 120.0f;
+
+#define WALLJUMP_VEL 380
+#define WALLJUMP_PUSH 425
+#define WALLJUMP_WAIT 400
 
 /*
 ===============
@@ -161,25 +171,34 @@ PM_ClipVelocity
 Slide off of the impacting surface
 ==================
 */
-void PM_ClipVelocity( vec3_t in, vec3_t normal, vec3_t out, float overbounce ) {
-	float	backoff;
-	float	change;
-	int		i;
-	
-	backoff = DotProduct (in, normal);
-	
-	if ( backoff < 0 ) {
-		backoff *= overbounce;
-	} else {
-		backoff /= overbounce;
-	}
+void _ClipVelocity( vec3_t in, vec3_t normal, vec3_t out, float overbounce, int max ) {
+	float backoff;
+	float change;
+	int i;
 
-	for ( i=0 ; i<3 ; i++ ) {
-		change = normal[i]*backoff;
+	backoff = DotProduct(in, normal);
+
+	if (backoff < 0)
+		backoff *= overbounce;
+	else
+		backoff /= overbounce;
+
+	for (i = 0; i < max; i++)
+	{
+		change = normal[i] * backoff;
 		out[i] = in[i] - change;
 	}
 }
 
+void PM_ClipVelocity(vec3_t in, vec3_t normal, vec3_t out, float overbounce)
+{
+	_ClipVelocity(in, normal, out, overbounce, 3);
+}
+
+void PM_ClipVelocity2(vec3_t in, vec3_t normal, vec3_t out, float overbounce)
+{
+	_ClipVelocity(in, normal, out, overbounce, 2);
+}
 
 /*
 ==================
@@ -217,7 +236,11 @@ static void PM_Friction( void ) {
 			// if getting knocked back, no friction
 			if ( ! (pm->ps->pm_flags & PMF_TIME_KNOCKBACK) ) {
 				control = speed < pm_stopspeed ? pm_stopspeed : speed;
-				drop += control*pm_friction*pml.frametime;
+
+				if ((pm->ps->pm_flags & PMF_DUCKED))
+					drop += control * pm_crouch_friction * pml.frametime;
+				else
+					drop += control * pm_friction * pml.frametime;
 			}
 		}
 	}
@@ -364,6 +387,99 @@ static void PM_SetMovementDir( void ) {
 	}
 }
 
+/*
+=============
+PM_CheckWallJump
+=============
+*/
+static qboolean PM_CheckWallJump(void)
+{
+	trace_t trace;
+	vec3_t normal = {0, 0, 0};
+	vec3_t down = {0, 0, -1};
+	float closest = 1;
+	int i;
+
+	if (pm->ps->walljumpTime > 0)
+		return qfalse;
+
+	if (pm->ps->walljumpCount >= 3) // allow 3 walljumps
+		return qfalse;
+
+	if (pm->ps->pm_flags & PMF_RESPAWNED)
+		return qfalse; // don't allow jump until all buttons are up
+
+	if (pm->cmd.upmove < 10)
+		return qfalse; // not holding jump
+
+	// must wait for jump to be released
+	if (pm->ps->pm_flags & PMF_JUMP_HELD)
+		return qfalse;
+
+	// don't walljump on steps
+	VectorMA(pm->ps->origin, STEPSIZE, down, down);
+	pm->trace(&trace, pm->ps->origin, pm->ps->mins, pm->ps->maxs, down, pm->ps->playerNum, pm->tracemask);
+	if (trace.fraction < 1.0)
+		return qfalse;
+
+	for (i = 0; i < 8; i++)
+	{
+		float dist;
+		vec3_t end;
+		end[0] = cos(2 * M_PI * i / 8);
+		end[1] = sin(2 * M_PI * i / 8);
+		end[2] = 0;
+		VectorAdd(pm->ps->origin, end, end);
+
+		pm->trace(&trace, pm->ps->origin, pm->ps->mins, pm->ps->maxs, end, pm->ps->playerNum, pm->tracemask);
+
+		if (trace.fraction < closest)
+		{
+			closest = trace.fraction;
+			VectorCopy(trace.plane.normal, normal);
+		}
+	}
+
+	if (closest < 1)
+	{
+		pml.groundPlane = qfalse; // jumping away
+		pml.walking = qfalse;
+		pm->ps->pm_flags |= PMF_JUMP_HELD;
+
+		pm->ps->groundEntityNum = ENTITYNUM_NONE;
+		pm->ps->walljumpTime = WALLJUMP_WAIT;
+		pm->ps->walljumpCount++;
+
+		// clip against the normal so that adding the bounce speed pushes you
+		// away (otherwise it might just slow you down if you jump right before
+		// hitting the wall)
+		PM_ClipVelocity(pm->ps->velocity, normal, pm->ps->velocity, OVERCLIP);
+
+		// push off the wall
+		VectorScale(normal, WALLJUMP_PUSH, normal);
+		VectorAdd(pm->ps->velocity, normal, pm->ps->velocity);
+
+		if (pm->ps->velocity[2] < WALLJUMP_VEL)
+			pm->ps->velocity[2] = WALLJUMP_VEL;
+
+		PM_AddEvent(EV_JUMP);
+
+		if (pm->cmd.forwardmove >= 0)
+		{
+			PM_ForceLegsAnim(LEGS_JUMP);
+			pm->ps->pm_flags &= ~PMF_BACKWARDS_JUMP;
+		}
+		else
+		{
+			PM_ForceLegsAnim(LEGS_JUMPB);
+			pm->ps->pm_flags |= PMF_BACKWARDS_JUMP;
+		}
+
+		return qtrue;
+	}
+
+	return qfalse;
+}
 
 /*
 =============
@@ -392,11 +508,19 @@ static qboolean PM_CheckJump( void ) {
 	pm->ps->pm_flags |= PMF_JUMP_HELD;
 
 	pm->ps->groundEntityNum = ENTITYNUM_NONE;
-	pm->ps->velocity[2] = JUMP_VELOCITY;
+
+	// marxy: ramp jump
+	if (pm->ps->velocity[2] > 0)
+		pm->ps->velocity[2] += JUMP_VELOCITY;
+	else
+		pm->ps->velocity[2] = JUMP_VELOCITY;
 
 	// extra velocity if jumping again within 400msecs
 	if (pm->ps->jumpTime > 0)
+	{
 		pm->ps->velocity[2] += 100;
+		pm->ps->stats[STAT_DFX_FLAG] |= DFXF_STAIRJUMP;
+	}
 
 	pm->ps->jumpTime = 400;
 
@@ -719,6 +843,7 @@ static void PM_AirMove( void ) {
 #endif
 
 	PM_StepSlideMove ( qtrue );
+	PM_CheckWallJump();
 }
 
 /*
@@ -834,7 +959,9 @@ static void PM_WalkMove( void ) {
 	// when a player gets hit, they temporarily lose
 	// full control, which allows them to be moved a bit
 	if ( ( pml.groundTrace.surfaceFlags & SURF_SLICK ) || pm->ps->pm_flags & PMF_TIME_KNOCKBACK ) {
-		accelerate = pm_airaccelerate;
+		accelerate = pm_slickaccelerate;
+	} else if ((pm->ps->pm_flags & PMF_DUCKED)&& pm->ps->crouchTime > 0 ) {
+		accelerate = pm_crouch_accelerate;
 	} else {
 		accelerate = pm_accelerate;
 	}
@@ -1367,6 +1494,12 @@ static void PM_CheckDuck (void)
 	{
 		pm->ps->maxs[2] = 16;
 		pm->ps->viewheight = CROUCH_VIEWHEIGHT;
+
+		if (!(pm->ps->pm_flags & PMF_DUCK_HELD))
+		{
+			pm->ps->pm_flags |= PMF_DUCK_HELD;
+			pm->ps->crouchTime = 750;
+		}
 	}
 	else
 	{
@@ -1953,6 +2086,11 @@ void PmoveSingle (pmove_t *pmove) {
 		pm->ps->pm_flags &= ~PMF_JUMP_HELD;
 	}
 
+	if (pm->cmd.upmove >= 0)
+	{
+		pm->ps->pm_flags &= ~PMF_DUCK_HELD;
+	}
+
 	// decide if backpedaling animations should be used
 	if ( pm->cmd.forwardmove < 0 ) {
 		pm->ps->pm_flags |= PMF_BACKWARDS_RUN;
@@ -2006,6 +2144,46 @@ void PmoveSingle (pmove_t *pmove) {
 	// make double jump function properly
 	if (pm->ps->jumpTime > 0)
 		pm->ps->jumpTime -= pml.msec;
+	else if (pm->ps->stats[STAT_DFX_FLAG] & DFXF_STAIRJUMP)
+		pm->ps->stats[STAT_DFX_FLAG] &= ~DFXF_STAIRJUMP;
+
+	// SLK handle crouchslide timing
+	if (pm->ps->crouchTime > 0)
+		pm->ps->crouchTime -= pml.msec;
+
+	// SLK Handle Walljumping
+	if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
+	{
+		pm->ps->walljumpTime = WALLJUMP_WAIT;
+		pm->ps->walljumpCount = 0;
+	}
+	else if (pm->ps->walljumpTime > 0)
+		pm->ps->walljumpTime -= pml.msec;
+
+	//SLK add keystate to playerstate
+	pm->ps->stats[STAT_DFX_FLAG] &= ~DFXF_KEYBACK;
+	pm->ps->stats[STAT_DFX_FLAG] &= ~DFXF_KEYFORWARD;
+
+	if (pm->cmd.forwardmove > 0)
+		pm->ps->stats[STAT_DFX_FLAG] |= DFXF_KEYFORWARD;
+	else if (pm->cmd.forwardmove < 0)
+		pm->ps->stats[STAT_DFX_FLAG] |= DFXF_KEYBACK;
+
+	pm->ps->stats[STAT_DFX_FLAG] &= ~DFXF_KEYLEFT;
+	pm->ps->stats[STAT_DFX_FLAG] &= ~DFXF_KEYRIGHT;
+
+	if (pm->cmd.rightmove > 0)
+		pm->ps->stats[STAT_DFX_FLAG] |= DFXF_KEYRIGHT;
+	else if (pm->cmd.rightmove < 0)
+		pm->ps->stats[STAT_DFX_FLAG] |= DFXF_KEYLEFT;
+
+	pm->ps->stats[STAT_DFX_FLAG] &= ~DFXF_KEYCROUCH;
+	pm->ps->stats[STAT_DFX_FLAG] &= ~DFXF_KEYJUMP;
+
+	if (pm->cmd.upmove > 0)
+		pm->ps->stats[STAT_DFX_FLAG] |= DFXF_KEYJUMP;
+	else if (pm->cmd.upmove < 0)
+		pm->ps->stats[STAT_DFX_FLAG] |= DFXF_KEYCROUCH;
 
 #ifdef MISSIONPACK
 	if ( pm->ps->powerups[PW_INVULNERABILITY] ) {

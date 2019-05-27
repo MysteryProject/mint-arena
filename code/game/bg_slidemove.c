@@ -255,6 +255,7 @@ void PM_StepSlideMove( qboolean gravity ) {
 //	vec3_t		delta, delta2;
 	vec3_t		up, down;
 	float		stepSize;
+	float		maxStepVelocity;
 
 	VectorCopy (pm->ps->origin, start_o);
 	VectorCopy (pm->ps->velocity, start_v);
@@ -268,9 +269,16 @@ void PM_StepSlideMove( qboolean gravity ) {
 	pm->trace (&trace, start_o, pm->ps->mins, pm->ps->maxs, down, pm->ps->playerNum, pm->tracemask);
 	VectorSet(up, 0, 0, 1);
 	// never step up when you still have up velocity
-	if ( pm->ps->velocity[2] > 0 && (trace.fraction == 1.0 ||
-										DotProduct(trace.plane.normal, up) < 0.7)) {
-		return;
+	maxStepVelocity = JUMP_VELOCITY + 100;
+
+	if ((pm->ps->pm_flags & PMF_JUMP_HELD) || pm->cmd.upmove < 10)
+	{
+		if (pm->ps->velocity[2] > 0 && 
+			(trace.fraction == 1.0 || DotProduct(trace.plane.normal, up) < 0.7) && 
+			(pm->ps->velocity[2] > maxStepVelocity || pm->ps->jumpTime <= 0))
+		{
+			return;
+		}
 	}
 
 	//VectorCopy (pm->ps->origin, down_o);
@@ -303,7 +311,10 @@ void PM_StepSlideMove( qboolean gravity ) {
 		VectorCopy (trace.endpos, pm->ps->origin);
 	}
 	if ( trace.fraction < 1.0 ) {
-		PM_ClipVelocity( pm->ps->velocity, trace.plane.normal, pm->ps->velocity, OVERCLIP );
+		if (pm->ps->stats[STAT_DFX_FLAG] & DFXF_STAIRJUMP)
+			PM_ClipVelocity2(pm->ps->velocity, trace.plane.normal, pm->ps->velocity, OVERCLIP);
+		else
+			PM_ClipVelocity(pm->ps->velocity, trace.plane.normal, pm->ps->velocity, OVERCLIP);
 	}
 
 #if 0

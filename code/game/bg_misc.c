@@ -1012,7 +1012,10 @@ vmNetField_t	bg_playerStateFields[] =
 { PSF(maxs[0]), 0 },
 { PSF(maxs[1]), 0 },
 { PSF(maxs[2]), 0 },
-{ PSF(jumpTime), -16 }
+{ PSF(jumpTime), -16 },
+{ PSF(crouchTime), -16 },
+{ PSF(walljumpTime), -16 },
+{ PSF(walljumpCount), -16 }
 };
 
 int bg_numPlayerStateFields = ARRAY_LEN(bg_playerStateFields);

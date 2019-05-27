@@ -406,7 +406,11 @@ typedef struct playerState_s {
 	int			jumppad_frame;
 	int			entityEventSequence;
 
+	// new movement
 	int jumpTime;
+	int crouchTime;
+	int walljumpTime;
+	int walljumpCount;
 } playerState_t;
 
 extern vmNetField_t	bg_entityStateFields[];
@@ -496,6 +500,7 @@ typedef enum {
 #define PMF_FOLLOW			4096	// spectate following another player
 #define PMF_SCOREBOARD		8192	// spectate as a scoreboard
 #define PMF_INVULEXPAND		16384	// invulnerability sphere set to full size
+#define PMF_DUCK_HELD		32768	// marxy: crouchslide
 
 #define	PMF_ALL_TIMES	(PMF_TIME_WATERJUMP|PMF_TIME_LAND|PMF_TIME_KNOCKBACK)
 
@@ -554,10 +559,21 @@ typedef enum {
 	STAT_KILLSTREAK,
 	STAT_MULTIKILL,
 	STAT_ARMOR_LEVEL,
+	STAT_DFX_FLAG,
 //#ifdef MISSIONPACK
 	STAT_PERSISTANT_POWERUP
 //#endif
 } statIndex_t;
+
+typedef enum {
+    DFXF_STAIRJUMP  = 1,    // for cpm stair jumping
+    DFXF_KEYFORWARD = 2,    // handling keypresses
+    DFXF_KEYBACK    = 4,    // ***
+    DFXF_KEYLEFT    = 8,
+    DFXF_KEYRIGHT   = 16,
+    DFXF_KEYJUMP    = 32,
+    DFXF_KEYCROUCH  = 64,
+} dfx_flagsIndex_t;
 
 
 // player_state->persistant[] indexes
