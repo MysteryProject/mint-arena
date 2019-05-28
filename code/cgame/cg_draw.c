@@ -1902,6 +1902,16 @@ static void CG_DrawCrosshair(void)
 	float		f;
 	float		x, y;
 	int			ca;
+	int color;
+	vec4_t cColor;
+	static float defaultColors[6][4] = {
+			{1.0f, 0.0f, 0.0f, 1.0f},
+			{1.0f, 0.2f, 0.2f, 1.0f},
+			{0.5f, 0.5f, 0.5f, 1.0f},
+			{0.5f, 0.5f, 1.0f, 1.0f},
+			{0.5f, 0.5f, 0.5f, 1.0f},
+			{1.0f, 1.0f, 1.0f, 1.0f}
+	};
 
 	if ( !cg_drawCrosshair.integer ) {
 		return;
@@ -1916,14 +1926,6 @@ static void CG_DrawCrosshair(void)
 	}
 
 	CG_SetScreenPlacement(PLACE_CENTER, PLACE_CENTER);
-
-	// set color based on health
-	if ( cg_crosshairHealth.integer ) {
-		vec4_t		hcolor;
-
-		CG_ColorForHealth( hcolor );
-		trap_R_SetColor( hcolor );
-	}
 
 	if (cg.numViewports > 1) {
 		// In splitscreen make crosshair normal [non-splitscreen] size, so it is easier to see.
@@ -1948,6 +1950,22 @@ static void CG_DrawCrosshair(void)
 		ca = 0;
 	}
 	hShader = cgs.media.crosshairShader[ ca % NUM_CROSSHAIRS ];
+
+	color = cg_crosshairColor.integer;
+
+	if (color == 6)
+	{
+		cColor[0] = cg_crosshairColorRed.integer / 255.0f;
+		cColor[1] = cg_crosshairColorGreen.integer / 255.0f;
+		cColor[2] = cg_crosshairColorBlue.integer / 255.0f;
+		cColor[3] = cg_crosshairColorAlpha.integer / 255.0f;
+
+		trap_R_SetColor(cColor);
+	}
+	else
+	{
+		trap_R_SetColor(defaultColors[color]);
+	}
 
 	CG_DrawPic( ((SCREEN_WIDTH-w)*0.5f)+x, ((SCREEN_HEIGHT-h)*0.5f)+y, w, h, hShader );
 
@@ -1986,11 +2004,11 @@ static void CG_DrawCrosshair3D(void)
 	}
 
 	// set color based on health
-	if ( cg_crosshairHealth.integer ) {
-		CG_ColorForHealth( hcolor );
-	} else {
+	//if ( cg_crosshairHealth.integer ) {
+	//	CG_ColorForHealth( hcolor );
+	//} else {
 		hcolor[0] = hcolor[1] = hcolor[2] = hcolor[3] = 1;
-	}
+	//}
 
 	w = cg_crosshairSize.value;
 
@@ -2073,11 +2091,11 @@ static void CG_DrawThirdPersonCrosshair(void)
 	}
 
 	// set color based on health
-	if ( cg_crosshairHealth.integer ) {
-		CG_ColorForHealth( hcolor );
-	} else {
+	//if ( cg_crosshairHealth.integer ) {
+	//	CG_ColorForHealth( hcolor );
+	//} else {
 		hcolor[0] = hcolor[1] = hcolor[2] = hcolor[3] = 1;
-	}
+	//}
 
 	w = cg_crosshairSize.value;
 

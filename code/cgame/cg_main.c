@@ -180,8 +180,12 @@ vmCvar_t	cg_drawRewards;
 vmCvar_t	cg_crosshairSize;
 vmCvar_t	cg_crosshairX;
 vmCvar_t	cg_crosshairY;
-vmCvar_t	cg_crosshairHealth;
-vmCvar_t	cg_draw2D;
+vmCvar_t	cg_crosshairColor;
+vmCvar_t cg_crosshairColorRed;
+vmCvar_t	cg_crosshairColorGreen;
+vmCvar_t cg_crosshairColorBlue;
+vmCvar_t cg_crosshairColorAlpha;
+vmCvar_t cg_draw2D;
 vmCvar_t	cg_drawStatus;
 vmCvar_t	cg_animSpeed;
 vmCvar_t	cg_debugAnim;
@@ -403,7 +407,11 @@ static cvarTable_t cgameCvarTable[] = {
 	{&cg_drawRewards, "cg_drawRewards", "1", CVAR_ARCHIVE, RANGE_BOOL},
 	{&cg_drawLagometer, "cg_drawLagometer", "1", CVAR_ARCHIVE, RANGE_BOOL},
 	{&cg_crosshairSize, "cg_crosshairSize", "24", CVAR_ARCHIVE, RANGE_ALL},
-	{&cg_crosshairHealth, "cg_crosshairHealth", "0", CVAR_ARCHIVE, RANGE_BOOL},
+	{&cg_crosshairColor, "cg_crosshairColor", "0", CVAR_ARCHIVE, RANGE_INT(0, 6)},
+	{&cg_crosshairColorRed, "cg_crosshairColorR", "255", CVAR_ARCHIVE, RANGE_INT(0, 255)},
+	{&cg_crosshairColorGreen, "cg_crosshairColorG", "255", CVAR_ARCHIVE, RANGE_INT(0, 255)},
+	{&cg_crosshairColorBlue, "cg_crosshairColorB", "255", CVAR_ARCHIVE, RANGE_INT(0, 255)},
+	{&cg_crosshairColorAlpha, "cg_crosshairColorA", "255", CVAR_ARCHIVE, RANGE_INT(0, 255)},
 	{&cg_crosshairX, "cg_crosshairX", "0", CVAR_ARCHIVE, RANGE_ALL},
 	{&cg_crosshairY, "cg_crosshairY", "0", CVAR_ARCHIVE, RANGE_ALL},
 	{&cg_brassTime, "cg_brassTime", "2500", CVAR_ARCHIVE, RANGE_ALL},
