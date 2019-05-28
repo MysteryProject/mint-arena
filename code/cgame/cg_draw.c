@@ -1889,6 +1889,15 @@ CROSSHAIR
 ================================================================================
 */
 
+const float defaultCrosshairColors[6][4] =
+		{
+				{1.0f, 1.0f, 1.0f, 1.0f}, // White
+				{0.2f, 1.0f, 0.2f, 1.0f}, // Green
+				{0.2f, 1.0f, 1.0f, 1.0f}, // Cyan
+				{0.2f, 0.2f, 1.0f, 1.0f}, // Blue
+				{1.0f, 0.2f, 0.2f, 1.0f}, // Red
+				{1.0f, 1.0f, 0.2f, 1.0f}	// Yellow
+};
 
 /*
 =================
@@ -1904,14 +1913,6 @@ static void CG_DrawCrosshair(void)
 	int			ca;
 	int color;
 	vec4_t cColor;
-	static float defaultColors[6][4] = {
-			{1.0f, 0.0f, 0.0f, 1.0f},
-			{1.0f, 0.2f, 0.2f, 1.0f},
-			{0.5f, 0.5f, 0.5f, 1.0f},
-			{0.5f, 0.5f, 1.0f, 1.0f},
-			{0.5f, 0.5f, 0.5f, 1.0f},
-			{1.0f, 1.0f, 1.0f, 1.0f}
-	};
 
 	if ( !cg_drawCrosshair.integer ) {
 		return;
@@ -1964,7 +1965,7 @@ static void CG_DrawCrosshair(void)
 	}
 	else
 	{
-		trap_R_SetColor(defaultColors[color]);
+		trap_R_SetColor(defaultCrosshairColors[color]);
 	}
 
 	CG_DrawPic( ((SCREEN_WIDTH-w)*0.5f)+x, ((SCREEN_HEIGHT-h)*0.5f)+y, w, h, hShader );
