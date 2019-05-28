@@ -67,7 +67,7 @@ enum {
 	ID_BACK
 };
 
-#define	NUM_CROSSHAIRS			10
+#define	NUM_CROSSHAIRS			45
 
 
 typedef struct {
@@ -131,7 +131,7 @@ static const char *thirdsize_names[] =
 static void Preferences_SetMenuItems( void ) {
 	float textScale;
 
-	s_preferences.crosshair.curvalue		= (int)trap_Cvar_VariableValue( "cg_drawCrosshair" ) % NUM_CROSSHAIRS;
+	s_preferences.crosshair.curvalue		= (int)trap_Cvar_VariableValue( "cg_drawCrosshair" );
 	s_preferences.crosshairhealth.curvalue	= trap_Cvar_VariableValue( "cg_crosshairHealth" ) != 0;
 	s_preferences.viewbob.curvalue			= trap_Cvar_VariableValue( "cg_viewbob" ) != 0;
 	s_preferences.simpleitems.curvalue		= trap_Cvar_VariableValue( "cg_simpleItems" ) != 0;
@@ -480,7 +480,7 @@ void Preferences_Cache( void ) {
 	trap_R_RegisterShaderNoMip( ART_BACK0 );
 	trap_R_RegisterShaderNoMip( ART_BACK1 );
 	for( n = 0; n < NUM_CROSSHAIRS; n++ ) {
-		s_preferences.crosshairShader[n] = trap_R_RegisterShaderNoMip( va("gfx/2d/crosshair%c", 'a' + n ) );
+		s_preferences.crosshairShader[n] = trap_R_RegisterShaderNoMip( va("crosshairs/crosshair%d", n+1 ) );
 	}
 }
 

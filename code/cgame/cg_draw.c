@@ -1950,7 +1950,7 @@ static void CG_DrawCrosshair(void)
 	if (ca < 0) {
 		ca = 0;
 	}
-	hShader = cgs.media.crosshairShader[ ca % NUM_CROSSHAIRS ];
+	hShader = cgs.media.crosshairShader[ ca ];
 
 	color = cg_crosshairColor.integer;
 
@@ -2024,7 +2024,7 @@ static void CG_DrawCrosshair3D(void)
 	if (ca < 0) {
 		ca = 0;
 	}
-	hShader = cgs.media.crosshairShader[ ca % NUM_CROSSHAIRS ];
+	hShader = cgs.media.crosshairShader[ ca ];
 
 	// Use a different method rendering the crosshair so players don't see two of them when
 	// focusing their eyes at distant objects with high stereo separation
@@ -2111,7 +2111,7 @@ static void CG_DrawThirdPersonCrosshair(void)
 	if (ca < 0) {
 		ca = 0;
 	}
-	hShader = cgs.media.crosshairShader[ ca % NUM_CROSSHAIRS ];
+	hShader = cgs.media.crosshairShader[ ca ];
 
 	xmax = tan(cg.refdef.fov_x * M_PI / 360.0f);
 	// We are going to trace to the next shootable object and place the crosshair in front of it.
