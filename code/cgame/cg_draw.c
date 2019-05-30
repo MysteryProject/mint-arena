@@ -1910,7 +1910,6 @@ static void CG_DrawCrosshair(void)
 	qhandle_t	hShader;
 	float		f;
 	float		x, y;
-	int			ca;
 	int color;
 	vec4_t cColor;
 
@@ -1945,12 +1944,7 @@ static void CG_DrawCrosshair(void)
 
 	x = cg_crosshairX.integer;
 	y = cg_crosshairY.integer;
-
-	ca = cg_drawCrosshair.integer;
-	if (ca < 0) {
-		ca = 0;
-	}
-	hShader = cgs.media.crosshairShader[ ca ];
+	hShader = cgs.media.crosshairShader[cg_drawCrosshair.integer];
 
 	color = cg_crosshairColor.integer;
 
