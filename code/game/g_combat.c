@@ -971,6 +971,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 #ifdef MISSIONPACK
 	vec3_t		bouncedir, impactpoint;
 #endif
+	float z_ratio;
+	float z_rel;
+	int height;
+	float targ_maxs2;
 
 	if (!targ->takedamage) {
 		return;
@@ -1178,6 +1182,33 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		// set the last player who damaged the target
 		targ->player->lasthurt_player = attacker->s.number;
 		targ->player->lasthurt_mod = mod;
+
+		if (attacker->player && targ->health > 0)
+		{
+			targ_maxs2 = targ->s.maxs[2];
+
+			height = abs(targ->s.mins[2]) + targ_maxs2;
+			z_rel = point[2] - targ->r.currentOrigin[2] + abs(targ->s.mins[2]);
+			z_ratio = z_rel / height;
+			//G_Printf("height: %d z_rel: %f z_ration: %f\n", height, z_rel, z_ratio);
+
+			if (z_ratio > 0.85)
+			{
+				G_Printf("%s hit %s with a headshot\n", attacker->player->pers.netname, targ->player->pers.netname);
+			}
+			else if (z_ratio > 0.73)
+			{
+				G_Printf("%s hit %s in the torso\n", attacker->player->pers.netname, targ->player->pers.netname);
+			}
+			else if (z_ratio > 0.50)
+			{
+				G_Printf("%s hit %s in the stomach\n", attacker->player->pers.netname, targ->player->pers.netname);
+			}
+			else
+			{
+				G_Printf("%s hit %s in the legs\n", attacker->player->pers.netname, targ->player->pers.netname);
+			}
+		}
 	}
 
 	// do the damage
