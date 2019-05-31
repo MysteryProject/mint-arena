@@ -429,9 +429,12 @@ usercmd_t->button bits definitions
 */
 
 #define	BUTTON_ATTACK		(1<<0)
+#define BUTTON_ATTACK2	(1<<1)
 
 #define	BUTTON_USE_HOLDABLE	(1<<2)
 #define	BUTTON_GESTURE		(1<<3)
+
+#define BUTTON_GRAPPLE	(1<<4)
 
 #define	BUTTON_AFFIRMATIVE	(1<<5)
 #define	BUTTON_NEGATIVE		(1<<6)

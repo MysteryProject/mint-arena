@@ -813,6 +813,8 @@ void ClearRegisteredItems( void ) {
 		RegisterItem( BG_FindItemForWeapon( WP_MACHINEGUN ) );
 	}
 	RegisterItem( BG_FindItemForWeapon( WP_GAUNTLET ) );
+
+	RegisterItem(BG_FindItemForWeapon(WP_GRAPPLING_HOOK));
 #ifdef MISSIONPACK
 	if( g_gametype.integer == GT_HARVESTER ) {
 		RegisterItem( BG_FindItem( "Red Cube" ) );

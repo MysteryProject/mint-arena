@@ -495,6 +495,8 @@ void G_RunMissile( gentity_t *ent ) {
 			// If grapple, reset owner
 			if (ent->parent && ent->parent->player && ent->parent->player->hook == ent) {
 				ent->parent->player->hook = NULL;
+				ent->parent->player->hookFired = qfalse;
+				ent->parent->player->fireHeld = qfalse;
 			}
 			G_FreeEntity( ent );
 			return;
@@ -663,7 +665,7 @@ gentity_t *fire_grapple (gentity_t *self, vec3_t start, vec3_t dir) {
 	hook->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;		// move a bit on the very first frame
 	hook->s.otherEntityNum = self->s.number; // use to match beam in client
 	VectorCopy( start, hook->s.pos.trBase );
-	VectorScale( dir, 800, hook->s.pos.trDelta );
+	VectorScale( dir, g_hookSpeed.integer, hook->s.pos.trDelta );
 	SnapVector( hook->s.pos.trDelta );			// save net bandwidth
 	VectorCopy (start, hook->r.currentOrigin);
 

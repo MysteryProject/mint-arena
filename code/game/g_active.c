@@ -838,10 +838,11 @@ void PlayerThink_real( gentity_t *ent ) {
 	}
 
 	// Let go of the hook if we aren't firing
-	if ( player->ps.weapon == WP_GRAPPLING_HOOK &&
-		player->hook && !( ucmd->buttons & BUTTON_ATTACK ) ) {
-		Weapon_HookFree(player->hook);
-	}
+	// offhand grapple
+	//if ( player->ps.weapon == WP_GRAPPLING_HOOK &&
+	//	player->hook && !( ucmd->buttons & BUTTON_ATTACK ) ) {
+	//	Weapon_HookFree(player->hook);
+	//}
 
 	// set up for pmove
 	oldEventSequence = player->ps.eventSequence;
@@ -947,9 +948,26 @@ void PlayerThink_real( gentity_t *ent ) {
 	}
 	SendPendingPredictableEvents( &ent->player->ps );
 
-	if ( !( ent->player->ps.eFlags & EF_FIRING ) ) {
-		player->fireHeld = qfalse;		// for grapple
+	//if ( !( ent->player->ps.eFlags & EF_FIRING ) ) {
+	//	player->fireHeld = qfalse;		// for grapple
+	//}
+
+	if (player->ps.pm_type != PM_DEAD)
+	{
+		if ((pm.cmd.buttons & BUTTON_GRAPPLE) && !player->hookFired)
+		{
+			Weapon_GrapplingHook_Fire(ent);
+			player->hookFired = qtrue;
+		}
+		else if (!(pm.cmd.buttons & BUTTON_GRAPPLE))
+		{
+			player->fireHeld = qfalse;
+			player->hookFired = qfalse;
+		}
 	}
+
+	if (player->hook && !player->fireHeld)
+		Weapon_HookFree(player->hook);
 
 	// use the snapped origin for linking so it matches client predicted versions
 	VectorCopy( ent->s.pos.trBase, ent->r.currentOrigin );

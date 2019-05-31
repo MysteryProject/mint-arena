@@ -600,6 +600,10 @@ GRAPPLING HOOK
 
 void Weapon_GrapplingHook_Fire (gentity_t *ent)
 {
+	// offhand grapple
+	AngleVectors(ent->player->ps.viewangles, forward, right, up);
+	CalcMuzzlePoint(ent, forward, right, up, muzzle);
+
 	if (!ent->player->fireHeld && !ent->player->hook)
 		fire_grapple (ent, muzzle, forward);
 

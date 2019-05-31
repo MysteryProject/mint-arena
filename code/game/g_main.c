@@ -121,6 +121,8 @@ vmCvar_t g_gunGameWeapons;
 vmCvar_t pmove_walljump;
 vmCvar_t pmove_crouchslide;
 vmCvar_t pmove_aircontrol;
+vmCvar_t g_offhandHook;
+vmCvar_t g_hookSpeed;
 
 static cvarTable_t gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -212,7 +214,11 @@ static cvarTable_t gameCvarTable[] = {
 	{&pmove_crouchslide, "pmove_crouchslide", "1", CVAR_SYSTEMINFO, 0, RANGE_BOOL},
 	{&pmove_aircontrol, "pmove_aircontrol", "150.0", CVAR_SYSTEMINFO, 0, RANGE_FLOAT(0, INT_MAX)},
 
-	{&g_rankings, "g_rankings", "0", 0, 0, RANGE_ALL}};
+	{&g_offhandHook, "g_offhandHook", "0", 0, 0, RANGE_BOOL},
+	{&g_hookSpeed, "g_hookSpeed", "1000", 0, 0, RANGE_INT(0, INT_MAX)},
+
+	{&g_rankings, "g_rankings", "0", 0, 0, RANGE_ALL}
+};
 
 static int gameCvarTableSize = ARRAY_LEN( gameCvarTable );
 
