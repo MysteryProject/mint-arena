@@ -597,6 +597,10 @@ void CG_PredictPlayerState( void ) {
 	cg_pmove.pmove_fixed = pmove_fixed.integer;// | cg_pmove_fixed.integer;
 	cg_pmove.pmove_msec = pmove_msec.integer;
 
+	cg_pmove.pmove_walljump = pmove_walljump.integer;
+	cg_pmove.pmove_crouchslide = pmove_crouchslide.integer;
+	cg_pmove.pmove_aircontrol = pmove_aircontrol.value;
+
 	cg_pmove.pmove_overbounce = pmove_overbounce.integer;
 
 	// run cmds

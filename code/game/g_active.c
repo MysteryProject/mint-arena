@@ -910,6 +910,10 @@ void PlayerThink_real( gentity_t *ent ) {
 	pm.pmove_fixed = pmove_fixed.integer | player->pers.pmoveFixed;
 	pm.pmove_msec = pmove_msec.integer;
 
+	pm.pmove_walljump = pmove_walljump.integer;
+	pm.pmove_crouchslide = pmove_crouchslide.integer;
+	pm.pmove_aircontrol = pmove_aircontrol.value;
+
 	pm.pmove_overbounce = pmove_overbounce.integer;
 
 	VectorCopy( player->ps.origin, player->oldOrigin );

@@ -816,3 +816,6 @@ extern	vmCvar_t	g_instagib;
 extern vmCvar_t g_instagibWeapon;
 extern vmCvar_t g_nextmapmode;
 extern vmCvar_t g_gunGameWeapons;
+extern vmCvar_t pmove_walljump;
+extern vmCvar_t pmove_crouchslide;
+extern vmCvar_t pmove_aircontrol;

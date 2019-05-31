@@ -534,6 +534,10 @@ typedef struct {
 	int			pmove_fixed;
 	int			pmove_msec;
 
+	int pmove_walljump; // max walljumps
+	qboolean pmove_crouchslide; // enable crouchslides
+	float pmove_aircontrol; // cpma style movement
+
 	// callbacks to test the world
 	// these will be different functions during game and cgame
 	void		(*trace)( trace_t *results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentMask );

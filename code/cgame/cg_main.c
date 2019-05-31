@@ -348,6 +348,11 @@ vmCvar_t cg_showLowAmmoPerWeapon[MAX_SPLITVIEW];
 vmCvar_t cg_newWeaponModels[MAX_SPLITVIEW];
 vmCvar_t cg_variants[MAX_SPLITVIEW][WP_NUM_WEAPONS];
 
+//
+vmCvar_t pmove_walljump;
+vmCvar_t pmove_crouchslide;
+vmCvar_t pmove_aircontrol;
+
 #ifdef MISSIONPACK
 vmCvar_t cg_currentSelectedPlayer[MAX_SPLITVIEW];
 vmCvar_t	cg_currentSelectedPlayerName[MAX_SPLITVIEW];
@@ -561,6 +566,9 @@ static cvarTable_t cgameCvarTable[] = {
 	{&cg_introPlayed, "com_introPlayed", "0", CVAR_ARCHIVE, RANGE_BOOL},
 	{&cg_joystickDebug, "in_joystickDebug", "0", CVAR_TEMP, RANGE_BOOL},
 	{&ui_stretch, "ui_stretch", "0", CVAR_ARCHIVE, RANGE_BOOL},
+	{&pmove_walljump, "pmove_walljump", "3", CVAR_SYSTEMINFO, RANGE_INT(0, INT_MAX)},
+	{&pmove_crouchslide, "pmove_crouchslide", "1", CVAR_SYSTEMINFO, RANGE_BOOL},
+	{&pmove_aircontrol, "pmove_aircontrol", "150.0", CVAR_SYSTEMINFO, RANGE_FLOAT(0, INT_MAX)},
 };
 
 static userCvarTable_t userCvarTable[] = {
@@ -587,7 +595,7 @@ static userCvarTable_t userCvarTable[] = {
 	{cg_newWeaponModels, "cg_newWeaponModels", "0", CVAR_ARCHIVE, RANGE_BOOL},
 #ifdef MISSIONPACK
 	{cg_currentSelectedPlayer, "cg_currentSelectedPlayer", "0", CVAR_ARCHIVE, RANGE_ALL},
-	{cg_currentSelectedPlayerName, "cg_currentSelectedPlayerName", "", CVAR_ARCHIVE, RANGE_ALL}
+	{cg_currentSelectedPlayerName, "cg_currentSelectedPlayerName", "", CVAR_ARCHIVE, RANGE_ALL},
 #endif
 };
 

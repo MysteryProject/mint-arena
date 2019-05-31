@@ -118,6 +118,9 @@ vmCvar_t	g_instagib;
 vmCvar_t 	g_instagibWeapon;
 vmCvar_t g_nextmapmode;
 vmCvar_t g_gunGameWeapons;
+vmCvar_t pmove_walljump;
+vmCvar_t pmove_crouchslide;
+vmCvar_t pmove_aircontrol;
 
 static cvarTable_t gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -205,8 +208,11 @@ static cvarTable_t gameCvarTable[] = {
 	{&pmove_fixed, "pmove_fixed", "0", CVAR_SYSTEMINFO, 0, RANGE_BOOL},
 	{&pmove_msec, "pmove_msec", "8", CVAR_SYSTEMINFO, 0, RANGE_ALL},
 
-	{&g_rankings, "g_rankings", "0", 0, 0, RANGE_ALL}
-};
+	{&pmove_walljump, "pmove_walljump", "3", CVAR_SYSTEMINFO, 0, RANGE_INT(0, INT_MAX)},
+	{&pmove_crouchslide, "pmove_crouchslide", "1", CVAR_SYSTEMINFO, 0, RANGE_BOOL},
+	{&pmove_aircontrol, "pmove_aircontrol", "150.0", CVAR_SYSTEMINFO, 0, RANGE_FLOAT(0, INT_MAX)},
+
+	{&g_rankings, "g_rankings", "0", 0, 0, RANGE_ALL}};
 
 static int gameCvarTableSize = ARRAY_LEN( gameCvarTable );
 

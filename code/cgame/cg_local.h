@@ -1544,6 +1544,10 @@ extern vmCvar_t cg_showLowAmmoPerWeapon[MAX_SPLITVIEW];
 extern vmCvar_t cg_newWeaponModels[MAX_SPLITVIEW];
 extern vmCvar_t cg_variants[MAX_SPLITVIEW][WP_NUM_WEAPONS];
 
+extern vmCvar_t pmove_walljump;
+extern vmCvar_t pmove_crouchslide;
+extern vmCvar_t pmove_aircontrol;
+
 //
 // cg_main.c
 //

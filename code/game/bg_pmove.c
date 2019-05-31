@@ -237,7 +237,7 @@ static void PM_Friction( void ) {
 			if ( ! (pm->ps->pm_flags & PMF_TIME_KNOCKBACK) ) {
 				control = speed < pm_stopspeed ? pm_stopspeed : speed;
 
-				if ((pm->ps->pm_flags & PMF_DUCKED))
+				if (pm->pmove_crouchslide && (pm->ps->pm_flags & PMF_DUCKED))
 					drop += control * pm_crouch_friction * pml.frametime;
 				else
 					drop += control * pm_friction * pml.frametime;
@@ -400,10 +400,10 @@ static qboolean PM_CheckWallJump(void)
 	float closest = 1;
 	int i;
 
-	if (pm->ps->walljumpTime > 0)
+	if (pm->pmove_walljump == 0 || pm->ps->walljumpTime > 0)
 		return qfalse;
 
-	if (pm->ps->walljumpCount >= 3) // allow 3 walljumps
+	if (pm->ps->walljumpCount >= pm->pmove_walljump)
 		return qfalse;
 
 	if (pm->ps->pm_flags & PMF_RESPAWNED)
@@ -761,7 +761,7 @@ static void PM_AirControl(vec3_t wishDir, float wishSpeed)
 
 	if ((dotProd = DotProduct(pm->ps->velocity, wishDir)) > 0)
 	{
-		k = pm_aircontrolconstant * pm_aircontrol * dotProd * dotProd * pml.frametime;
+		k = pm_aircontrolconstant * pm->pmove_aircontrol * dotProd * dotProd * pml.frametime;
 		pm->ps->velocity[0] = pm->ps->velocity[0] * speed + wishDir[0] * k;
 		pm->ps->velocity[1] = pm->ps->velocity[1] * speed + wishDir[1] * k;
 		VectorNormalize(pm->ps->velocity);
@@ -806,23 +806,29 @@ static void PM_AirMove( void ) {
 	wishspeed = VectorNormalize(wishdir);
 	wishspeed *= scale;
 
-	wishSpeed2 = wishspeed;
-	
-	if (DotProduct(pm->ps->velocity, wishdir) < 0)
-		accel = pm_airstopaccelerate;
-	else
-		accel = pm_airaccelerate;
-
-	if (pm->ps->movementDir == 2 || pm->ps->movementDir == 6)
+	if (pm->pmove_aircontrol)
 	{
-		accel = pm_airstrafaccelerate;
+		wishSpeed2 = wishspeed;
 
-		if (wishspeed > pm_airstrafespeed)
-			wishspeed = pm_airstrafespeed;
+		if (DotProduct(pm->ps->velocity, wishdir) < 0)
+			accel = pm_airstopaccelerate;
+		else
+			accel = pm_airaccelerate;
+
+		if (pm->ps->movementDir == 2 || pm->ps->movementDir == 6)
+		{
+			accel = pm_airstrafaccelerate;
+
+			if (wishspeed > pm_airstrafespeed)
+				wishspeed = pm_airstrafespeed;
+		}
 	}
+	else
+		accel = 1.0;
 
 	PM_Accelerate(wishdir, wishspeed, accel);
-	PM_AirControl(wishdir, wishSpeed2);
+	if (pm->pmove_aircontrol)
+		PM_AirControl(wishdir, wishSpeed2);
 
 	// we may have a ground plane that is very steep, even
 	// though we don't have a groundentity
@@ -960,7 +966,7 @@ static void PM_WalkMove( void ) {
 	// full control, which allows them to be moved a bit
 	if ( ( pml.groundTrace.surfaceFlags & SURF_SLICK ) || pm->ps->pm_flags & PMF_TIME_KNOCKBACK ) {
 		accelerate = pm_slickaccelerate;
-	} else if ((pm->ps->pm_flags & PMF_DUCKED)&& pm->ps->crouchTime > 0 ) {
+	} else if (pm->pmove_crouchslide && (pm->ps->pm_flags & PMF_DUCKED)&& pm->ps->crouchTime > 0 ) {
 		accelerate = pm_crouch_accelerate;
 	} else {
 		accelerate = pm_accelerate;
