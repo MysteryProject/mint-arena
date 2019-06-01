@@ -1467,6 +1467,16 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 		cent->pe.headless = qtrue;
 		break;
 
+	case EV_COMBOBREAK:
+		DEBUGNAME("EV_COMBOBREAK");
+		trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.comboBreakerSound);
+		break;
+
+	case EV_FIRSTBLOOD:
+		DEBUGNAME("EV_FIRSTBLOOD");
+		trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.firstBloodSound);
+		break;
+
 	default:
 		DEBUGNAME("UNKNOWN");
 		CG_Error( "Unknown event: %i", event );

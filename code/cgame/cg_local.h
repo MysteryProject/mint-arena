@@ -1226,6 +1226,8 @@ typedef struct {
 	sfxHandle_t killstreak_25;
 	sfxHandle_t killstreak_30;
 	sfxHandle_t headshotSound;
+	sfxHandle_t comboBreakerSound;
+	sfxHandle_t firstBloodSound;
 
 	// new award medals
 	qhandle_t medalmultikill_2;

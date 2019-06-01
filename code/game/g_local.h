@@ -458,6 +458,8 @@ typedef struct {
 #ifdef MISSIONPACK
 	int			portalSequence;
 #endif
+
+	qboolean firstBlood; // if the first kill has happened yet
 } level_locals_t;
 
 

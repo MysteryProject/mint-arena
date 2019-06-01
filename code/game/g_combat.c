@@ -680,6 +680,11 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				G_AddEvent(attacker, EV_MULTIKILL + streak - 1, attacker->player->ps.stats[STAT_MULTIKILL]);
 			}
 
+			if (self->player->ps.stats[STAT_MULTIKILL] > 0)
+			{
+				G_AddEvent(attacker, EV_COMBOBREAK, 0);
+			}
+
 			if (attacker->player->ps.stats[STAT_KILLSTREAK] % 5 == 0)
 			{
 				int killstreak = attacker->player->ps.stats[STAT_KILLSTREAK];
@@ -688,6 +693,12 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 					killstreak = 30;
 
 				G_AddEvent(attacker, EV_KILLSTREAK + (killstreak / 5) - 1, attacker->player->ps.stats[STAT_KILLSTREAK]);
+			}
+
+			if (!level.firstBlood)
+			{
+				G_AddEvent(attacker, EV_FIRSTBLOOD, 0);
+				level.firstBlood = qtrue;
 			}
 		}
 	} else {
