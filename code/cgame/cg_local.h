@@ -195,6 +195,7 @@ typedef struct {
 	float			barrelAngle;
 	int				barrelTime;
 	qboolean		barrelSpinning;
+	qboolean headless;
 
 	// third person gun flash origin
 	vec3_t			flashOrigin;
@@ -1224,6 +1225,7 @@ typedef struct {
 	sfxHandle_t killstreak_20;
 	sfxHandle_t killstreak_25;
 	sfxHandle_t killstreak_30;
+	sfxHandle_t headshotSound;
 
 	// new award medals
 	qhandle_t medalmultikill_2;
@@ -1922,6 +1924,7 @@ void CG_LightningBoltBeam( vec3_t start, vec3_t end );
 void CG_ScorePlum( int playerNum, vec3_t org, int score );
 
 void CG_GibPlayer( vec3_t playerOrigin );
+void CG_GibPlayerHead( vec3_t playerOrigin );
 void CG_BigExplode( vec3_t playerOrigin );
 
 void CG_Bleed( vec3_t origin, int entityNum );

@@ -768,9 +768,10 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	// never gib in a nodrop
 	contents = trap_PointContents( self->r.currentOrigin, -1 );
 
-	gibPlayer = ( (self->health <= GIB_HEALTH && !(contents & CONTENTS_NODROP)) || meansOfDeath == MOD_SUICIDE );
+	gibPlayer = ((self->health <= GIB_HEALTH && !(contents & CONTENTS_NODROP) && !self->player->lastHitHeadshot) || meansOfDeath == MOD_SUICIDE);
 
-	if ( gibPlayer ) {
+	if (gibPlayer)
+	{
 		// gib death
 		GibEntity( self );
 
@@ -806,6 +807,16 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		( ( self->player->ps.torsoAnim & ANIM_TOGGLEBIT ) ^ ANIM_TOGGLEBIT ) | anim;
 
 	G_AddEvent( self, EV_DEATH1 + rndAnim, gibPlayer );
+
+	if (self->player->lastHitHeadshot)
+	{
+		G_AddEvent(attacker, EV_HEADSHOT, 0);
+		G_AddEvent(self, EV_GIB_PLAYER_HEADSHOT, 0);
+		self->player->headless = qtrue;
+		//self->player->lastHitHeadshot = qfalse;
+	}
+	else
+		self->player->headless = qfalse;
 
 	// globally cycle through the different death animations
 	rndAnim = ( rndAnim + 1 ) % 3;
@@ -971,7 +982,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 #ifdef MISSIONPACK
 	vec3_t		bouncedir, impactpoint;
 #endif
-	float z_ratio;
+	float z_ratio = 0.0f;
 	float z_rel;
 	int height;
 	float targ_maxs2;
@@ -1188,14 +1199,14 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			targ_maxs2 = targ->s.maxs[2];
 
 			height = abs(targ->s.mins[2]) + targ_maxs2;
+
+			if(targ->player->ps.pm_flags & PMF_DUCKED)
+				height *= 0.75;
+
 			z_rel = point[2] - targ->r.currentOrigin[2] + abs(targ->s.mins[2]);
 			z_ratio = z_rel / height;
 			//G_Printf("height: %d z_rel: %f z_ration: %f\n", height, z_rel, z_ratio);
-
-			if (z_ratio > 0.85)
-			{
-				G_Printf("%s hit %s with a headshot\n", attacker->player->pers.netname, targ->player->pers.netname);
-			}
+			/*
 			else if (z_ratio > 0.73)
 			{
 				G_Printf("%s hit %s in the torso\n", attacker->player->pers.netname, targ->player->pers.netname);
@@ -1208,6 +1219,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			{
 				G_Printf("%s hit %s in the legs\n", attacker->player->pers.netname, targ->player->pers.netname);
 			}
+			*/
 		}
 	}
 
@@ -1220,7 +1232,14 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			
 		if ( targ->health <= 0 ) {
 			if ( player )
+			{
 				targ->flags |= FL_NO_KNOCKBACK;
+
+				if (z_ratio > 0.85)
+					targ->player->lastHitHeadshot = qtrue;
+				else
+					targ->player->lastHitHeadshot = qfalse;
+			}
 
 			if (targ->health < -999)
 				targ->health = -999;

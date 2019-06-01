@@ -1531,6 +1531,7 @@ static void CG_RegisterSounds( void ) {
 	cgs.media.killstreak_20 = trap_S_RegisterSound("sound/award/killstreak_20.wav", qtrue);
 	cgs.media.killstreak_25 = trap_S_RegisterSound("sound/award/killstreak_25.wav", qtrue);
 	cgs.media.killstreak_30 = trap_S_RegisterSound("sound/award/killstreak_30.wav", qtrue);
+	cgs.media.headshotSound = trap_S_RegisterSound("sound/award/headshot.wav", qtrue);
 }
 
 //===================================================================================

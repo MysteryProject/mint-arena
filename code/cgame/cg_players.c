@@ -2988,7 +2988,7 @@ void CG_Player( centity_t *cent ) {
 	// add the head
 	//
 	head.hModel = pi->headModel;
-	if (!head.hModel) {
+	if (!head.hModel || cent->pe.headless) {
 		return;
 	}
 	head.customSkin = legs.customSkin;
@@ -3052,6 +3052,8 @@ void CG_ResetPlayerEntity( centity_t *cent ) {
 	cent->pe.torso.yawing = qfalse;
 	cent->pe.torso.pitchAngle = cent->rawAngles[PITCH];
 	cent->pe.torso.pitching = qfalse;
+
+	cent->pe.headless = qfalse;
 
 	if ( cg_debugPosition.integer ) {
 		CG_Printf("%i ResetPlayerEntity yaw=%f\n", cent->currentState.number, cent->pe.torso.yawAngle );

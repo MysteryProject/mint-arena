@@ -509,6 +509,8 @@ void CopyToBodyQue( gentity_t *ent ) {
 		body->takedamage = qtrue;
 	}
 
+	if (ent->player->headless)
+		G_AddEvent(body, EV_BODY_NOHEAD, 0);
 
 	VectorCopy ( body->s.pos.trBase, body->r.currentOrigin );
 	trap_LinkEntity (body);
@@ -1276,6 +1278,9 @@ void PlayerSpawn(gentity_t *ent) {
 	if ( ent->player->sess.spectatorState != SPECTATOR_FOLLOW ) {
 		PlayerEndFrame( ent );
 	}
+
+	ent->player->headless = qfalse;
+	ent->player->lastHitHeadshot = qfalse;
 
 	// clear entity state values
 	BG_PlayerStateToEntityState( &player->ps, &ent->s, qtrue );

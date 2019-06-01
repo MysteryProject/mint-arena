@@ -353,8 +353,9 @@ struct gplayer_s {
 	char		*areabits;
 
 	qboolean hookFired; // offhand grapple
+	qboolean headless;
+	qboolean lastHitHeadshot;
 };
-
 
 // A single client can have multiple players, for splitscreen.
 typedef struct gconnection_s {

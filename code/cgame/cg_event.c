@@ -1451,7 +1451,22 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 		if (!cg_oldAwards.integer)
 			trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.multikill_8);
 		break;
-		
+
+	case EV_HEADSHOT:
+		DEBUGNAME("EV_HEADSHOT");
+		trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.headshotSound);
+		break;
+	case EV_GIB_PLAYER_HEADSHOT:
+		DEBUGNAME("EV_GIB_PLAYER_HEADSHOT");
+		trap_S_StartSound(NULL, es->number, CHAN_VOICE, cgs.media.gibSound);
+		cent->pe.headless = qtrue;
+		CG_GibPlayerHead(cent->lerpOrigin);
+		break;
+	case EV_BODY_NOHEAD:
+		DEBUGNAME("EV_BODY_NOHEAD");
+		cent->pe.headless = qtrue;
+		break;
+
 	default:
 		DEBUGNAME("UNKNOWN");
 		CG_Error( "Unknown event: %i", event );

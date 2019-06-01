@@ -729,6 +729,26 @@ void CG_GibPlayer( vec3_t playerOrigin ) {
 	CG_LaunchGib( origin, velocity, cgs.media.gibLeg );
 }
 
+void CG_GibPlayerHead(vec3_t playerOrigin)
+{
+	vec3_t	origin, velocity;
+
+	if ( !cg_blood.integer ) {
+		return;
+	}
+
+	VectorCopy( playerOrigin, origin );
+	origin[2]+=25;
+	velocity[0] = crandom()*GIB_VELOCITY;
+	velocity[1] = crandom()*GIB_VELOCITY;
+	velocity[2] = GIB_JUMP + crandom()*GIB_VELOCITY;
+	if ( rand() & 1 ) {
+		CG_LaunchGib( origin, velocity, cgs.media.gibSkull );
+	} else {
+		CG_LaunchGib( origin, velocity, cgs.media.gibBrain );
+	}
+}
+
 /*
 ==================
 CG_LaunchExplode
