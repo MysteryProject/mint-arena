@@ -1530,7 +1530,7 @@ void Menu_Draw( menuframework_s *menu )
 	{
 		itemptr = (menucommon_s*)menu->items[i];
 
-		if (itemptr->flags & QMF_HIDDEN)
+		if ((itemptr->flags & QMF_HIDDEN) || ((itemptr->flags & QMF_DEVELOPER) && !trap_Cvar_VariableValue("developer")))
 			continue;
 
 		if (itemptr->ownerdraw)
