@@ -701,4 +701,8 @@ void UI_SPUnlockMedals_f( void );
 
 void UI_InitGameinfo( void );
 
+// new
+void MenuMain(void);
+void CH_MenuMain(void);
+
 #endif

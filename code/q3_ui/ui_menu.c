@@ -38,7 +38,7 @@ MAIN MENU
 
 #include "ui_local.h"
 
-#define ID_DEBUG 9
+#define ID_DEBUG 18
 #define ID_SINGLEPLAYER 10
 #define ID_MULTIPLAYER 11
 #define ID_SETUP 12
@@ -132,7 +132,7 @@ void Main_MenuEvent(void *ptr, int event)
 		break;
 
 	case ID_DEBUG:
-		// load debug menu
+		MenuMain();
 		break;
 	}
 }
