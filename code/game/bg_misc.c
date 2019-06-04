@@ -1315,24 +1315,16 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 		}
 		else
 #endif
+		if (item->quantity == 100)
+			return (ps->stats[STAT_ARMOR] >= ARMOR_LVL2_MAX) ? qfalse : qtrue;
+		else if (item->quantity == 50)
 		{
-			if (item->quantity == 100) // lvl2 (red)
-			{
-				upperBound = ARMOR_LVL2_MAX;
-				redArmor = qtrue;
-			}
-			else if (item->quantity == 50) // lvl1 (yellow)
-			{
-				upperBound = ARMOR_LVL1_MAX;
-			}
-			else
-				upperBound = ARMOR_LVL2_MAX;
+			if (ps->stats[STAT_ARMOR_LEVEL] <= ARMOR_LVL1)
+				return (ps->stats[STAT_ARMOR] >= ARMOR_LVL1_MAX) ? qfalse : qtrue;
+
+			return (ps->stats[STAT_ARMOR] > ARMOR_LVL2_BREAKPOINT) ? qfalse : qtrue;
 		}
 
-		// we also clamp armor to the maxhealth for handicapping
-		if ( ps->stats[STAT_ARMOR] >= upperBound && !(redArmor && ps->stats[STAT_ARMOR_LEVEL] != 2)) {
-			return qfalse;
-		}
 		return qtrue;
 
 	case IT_HEALTH:

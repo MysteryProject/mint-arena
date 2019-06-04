@@ -297,33 +297,26 @@ int Pickup_Armor( gentity_t *ent, gentity_t *other ) {
 	if (ent->item->quantity == 100) // lvl2 (red)
 	{
 		other->player->ps.stats[STAT_ARMOR] = ARMOR_LVL2_MAX; // always give full armor when picking up lvl2
-		other->player->ps.stats[STAT_ARMOR_LEVEL] = 2;
+		other->player->ps.stats[STAT_ARMOR_LEVEL] = ARMOR_LVL2;
 	}
 	else if (ent->item->quantity == 50) // lvl1 (yellow)
 	{
-		if (other->player->ps.stats[STAT_ARMOR_LEVEL] == 2)
-		{
-			other->player->ps.stats[STAT_ARMOR] += 50;
-			if (other->player->ps.stats[STAT_ARMOR] > ARMOR_LVL1_MAX)
-				other->player->ps.stats[STAT_ARMOR] = ARMOR_LVL1_MAX;
-		}
-		else
-		{
-			other->player->ps.stats[STAT_ARMOR] += 100;
-			if (other->player->ps.stats[STAT_ARMOR] > ARMOR_LVL1_MAX)
-				other->player->ps.stats[STAT_ARMOR] = ARMOR_LVL1_MAX;
-		}
+		if (other->player->ps.stats[STAT_ARMOR_LEVEL] == ARMOR_LVL2)
+			other->player->ps.stats[STAT_ARMOR] *= ARMOR_LVL2_MULTIPLIER;
+
+		other->player->ps.stats[STAT_ARMOR] += 100;
+
+		if (other->player->ps.stats[STAT_ARMOR] > ARMOR_LVL1_MAX)
+			other->player->ps.stats[STAT_ARMOR] = ARMOR_LVL1_MAX;
+
+		other->player->ps.stats[STAT_ARMOR_LEVEL] = ARMOR_LVL1;
 	}
 	else // shard
 	{
-		if (other->player->ps.stats[STAT_ARMOR_LEVEL] == 2)
-		{
-			other->player->ps.stats[STAT_ARMOR] += 2; // only give have the amount if armor is lvl2
-		}
-		else
-		{
-			other->player->ps.stats[STAT_ARMOR] += ent->item->quantity;
-		}
+		if (other->player->ps.stats[STAT_ARMOR] <= 0)
+			other->player->ps.stats[STAT_ARMOR_LEVEL] = ARMOR_LVL1;
+
+		other->player->ps.stats[STAT_ARMOR] += 2;
 	}
 
 	return RESPAWN_ARMOR;

@@ -63,13 +63,20 @@ Suite 120, Rockville, Maryland 20850 USA.
 #define	DEFAULT_GRAVITY		800
 #define	GIB_HEALTH			-40
 
-#define	ARMOR_LVL1_PROTECTION	0.66
+typedef enum {
+	ARMOR_LVL0,
+	ARMOR_LVL1,
+	ARMOR_LVL2
+} armorLevel_t;
+
+#define	ARMOR_LVL1_PROTECTION	0.60
 #define ARMOR_LVL1_MAX 150
 #define ARMOR_LVL1_THRESHOLD 100 // point at which red breaks down to yellow
 
 #define ARMOR_LVL2_PROTECTION 0.75
 #define ARMOR_LVL2_MAX 200
-#define ARMOR_LVL2_THRESHOLD 150 // max we can repair to with yellow armor
+#define ARMOR_LVL2_BREAKPOINT (ARMOR_LVL1_MAX * (ARMOR_LVL1_PROTECTION / ARMOR_LVL2_PROTECTION))
+#define ARMOR_LVL2_MULTIPLIER (ARMOR_LVL2_PROTECTION / ARMOR_LVL1_PROTECTION)
 
 #define	MAX_LOCATIONS		64
 

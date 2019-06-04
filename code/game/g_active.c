@@ -455,9 +455,9 @@ void PlayerTimerActions( gentity_t *ent, int msec ) {
 		}
 
 		// count down armor when over max
-		if ( player->ps.stats[STAT_ARMOR] > ARMOR_LVL2_MAX ) {
-			player->ps.stats[STAT_ARMOR]--;
-		}
+		//if ( player->ps.stats[STAT_ARMOR] > ARMOR_LVL2_MAX ) {
+		//	player->ps.stats[STAT_ARMOR]--;
+		//}
 	}
 #ifdef MISSIONPACK
 	if( BG_ItemForItemNum( player->ps.stats[STAT_PERSISTANT_POWERUP] )->giTag == PW_AMMOREGEN ) {
@@ -952,7 +952,7 @@ void PlayerThink_real( gentity_t *ent ) {
 	//	player->fireHeld = qfalse;		// for grapple
 	//}
 
-	if (player->ps.pm_type != PM_DEAD)
+	if (player->ps.pm_type != PM_DEAD && g_offhandHook.integer)
 	{
 		if ((pm.cmd.buttons & BUTTON_GRAPPLE) && !player->hookFired)
 		{
