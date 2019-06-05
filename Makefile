@@ -1135,6 +1135,7 @@ Q3CGOBJ = \
   $(B)/$(BASEGAME)/ui/ui_variants.o \
   $(B)/$(BASEGAME)/ui/ui_video.o \
   \
+  $(B)/$(BASEGAME)/qcommon/q_json.o \
   $(B)/$(BASEGAME)/qcommon/q_math.o \
   $(B)/$(BASEGAME)/qcommon/q_shared.o \
   $(B)/$(BASEGAME)/qcommon/q_unicode.o
@@ -1325,6 +1326,7 @@ Q3GOBJ = \
   $(B)/$(BASEGAME)/botlib/l_log.o \
   $(B)/$(BASEGAME)/botlib/l_memory.o \
   \
+  $(B)/$(BASEGAME)/qcommon/q_json.o \
   $(B)/$(BASEGAME)/qcommon/q_math.o \
   $(B)/$(BASEGAME)/qcommon/q_shared.o
 
