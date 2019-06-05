@@ -9,148 +9,203 @@
 
 #define NO_MISSILE NULL, NULL, 0, 0, 0, VEC3(0, 0, 0)
 
-cg_fireInfo_t cg_fireInfo[] = {
-    {
-        "rail_fire",
-        "sound/weapons/railgun/rg_hum.wav",
-        NULL,
-        VEC3(1, 0.5f, 0),
-        FLASH1("sound/weapons/railgun/railgf1a.wav"),
-        NO_MISSILE,
-        BF_NONE,
-        qtrue
-    },
-    {
-        "minirail_fire",
-        "sound/weapons/minirail/rg_hum.wav",
-        NULL,
-        VEC3(1, 0.5f, 0),
-        FLASH1("sound/weapons/minirail/railgf1a.wav"),
-        NO_MISSILE,
-        BF_NONE,
-        qtrue
-    },
-    {
-        "gauntlet_fire",
-        NULL,
-        "sound/weapons/melee/fstrun.wav",
-        VEC3(0.6f, 0.6f, 1),
-        FLASH1("sound/weapons/melee/fstatck.wav"),
-        NO_MISSILE,
-        BF_NONE,
-        qfalse
-    },
-    {
-        "lightning_fire",
-        "sound/weapons/melee/fsthum.wav",
-        "sound/weapons/lightning/lg_hum.wav",
-        VEC3(0.6f, 0.6f, 1.0f),
-        FLASH1("sound/weapons/lightning/lg_fire.wav"),
-        NO_MISSILE,
-        BF_NONE,
-        qfalse
-    },
-    {
-        "mg_fire",
-        NULL,
-        NULL,
-        VEC3(1, 1, 0),
-        FLASH4("sound/weapons/machinegun/machgf1b.wav",
-                "sound/weapons/machinegun/machgf2b.wav",
-                "sound/weapons/machinegun/machgf3b.wav",
-                "sound/weapons/machinegun/machgf4b.wav"),
-        NO_MISSILE,
-        BF_BULLET,
-        qfalse
-    },
-    {
-        "sg_fire",
-        NULL,
-        NULL,
-        VEC3(1, 1, 0),
-        FLASH1("sound/weapons/shotgun/sshotf1b.wav"),
-        NO_MISSILE,
-        BF_SHELL,
-        qfalse
-    },
-    {
-        "rocket_fire",
-        NULL,
-        NULL,
-        VEC3(1, 0.75f, 0),
-        FLASH1("sound/weapons/rocket/rocklf1a.wav"),
-        "models/ammo/rocket/rocket.md3",
-        "sound/weapons/rocket/rockfly.wav",
-        2000,
-        64,
-        200,
-        VEC3(1, 0.75f, 0),
-        BF_NONE,
-        qfalse
-    },
-    {
-        "grenade_fire",
-        NULL,
-        NULL,
-        VEC3(1, 0.7f, 0),
-        FLASH1("sound/weapons/grenade/grenlf1a.wav"),
-        "models/ammo/grenade1.md3",
-        NULL,
-        700,
-        32,
-        0,
-        VEC3(0, 0, 0),
-        BF_NONE,
-        qfalse
-    },
-    {
-        "impact_fire",
-        NULL,
-        NULL,
-        VEC3(1, 0.6f, 0),
-        FLASH1("sound/weapons/impactcannon/rocklf1a.wav"),
-        NULL,
-        "sound/weapons/impactcannon/rockfly.wav",
-        0,
-        0,
-        0,
-        VEC3(0, 0, 0),
-        BF_NONE,
-        qfalse
-    },
-    {
-        "plasma_fire",
-        NULL,
-        NULL,
-        VEC3(0.6f, 0.6f, 1),
-        FLASH1("sound/weapons/plasma/hyprbf1a.wav"),
-        NULL,
-        "sound/weapons/plasma/lasfly.wav",
-        0,
-        0,
-        0,
-        VEC3(0, 0, 0),
-        BF_NONE,
-        qfalse
-    },
-    {
-        "bfg_fire",
-        "sound/weapons/bfg/bfg_hum.wav",
-        NULL,
-        VEC3(1, 0.7f, 1),
-        FLASH1("sound/weapons/bfg/bfg_fire.wav"),
-        "models/weaphits/bfg.md3",
-        "sound/weapons/rocket/rockfly.wav",
-        0,
-        0,
-        0,
-        VEC3(0, 0, 0),
-        BF_NONE,
-        qfalse
-    },
-};
+#define MAX_FIREINFO 32
+#define FIREINFO_FILE "fire_info.json"
+#define MAX_TOKENS 1024
 
-int cg_numFireInfo = ARRAY_LEN(cg_fireInfo);
+cg_fireInfo_t cg_fireInfo[MAX_FIREINFO];
+int cg_numFireInfo = 0;
+
+static qboolean jsoneq(const char *json, jsmntok_t *tok, const char *s) {
+  if (tok->type == JSMN_STRING && (int)strlen(s) == tok->end - tok->start &&
+      Q_strncmp(json + tok->start, s, tok->end - tok->start) == 0) {
+    return qtrue;
+  }
+  return qfalse;
+}
+
+void CG_ParseFireInfoJSON(char *json)
+{
+    int i, j, k, r;
+    jsmn_parser parser;
+    jsmntok_t tokens[MAX_TOKENS];
+
+    jsmn_init(&parser);
+    r = jsmn_parse(&parser, json, strlen(json), tokens, sizeof(tokens) / sizeof(tokens[0]));
+
+    CG_Printf("Parsing json: %d\n", strlen(json), json);
+
+    if (r < 0)
+    {
+        trap_Print( va( S_COLOR_RED "Failed to parse JSON: %d\n", r ) );
+		return;
+    }
+
+    if (tokens[0].type != JSMN_ARRAY)
+    {
+        trap_Print(S_COLOR_RED "JSON top object is not an array\n");
+        return;
+    }
+
+    for (i = 1; i < r; i++)
+    {
+        if (tokens[i].type == JSMN_ARRAY)
+        {
+            for (j = 1; i + j < r; j += 2)
+            {
+                jsmntok_t *keyToken = &tokens[i + j];
+                jsmntok_t *valueToken;
+                char key[128];
+                char value[MAX_QPATH];
+
+                if (keyToken->type == JSMN_ARRAY)
+                {
+                    i += j - 1;
+                    break; // we hit the next item
+                }
+
+                valueToken = &tokens[i + j + 1];
+
+                Q_strncpyz(key, json + keyToken->start, keyToken->end - keyToken->start);
+                Q_strncpyz(value, json + valueToken->start, valueToken->end - valueToken->start);
+
+                CG_Printf("Parsing token %s: %s\n", key, value);
+
+                if (Q_stricmp(key, "name") == 0)
+                {
+                    cg_fireInfo[cg_numFireInfo].identifier = trap_HeapMalloc(strlen(value));
+                    Q_strncpyz(cg_fireInfo[cg_numFireInfo].identifier, value, strlen(value));
+                } 
+                else if (Q_stricmp(key, "idleSound") == 0)
+                {
+                    cg_fireInfo[cg_numFireInfo].idleSound = trap_HeapMalloc(strlen(value));
+                    Q_strncpyz(cg_fireInfo[cg_numFireInfo].idleSound, value, strlen(value));
+                }
+                else if (Q_stricmp(key, "fireSound") == 0)
+                {
+                    cg_fireInfo[cg_numFireInfo].fireSound = trap_HeapMalloc(strlen(value));
+                    Q_strncpyz(cg_fireInfo[cg_numFireInfo].fireSound, value, strlen(value));
+                }
+                else if (Q_stricmp(key, "flashColor") == 0)
+                {
+                    char colorValue[8];
+                    jsmntok_t *colorTok = &tokens[i + j + 2];
+
+                    Q_strncpyz(colorValue, json + colorTok->start, colorTok->end - colorTok->start);
+                    cg_fireInfo[cg_numFireInfo].flashColor[0] = atof(colorValue);
+
+                    colorTok = &tokens[i + j + 3];
+                    Q_strncpyz(colorValue, json + colorTok->start, colorTok->end - colorTok->start);
+                    cg_fireInfo[cg_numFireInfo].flashColor[1] = atof(colorValue);
+
+                    colorTok = &tokens[i + j + 4];
+                    Q_strncpyz(colorValue, json + colorTok->start, colorTok->end - colorTok->start);
+                    cg_fireInfo[cg_numFireInfo].flashColor[2] = atof(colorValue);
+                    j += 3;
+                }
+                else if (Q_stricmp(key, "flashSound") == 0)
+                {
+                    char path[MAX_QPATH];
+                    jsmntok_t *tok;
+
+                    for(k = 0; k < keyToken->size && k < 4; k++)
+                    {
+                        tok = &tokens[i + j + 2 + k];
+                        Q_strncpyz(path, json + tok->start, tok->end - tok->start);
+                        cg_fireInfo[cg_numFireInfo].flashSound[k] = trap_HeapMalloc(strlen(path));
+                        Q_strncpyz(cg_fireInfo[cg_numFireInfo].flashSound[k], path, strlen(path));
+                    }
+
+                    j += keyToken->size;
+                }
+                else if (Q_stricmp(key, "missileModel") == 0)
+                {
+                    cg_fireInfo[cg_numFireInfo].missileModel = trap_HeapMalloc(strlen(value));
+                    Q_strncpyz(cg_fireInfo[cg_numFireInfo].missileModel, value, strlen(value));
+                }
+                else if (Q_stricmp(key, "missileSound") == 0)
+                {
+                    cg_fireInfo[cg_numFireInfo].missileSound = trap_HeapMalloc(strlen(value));
+                    Q_strncpyz(cg_fireInfo[cg_numFireInfo].missileSound, value, strlen(value));
+                }
+                else if (Q_stricmp(key, "missileTrailTime") == 0)
+                {
+                    cg_fireInfo[cg_numFireInfo].missileTrailTime = atoi(value);
+                }
+                else if (Q_stricmp(key, "missileTrailRadius") == 0)
+                {
+                    cg_fireInfo[cg_numFireInfo].missileTrailRadius = atoi(value);
+                }
+                else if (Q_stricmp(key, "missileDlight") == 0)
+                {
+                    cg_fireInfo[cg_numFireInfo].missileDlight = atoi(value);
+                }
+                else if (Q_stricmp(key, "missileDlightColor") == 0)
+                {
+                    char colorValue[8];
+                    jsmntok_t *colorTok = &tokens[i + j + 2];
+
+                    Q_strncpyz(colorValue, json + colorTok->start, colorTok->end - colorTok->start);
+                    cg_fireInfo[cg_numFireInfo].missileDlightColor[0] = atof(colorValue);
+
+                    colorTok = &tokens[i + j + 3];
+                    Q_strncpyz(colorValue, json + colorTok->start, colorTok->end - colorTok->start);
+                    cg_fireInfo[cg_numFireInfo].missileDlightColor[1] = atof(colorValue);
+
+                    colorTok = &tokens[i + j + 4];
+                    Q_strncpyz(colorValue, json + colorTok->start, colorTok->end - colorTok->start);
+                    cg_fireInfo[cg_numFireInfo].missileDlightColor[2] = atof(colorValue);
+
+                    j += 2;
+                }
+                else if (Q_stricmp(key, "brassType") == 0)
+                {
+                    if (Q_stricmp(value, "none") == 0)
+                        cg_fireInfo[cg_numFireInfo].brassType = BF_NONE;
+                    else if (Q_stricmp(value, "bullet") == 0)
+                        cg_fireInfo[cg_numFireInfo].brassType = BF_BULLET;
+                    else if (Q_stricmp(value, "shell") == 0)
+                        cg_fireInfo[cg_numFireInfo].brassType = BF_SHELL;
+                }
+                else if (Q_stricmp(key, "customShading") == 0)
+                {
+                    if (Q_stricmp(value, "true") == 0)
+                        cg_fireInfo[cg_numFireInfo].customShading = qtrue;
+                    else 
+                        cg_fireInfo[cg_numFireInfo].customShading = qfalse;
+                }
+            }
+            CG_Printf("Parsed info for %s\n", cg_fireInfo[cg_numFireInfo].identifier);
+            cg_numFireInfo++;
+        }
+    }
+}
+
+void CG_FireInfoLoad(void)
+{
+    int				len;
+	fileHandle_t	f;
+	char			buf[8192];
+
+	len = trap_FS_FOpenFile( FIREINFO_FILE, &f, FS_READ );
+	
+    if ( !f ) {
+		trap_Print( va( S_COLOR_RED "file not found: %s\n", FIREINFO_FILE ) );
+		return;
+	}
+
+	if ( len >= 8192 ) {
+		trap_Print( va( S_COLOR_RED "file too large: %s is %i, max allowed is %i\n", FIREINFO_FILE, len, MAX_BOTS_TEXT ) );
+		trap_FS_FCloseFile( f );
+		return;
+	}
+
+	trap_FS_Read( buf, len, f );
+	buf[len] = 0;
+	trap_FS_FCloseFile( f );
+
+    CG_ParseFireInfoJSON(buf);
+}
 
 cg_fireInfo_t *CG_FireInfo(const char *name)
 {

@@ -1879,6 +1879,7 @@ typedef struct
 
 extern cg_fireInfo_t cg_fireInfo[];
 extern int cg_numFireInfo;
+extern void CG_FireInfoLoad(void);
 extern cg_fireInfo_t *CG_FireInfo(const char *name);
 
 //

@@ -2866,6 +2866,9 @@ void CG_Ingame_Init( int serverMessageNum, int serverCommandSequence, int maxSpl
 
 	CG_RegisterPlayers();		// if low on memory, some players will be deferred
 
+	//CG_LoadString("weapons");
+	CG_FireInfoLoad();
+
 #ifdef MISSIONPACK_HUD
 	CG_AssetCache();
 	CG_LoadHudMenu();      // load new hud stuff
