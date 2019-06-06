@@ -1175,7 +1175,7 @@ void CG_NewPlayerInfo( int playerNum ) {
 
 	for(i = 0; i < MAX_SPLITVIEW; i++)
 	{
-		if (cg.localPlayers[i].playerNum == playerNum)
+		if (cg.localPlayers[i].playerNum > 0 && cg.localPlayers[i].playerNum == playerNum)
 		{
 			localPlayer = qtrue;
 			break;
