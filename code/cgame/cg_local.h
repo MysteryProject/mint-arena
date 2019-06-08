@@ -846,6 +846,7 @@ typedef struct {
 	float		bobfracsin;
 	int			bobcycle;
 	float		xyspeed;
+	float xyzspeed;
 
 	// development tool
 	refEntity_t		testModelEntity;

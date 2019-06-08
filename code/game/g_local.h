@@ -831,3 +831,4 @@ extern vmCvar_t g_hookSpeed;
 extern vmCvar_t g_knockout;
 extern vmCvar_t g_damageScale;
 extern vmCvar_t g_ammoScale;
+extern vmCvar_t g_knockoutMaxVelocity;

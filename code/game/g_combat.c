@@ -1286,7 +1286,17 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	if (take) {
 		if (g_knockout.integer && targ->player)
 		{
-			if (mod == MOD_TRIGGER_HURT || mod == MOD_TELEFRAG || mod == MOD_CRUSH)
+			float xyzspeed = sqrt(targ->player->ps.velocity[0] * targ->player->ps.velocity[0] +
+								  targ->player->ps.velocity[1] * targ->player->ps.velocity[1] +
+								  targ->player->ps.velocity[2] * targ->player->ps.velocity[2]);
+
+			if (xyzspeed >= g_knockoutMaxVelocity.integer)
+			{
+				targ->player->ps.stats[STAT_HEALTH] = targ->health = -999;
+				targ->enemy = attacker;
+				targ->die(targ, inflictor, attacker, -999, MOD_EXPLODED);
+			}
+			else if (mod == MOD_TRIGGER_HURT || mod == MOD_TELEFRAG || mod == MOD_CRUSH)
 			{
 				targ->player->ps.stats[STAT_HEALTH] = targ->health = -999;
 				targ->enemy = attacker;

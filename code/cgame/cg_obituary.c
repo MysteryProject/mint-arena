@@ -248,6 +248,10 @@ static void CG_AddObituary(char *attackerName, char *targetName, team_t attacker
             weapString = "Knocked Out";
             break;
 
+        case MOD_EXPLODED:
+            weapString = "SpEeD";
+            break;
+
         case MI_NONE:
         case MOD_UNKNOWN:
         default:

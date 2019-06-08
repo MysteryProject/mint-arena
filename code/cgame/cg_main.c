@@ -573,7 +573,7 @@ static cvarTable_t cgameCvarTable[] = {
 	{&pmove_crouchslide, "pmove_crouchslide", "1", CVAR_SYSTEMINFO, RANGE_BOOL},
 	{&pmove_aircontrol, "pmove_aircontrol", "150.0", CVAR_SYSTEMINFO, RANGE_FLOAT(0, INT_MAX)},
 	{&cg_staminaDrawScale, "cg_staminaDrawScale", "1", CVAR_ARCHIVE, RANGE_FLOAT(0, INT_MAX)},
-	{&cg_drawSpeed, "cg_drawSpeed", "0", CVAR_ARCHIVE, RANGE_BOOL},
+	{&cg_drawSpeed, "cg_drawSpeed", "0", CVAR_ARCHIVE, RANGE_INT(0, 2)},
 };
 
 static userCvarTable_t userCvarTable[] = {

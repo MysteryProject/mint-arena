@@ -1098,6 +1098,7 @@ typedef enum {
 #endif
 	MOD_GRAPPLE,
 	MOD_KNOCKOUT,
+	MOD_EXPLODED,
 	MOD_SUICIDE_TEAM_CHANGE
 } meansOfDeath_t;
 

@@ -126,6 +126,7 @@ vmCvar_t g_hookSpeed;
 vmCvar_t g_knockout;
 vmCvar_t g_damageScale;
 vmCvar_t g_ammoScale;
+vmCvar_t g_knockoutMaxVelocity;
 
 static cvarTable_t gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -187,8 +188,9 @@ static cvarTable_t gameCvarTable[] = {
 	{&g_nextmapmode, "g_nextmapmode", "", CVAR_ARCHIVE, 0, RANGE_ALL}, // "" - default, use nextmap command
 																	   // "random" - randomly choses a map from arenas list (currently just a random map)
 																	   // "file" - loads from mapycylce.txt (TODO)
-	{&g_damageScale, "g_damageScale", "1.0", 0, GCF_TRACK_CHANGE, RANGE_FLOAT(INT_MIN, INT_MAX)},
-	{&g_ammoScale, "g_ammoScale", "1.0", 0, GCF_TRACK_CHANGE, RANGE_FLOAT(INT_MIN, INT_MAX)},
+	{&g_damageScale, "g_damageScale", "1.0", 0, CVAR_SERVERINFO | GCF_TRACK_CHANGE, RANGE_FLOAT(INT_MIN, INT_MAX)},
+	{&g_ammoScale, "g_ammoScale", "1.0", 0, CVAR_SERVERINFO | GCF_TRACK_CHANGE, RANGE_FLOAT(INT_MIN, INT_MAX)},
+	{&g_knockoutMaxVelocity, "g_knockoutMaxVelocity", "10000", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, GCF_TRACK_CHANGE, RANGE_INT(0, INT_MAX)},
 
 	{&g_podiumDist, "g_podiumDist", "80", 0, 0, RANGE_ALL},
 	{&g_podiumDrop, "g_podiumDrop", "70", 0, 0, RANGE_ALL},

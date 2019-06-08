@@ -543,8 +543,12 @@ static void CG_DrawStatusBar( void ) {
 
 	}
 
-	if (cg_drawSpeed.integer)
+	if (cg_drawSpeed.integer == 1)
+	{
 		CG_DrawString(640, 0, va("%du", (int)floor(cg.xyspeed)), UI_RIGHT | UI_GRADIENT | UI_SMALLFONT | UI_NOSCALE, colors[3]);
+	} else if (cg_drawSpeed.integer == 2) {
+		CG_DrawString(640, 0, va("%du", (int)floor(cg.xyzspeed)), UI_RIGHT | UI_GRADIENT | UI_SMALLFONT | UI_NOSCALE, colors[3]);
+	}
 
 	/*
 	color = 3;
