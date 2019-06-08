@@ -454,11 +454,11 @@ void G_RegisterCvars( void ) {
 
 	if ( g_knockout.integer ) {
 		if ( g_instagib.integer ) {
-			trap_Cvar_Set( "sv_gametypeName", va( "Knockout %s", bg_displayGametypeNames[g_gametype.integer] ) );
-			trap_Cvar_Set( "sv_gametypeNetName", va( "Knock%s", bg_netGametypeNames[g_gametype.integer] ) );
-		} else {
 			trap_Cvar_Set( "sv_gametypeName", va( "Knockout Instagib %s", bg_displayGametypeNames[g_gametype.integer] ) );
 			trap_Cvar_Set( "sv_gametypeNetName", va( "KnockInsta%s", bg_netGametypeNames[g_gametype.integer] ) );
+		} else {
+			trap_Cvar_Set( "sv_gametypeName", va( "Knockout %s", bg_displayGametypeNames[g_gametype.integer] ) );
+			trap_Cvar_Set( "sv_gametypeNetName", va( "Knock%s", bg_netGametypeNames[g_gametype.integer] ) );
 		}
 	} else if ( g_instagib.integer ) {
 		trap_Cvar_Set( "sv_gametypeName", va( "Instagib %s", bg_displayGametypeNames[g_gametype.integer] ) );

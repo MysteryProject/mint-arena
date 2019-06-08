@@ -704,7 +704,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 	} else {
 		attacker2 = &g_entities[self->player->lasthurt_player];
-		if (g_knockback.integer && attacker2 && attacker2->player && level.time - self->player->lasthurt_time < CARNAGE_REWARD_TIME )
+		if (g_knockback.integer && attacker2 && attacker2->player && level.time - self->player->lasthurt_time < 4000 )
 		{
 			attacker2->player->lastkilled_player = self->s.number;
 			AddScore( attacker2, self->r.currentOrigin, 1 );
@@ -1244,11 +1244,15 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	if (targ->player) {
 		// set the last player who damaged the target
 		targ->player->lasthurt_mod = mod;
-		targ->player->lasthurt_time = level.time;
 
-		if (attacker->player || !g_knockback.integer)
+		if (attacker->player && attacker != targ)
+			targ->player->lasthurt_time = level.time;
+
+		if ((g_knockback.integer && attacker->player) || !g_knockback.integer)
+		{
 			targ->player->lasthurt_player = attacker->s.number;
-
+		}
+		
 		if (attacker->player && targ->health > 0)
 		{
 			targ_maxs2 = targ->s.maxs[2];
@@ -1284,13 +1288,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		{
 			if (mod == MOD_TRIGGER_HURT || mod == MOD_TELEFRAG || mod == MOD_CRUSH)
 			{
-				targ->player->ps.stats[STAT_HEALTH] = targ->health = targ->health - take;
-
-				if (targ->health < -999)
-					targ->health = -999;
-
+				targ->player->ps.stats[STAT_HEALTH] = targ->health = -999;
 				targ->enemy = attacker;
-				targ->die(targ, inflictor, attacker, take, mod);
+				targ->die(targ, inflictor, attacker, -999, mod);
 			}
 			else
 			{
