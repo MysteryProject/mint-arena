@@ -2239,7 +2239,31 @@ static void CG_PlayerFloatSprite( vec3_t origin, int rf, qhandle_t shader ) {
 	trap_R_AddRefEntityToScene( &ent );
 }
 
+static void CG_PlayerFloatText( vec3_t origin, int rf, char *text, vec4_t color ) {
+	refEntity_t		ent;
 
+	memset( &ent, 0, sizeof( ent ) );
+
+	VectorCopy( origin, ent.origin );
+	VectorCopy( origin, ent.oldorigin );
+	AxisCopy( cg.refdef.viewaxis, ent.axis );
+
+	ent.reType = RT_SPRITE;
+	ent.radius = 10;
+	ent.renderfx = rf;
+	ent.shaderRGBA[0] = color[0];
+	ent.shaderRGBA[1] = color[1];
+	ent.shaderRGBA[2] = color[2];
+	ent.shaderRGBA[3] = color[3];
+
+	CG_SurfaceText( &ent, &cgs.media.bigFont, cg_staminaDrawScale.value, text, 0, 0, 0.4f, qfalse );
+}
+
+
+vec4_t staminaColor_0 = { 255, 250, 255, 255 };
+vec4_t staminaColor_1 = { 150, 150, 0, 255 };
+vec4_t staminaColor_2 = { 255, 120, 0, 255 };
+vec4_t staminaColor_3 = { 255, 75, 75, 255 };
 
 /*
 ===============
@@ -2274,6 +2298,21 @@ static void CG_PlayerSprites( centity_t *cent, const refEntity_t *parent ) {
 		}
 	} else {
 		friendFlags = awardFlags = thirdPersonFlags = 0;
+	}
+
+	if (cgs.knockout && !(cent->currentState.eFlags & EF_DEAD))
+	{
+		int value = cent->currentState.stamina;
+		vec4_t *color = &staminaColor_0;
+
+		if (value > 500)
+			color = &staminaColor_3;
+		else if (value > 250)
+			color = &staminaColor_2;
+		else if (value > 100)
+			color = &staminaColor_1;
+
+		CG_PlayerFloatText(origin, friendFlags, va("%d%%", value), *color);
 	}
 
 	if ( cent->currentState.eFlags & EF_CONNECTION ) {

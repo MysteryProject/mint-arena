@@ -123,6 +123,9 @@ vmCvar_t pmove_crouchslide;
 vmCvar_t pmove_aircontrol;
 vmCvar_t g_offhandHook;
 vmCvar_t g_hookSpeed;
+vmCvar_t g_knockout;
+vmCvar_t g_damageScale;
+vmCvar_t g_ammoScale;
 
 static cvarTable_t gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -138,6 +141,7 @@ static cvarTable_t gameCvarTable[] = {
 	{&g_instagib, "g_instagib", "0", CVAR_LATCH, GCF_DO_RESTART, RANGE_BOOL},
 	{&g_instagibWeapon, "g_instagibWeapon", "weapon_railgun", CVAR_LATCH, GCF_DO_RESTART, RANGE_ALL},
 	{&g_gunGameWeapons, "g_gunGameWeapons", "classic", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, GCF_DO_RESTART, RANGE_ALL},
+	{&g_knockout, "g_knockout", "0", CVAR_SERVERINFO | CVAR_LATCH, GCF_DO_RESTART, RANGE_BOOL},
 
 	{&g_maxplayers, "sv_maxclients", "8", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, RANGE_ALL},
 	{&g_maxGamePlayers, "g_maxGameClients", "0", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, RANGE_INT(0, MAX_CLIENTS - 1)},
@@ -183,6 +187,8 @@ static cvarTable_t gameCvarTable[] = {
 	{&g_nextmapmode, "g_nextmapmode", "", CVAR_ARCHIVE, 0, RANGE_ALL}, // "" - default, use nextmap command
 																	   // "random" - randomly choses a map from arenas list (currently just a random map)
 																	   // "file" - loads from mapycylce.txt (TODO)
+	{&g_damageScale, "g_damageScale", "1.0", 0, GCF_TRACK_CHANGE, RANGE_FLOAT(INT_MIN, INT_MAX)},
+	{&g_ammoScale, "g_ammoScale", "1.0", 0, GCF_TRACK_CHANGE, RANGE_FLOAT(INT_MIN, INT_MAX)},
 
 	{&g_podiumDist, "g_podiumDist", "80", 0, 0, RANGE_ALL},
 	{&g_podiumDrop, "g_podiumDrop", "70", 0, 0, RANGE_ALL},
@@ -446,7 +452,15 @@ void G_RegisterCvars( void ) {
 	//	trap_Cvar_Update( &g_instagib );
 	//}
 
-	if ( g_instagib.integer ) {
+	if ( g_knockout.integer ) {
+		if ( g_instagib.integer ) {
+			trap_Cvar_Set( "sv_gametypeName", va( "Knockout %s", bg_displayGametypeNames[g_gametype.integer] ) );
+			trap_Cvar_Set( "sv_gametypeNetName", va( "Knock%s", bg_netGametypeNames[g_gametype.integer] ) );
+		} else {
+			trap_Cvar_Set( "sv_gametypeName", va( "Knockout Instagib %s", bg_displayGametypeNames[g_gametype.integer] ) );
+			trap_Cvar_Set( "sv_gametypeNetName", va( "KnockInsta%s", bg_netGametypeNames[g_gametype.integer] ) );
+		}
+	} else if ( g_instagib.integer ) {
 		trap_Cvar_Set( "sv_gametypeName", va( "Instagib %s", bg_displayGametypeNames[g_gametype.integer] ) );
 		trap_Cvar_Set( "sv_gametypeNetName", va( "Insta%s", bg_netGametypeNames[g_gametype.integer] ) );
 	} else {

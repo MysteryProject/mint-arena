@@ -323,6 +323,7 @@ struct gplayer_s {
 	int			lastkilled_player;	// last player that this player killed
 	int			lasthurt_player;	// last player that damaged this player
 	int			lasthurt_mod;		// type of damage the player did
+	int			lasthurt_time;		// time of last hit by player
 
 	// timers
 	int			respawnTime;		// can respawn when time > this, force after g_forcerespwan
@@ -827,3 +828,6 @@ extern vmCvar_t pmove_crouchslide;
 extern vmCvar_t pmove_aircontrol;
 extern vmCvar_t g_offhandHook;
 extern vmCvar_t g_hookSpeed;
+extern vmCvar_t g_knockout;
+extern vmCvar_t g_damageScale;
+extern vmCvar_t g_ammoScale;

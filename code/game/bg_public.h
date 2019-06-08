@@ -294,6 +294,7 @@ typedef struct entityState_s {
 	int		legsAnim;		// mask off ANIM_TOGGLEBIT
 	int		torsoAnim;		// mask off ANIM_TOGGLEBIT
 	int		tokens;			// harvester skulls
+	int stamina;
 } entityState_t;
 
 
@@ -575,6 +576,7 @@ typedef enum {
 	STAT_MULTIKILL,
 	STAT_ARMOR_LEVEL,
 	STAT_DFX_FLAG,
+	STAT_STAMINA, // for knockback mode
 //#ifdef MISSIONPACK
 	STAT_PERSISTANT_POWERUP
 //#endif
@@ -1095,6 +1097,7 @@ typedef enum {
 	MOD_JUICED,
 #endif
 	MOD_GRAPPLE,
+	MOD_KNOCKOUT,
 	MOD_SUICIDE_TEAM_CHANGE
 } meansOfDeath_t;
 
@@ -1148,7 +1151,7 @@ gitem_t	*BG_FindItemForHoldable( holdable_t pw );
 #define	BG_ItemForItemNum(x) (&bg_itemlist[(x)])
 #define	BG_ItemNumForItem(x) ((x)-bg_itemlist)
 
-qboolean	BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const playerState_t *ps );
+qboolean	BG_CanItemBeGrabbed( int gametype, qboolean knockout, const entityState_t *ent, const playerState_t *ps );
 
 
 // g_dmflags->integer flags

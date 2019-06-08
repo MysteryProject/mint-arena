@@ -474,19 +474,58 @@ static void CG_DrawStatusBar( void ) {
 	//
 	// health
 	//
-	value = ps->stats[STAT_HEALTH];
-	if ( value > 100 ) {
-		color = 3; // white
-	} else if (value > 25) {
-		color = 0; // green
-	} else if (value > 0) {
-		color = (cg.time >> 8) & 1; // flash
-	} else {
-		color = 1; // red
-	}
+	if (cgs.knockout)
+	{
+		vec4_t staminaColor;
+		value = ps->stats[STAT_STAMINA];
 
-	// stretch the health up when taking damage
-	CG_DrawField ( 185, SCREEN_HEIGHT, UI_VA_BOTTOM, 3, value, colors[color] );
+		if (value > 500)
+		{
+			staminaColor[0] = staminaColor_3[0] / 255.0f;
+			staminaColor[1] = staminaColor_3[1] / 255.0f;
+			staminaColor[2] = staminaColor_3[2] / 255.0f;
+			staminaColor[3] = staminaColor_3[3] / 255.0f;
+		}
+		else if (value > 250)
+		{
+			staminaColor[0] = staminaColor_2[0] / 255.0f;
+			staminaColor[1] = staminaColor_2[1] / 255.0f;
+			staminaColor[2] = staminaColor_2[2] / 255.0f;
+			staminaColor[3] = staminaColor_2[3] / 255.0f;
+		}
+		else if (value > 100)
+		{
+			staminaColor[0] = staminaColor_1[0] / 255.0f;
+			staminaColor[1] = staminaColor_1[1] / 255.0f;
+			staminaColor[2] = staminaColor_1[2] / 255.0f;
+			staminaColor[3] = staminaColor_1[3] / 255.0f;
+		}
+		else 
+		{
+			staminaColor[0] = staminaColor_0[0] / 255.0f;
+			staminaColor[1] = staminaColor_0[1] / 255.0f;
+			staminaColor[2] = staminaColor_0[2] / 255.0f;
+			staminaColor[3] = staminaColor_0[3] / 255.0f;
+		}
+		
+		CG_DrawField ( 185, SCREEN_HEIGHT, UI_VA_BOTTOM, 3, value, staminaColor );
+	}
+	else
+	{
+		value = ps->stats[STAT_HEALTH];
+		if ( value > 100 ) {
+			color = 3; // white
+		} else if (value > 25) {
+			color = 0; // green
+		} else if (value > 0) {
+			color = (cg.time >> 8) & 1; // flash
+		} else {
+			color = 1; // red
+		}
+
+		// stretch the health up when taking damage
+		CG_DrawField ( 185, SCREEN_HEIGHT, UI_VA_BOTTOM, 3, value, colors[color] );
+	}
 
 
 	//
@@ -504,7 +543,8 @@ static void CG_DrawStatusBar( void ) {
 
 	}
 
-	CG_DrawString(640, 0, va("%du", (int)floor(cg.xyspeed)), UI_RIGHT | UI_GRADIENT | UI_SMALLFONT | UI_NOSCALE, colors[3]);
+	if (cg_drawSpeed.integer)
+		CG_DrawString(640, 0, va("%du", (int)floor(cg.xyspeed)), UI_RIGHT | UI_GRADIENT | UI_SMALLFONT | UI_NOSCALE, colors[3]);
 
 	/*
 	color = 3;

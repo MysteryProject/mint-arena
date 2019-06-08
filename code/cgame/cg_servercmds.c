@@ -211,6 +211,7 @@ void CG_ParseServerinfo( void ) {
 	cgs.capturelimit = atoi( Info_ValueForKey( info, "capturelimit" ) );
 	cgs.timelimit = atoi( Info_ValueForKey( info, "timelimit" ) );
 	cgs.maxplayers = atoi( Info_ValueForKey( info, "sv_maxclients" ) );
+	cgs.knockout = atoi(Info_ValueForKey(info, "g_knockout"));
 	mapname = Info_ValueForKey( info, "mapname" );
 	Com_sprintf( cgs.mapname, sizeof( cgs.mapname ), "maps/%s.bsp", mapname );
 	BG_GunGameInfoFromString(Info_ValueForKey(info, "g_gunGameWeapons"));
