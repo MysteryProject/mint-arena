@@ -941,7 +941,7 @@ vmNetField_t	bg_entityStateFields[] =
 { NETF(dl_intensity), 32 },
 { NETF(density), 10},
 { NETF(frame), 16 },
-{ NETF(stamina), 16 }
+{ NETF(damage), 16 }
 };
 
 int bg_numEntityStateFields = ARRAY_LEN(bg_entityStateFields);
@@ -1333,7 +1333,7 @@ qboolean BG_CanItemBeGrabbed( int gametype, qboolean knockout, const entityState
 		// don't pick up if already at max
 		if (knockout)
 		{
-			if (ps->stats[STAT_STAMINA] <= 0)
+			if (ps->stats[STAT_DAMAGE] <= 0)
 				return qfalse;
 				
 			return qtrue;
@@ -1774,7 +1774,7 @@ void BG_PlayerStateToEntityState( playerState_t *ps, entityState_t *s, qboolean 
 		}
 	}
 
-	s->stamina = ps->stats[STAT_STAMINA];
+	s->damage = ps->stats[STAT_DAMAGE];
 
 	s->contents = ps->contents;
 	s->loopSound = ps->loopSound;
@@ -1865,7 +1865,7 @@ void BG_PlayerStateToEntityStateExtraPolate( playerState_t *ps, entityState_t *s
 		}
 	}
 
-	s->stamina = ps->stats[STAT_STAMINA];
+	s->damage = ps->stats[STAT_DAMAGE];
 
 	s->contents = ps->contents;
 	s->loopSound = ps->loopSound;

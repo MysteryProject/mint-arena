@@ -2256,14 +2256,14 @@ static void CG_PlayerFloatText( vec3_t origin, int rf, char *text, vec4_t color 
 	ent.shaderRGBA[2] = color[2];
 	ent.shaderRGBA[3] = color[3];
 
-	CG_SurfaceText( &ent, &cgs.media.bigFont, cg_staminaDrawScale.value, text, 0, 0, 0.4f, qfalse );
+	CG_SurfaceText( &ent, &cgs.media.bigFont, cg_damageDrawScale.value, text, 0, 0, 0.4f, qfalse );
 }
 
 
-vec4_t staminaColor_0 = { 255, 250, 255, 255 };
-vec4_t staminaColor_1 = { 150, 150, 0, 255 };
-vec4_t staminaColor_2 = { 255, 120, 0, 255 };
-vec4_t staminaColor_3 = { 255, 75, 75, 255 };
+vec4_t damageColor_0 = { 255, 250, 255, 255 };
+vec4_t damageColor_1 = { 150, 150, 0, 255 };
+vec4_t damageColor_2 = { 255, 120, 0, 255 };
+vec4_t damageColor_3 = { 255, 75, 75, 255 };
 
 /*
 ===============
@@ -2302,15 +2302,15 @@ static void CG_PlayerSprites( centity_t *cent, const refEntity_t *parent ) {
 
 	if (cgs.knockout && !(cent->currentState.eFlags & EF_DEAD))
 	{
-		int value = cent->currentState.stamina;
-		vec4_t *color = &staminaColor_0;
+		int value = cent->currentState.damage;
+		vec4_t *color = &damageColor_0;
 
 		if (value > 500)
-			color = &staminaColor_3;
+			color = &damageColor_3;
 		else if (value > 250)
-			color = &staminaColor_2;
+			color = &damageColor_2;
 		else if (value > 100)
-			color = &staminaColor_1;
+			color = &damageColor_1;
 
 		CG_PlayerFloatText(origin, friendFlags, va("%d%%", value), *color);
 	}

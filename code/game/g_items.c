@@ -278,10 +278,10 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 
 	if (g_knockout.integer)
 	{
-		other->player->ps.stats[STAT_STAMINA] -= quantity * g_damageScale.value; // scale with damage?
+		other->player->ps.stats[STAT_DAMAGE] -= quantity * g_damageScale.value; // scale with damage?
 
-		if (other->player->ps.stats[STAT_STAMINA] < 0)
-			other->player->ps.stats[STAT_STAMINA] = 0;
+		if (other->player->ps.stats[STAT_DAMAGE] < 0)
+			other->player->ps.stats[STAT_DAMAGE] = 0;
 	} else {
 		other->health += quantity;
 

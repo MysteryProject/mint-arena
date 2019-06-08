@@ -1011,7 +1011,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	int height;
 	float targ_maxs2;
 	qboolean fromWorld;
-	float stamina;
+	float damagePercent;
 
 	if (!targ->takedamage) {
 		return;
@@ -1083,13 +1083,13 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	
 	if (g_knockout.integer && targ->player)
 	{
-		stamina = targ->player->ps.stats[STAT_STAMINA] + damage;
+		damagePercent = targ->player->ps.stats[STAT_DAMAGE] + damage;
 
-		if (stamina > 999)
-			stamina = 999;
+		if (damagePercent > 999)
+			damagePercent = 999;
 
-		knockback = damage * (0.7745966 * pow(1.001987, stamina));
-		//G_Printf("%f %d\n", (0.7745966 * pow(1.001987, stamina)), damage);
+		knockback = damage * (0.7745966 * pow(1.001987, damagePercent));
+		//G_Printf("%f %d\n", (0.7745966 * pow(1.001987, damagePercent)), damage);
 
 		if (knockback > INT_MAX)
 			knockback = INT_MAX;
@@ -1304,10 +1304,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 			}
 			else
 			{
-				targ->player->ps.stats[STAT_STAMINA] += take;
+				targ->player->ps.stats[STAT_DAMAGE] += take;
 
-				if (targ->player->ps.stats[STAT_STAMINA] > 999)
-					targ->player->ps.stats[STAT_STAMINA] = 999;
+				if (targ->player->ps.stats[STAT_DAMAGE] > 999)
+					targ->player->ps.stats[STAT_DAMAGE] = 999;
 			}
 		}
 		else

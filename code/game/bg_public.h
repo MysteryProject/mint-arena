@@ -294,7 +294,7 @@ typedef struct entityState_s {
 	int		legsAnim;		// mask off ANIM_TOGGLEBIT
 	int		torsoAnim;		// mask off ANIM_TOGGLEBIT
 	int		tokens;			// harvester skulls
-	int stamina;
+	int damage;
 } entityState_t;
 
 
@@ -576,7 +576,7 @@ typedef enum {
 	STAT_MULTIKILL,
 	STAT_ARMOR_LEVEL,
 	STAT_DFX_FLAG,
-	STAT_STAMINA, // for knockback mode
+	STAT_DAMAGE, // for knockback mode
 //#ifdef MISSIONPACK
 	STAT_PERSISTANT_POWERUP
 //#endif

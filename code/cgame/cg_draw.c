@@ -476,39 +476,39 @@ static void CG_DrawStatusBar( void ) {
 	//
 	if (cgs.knockout)
 	{
-		vec4_t staminaColor;
-		value = ps->stats[STAT_STAMINA];
+		vec4_t damageColor;
+		value = ps->stats[STAT_DAMAGE];
 
 		if (value > 500)
 		{
-			staminaColor[0] = staminaColor_3[0] / 255.0f;
-			staminaColor[1] = staminaColor_3[1] / 255.0f;
-			staminaColor[2] = staminaColor_3[2] / 255.0f;
-			staminaColor[3] = staminaColor_3[3] / 255.0f;
+			damageColor[0] = damageColor_3[0] / 255.0f;
+			damageColor[1] = damageColor_3[1] / 255.0f;
+			damageColor[2] = damageColor_3[2] / 255.0f;
+			damageColor[3] = damageColor_3[3] / 255.0f;
 		}
 		else if (value > 250)
 		{
-			staminaColor[0] = staminaColor_2[0] / 255.0f;
-			staminaColor[1] = staminaColor_2[1] / 255.0f;
-			staminaColor[2] = staminaColor_2[2] / 255.0f;
-			staminaColor[3] = staminaColor_2[3] / 255.0f;
+			damageColor[0] = damageColor_2[0] / 255.0f;
+			damageColor[1] = damageColor_2[1] / 255.0f;
+			damageColor[2] = damageColor_2[2] / 255.0f;
+			damageColor[3] = damageColor_2[3] / 255.0f;
 		}
 		else if (value > 100)
 		{
-			staminaColor[0] = staminaColor_1[0] / 255.0f;
-			staminaColor[1] = staminaColor_1[1] / 255.0f;
-			staminaColor[2] = staminaColor_1[2] / 255.0f;
-			staminaColor[3] = staminaColor_1[3] / 255.0f;
+			damageColor[0] = damageColor_1[0] / 255.0f;
+			damageColor[1] = damageColor_1[1] / 255.0f;
+			damageColor[2] = damageColor_1[2] / 255.0f;
+			damageColor[3] = damageColor_1[3] / 255.0f;
 		}
 		else 
 		{
-			staminaColor[0] = staminaColor_0[0] / 255.0f;
-			staminaColor[1] = staminaColor_0[1] / 255.0f;
-			staminaColor[2] = staminaColor_0[2] / 255.0f;
-			staminaColor[3] = staminaColor_0[3] / 255.0f;
+			damageColor[0] = damageColor_0[0] / 255.0f;
+			damageColor[1] = damageColor_0[1] / 255.0f;
+			damageColor[2] = damageColor_0[2] / 255.0f;
+			damageColor[3] = damageColor_0[3] / 255.0f;
 		}
 		
-		CG_DrawField ( 185, SCREEN_HEIGHT, UI_VA_BOTTOM, 3, value, staminaColor );
+		CG_DrawField ( 185, SCREEN_HEIGHT, UI_VA_BOTTOM, 3, value, damageColor );
 	}
 	else
 	{
