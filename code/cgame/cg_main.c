@@ -358,6 +358,9 @@ vmCvar_t cg_currentSelectedPlayer[MAX_SPLITVIEW];
 vmCvar_t	cg_currentSelectedPlayerName[MAX_SPLITVIEW];
 #endif
 
+vmCvar_t cg_damageDrawScale;
+vmCvar_t cg_drawSpeed;
+
 typedef struct {
 	vmCvar_t	*vmCvar;
 	char		*cvarName;
@@ -569,6 +572,8 @@ static cvarTable_t cgameCvarTable[] = {
 	{&pmove_walljump, "pmove_walljump", "3", CVAR_SYSTEMINFO, RANGE_INT(0, INT_MAX)},
 	{&pmove_crouchslide, "pmove_crouchslide", "1", CVAR_SYSTEMINFO, RANGE_BOOL},
 	{&pmove_aircontrol, "pmove_aircontrol", "150.0", CVAR_SYSTEMINFO, RANGE_FLOAT(0, INT_MAX)},
+	{&cg_damageDrawScale, "cg_damageDrawScale", "1", CVAR_ARCHIVE, RANGE_FLOAT(0, INT_MAX)},
+	{&cg_drawSpeed, "cg_drawSpeed", "0", CVAR_ARCHIVE, RANGE_INT(0, 2)},
 };
 
 static userCvarTable_t userCvarTable[] = {

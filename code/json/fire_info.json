@@ -1,0 +1,84 @@
+[
+    {
+        "name": "rail_wpf",
+        "idleSound": "sound/weapons/railgun/rg_hum.wav",
+        "flashColor": [ 1.0, 0.5, 0.0 ],
+        "flashSound": [ "sound/weapons/railgun/railgf1a.wav" ],
+        "customShading": true
+    },
+    {
+        "name": "minirail_wpf",
+        "idleSound": "sound/weapons/minirail/rg_hum.wav",
+        "flashColor": [ 1.0, 0.5, 0.0 ],
+        "flashSound": [ "sound/weapons/minirail/railgf1a.wav" ],
+        "customShading": true
+    },
+    {
+        "name": "gauntlet_wpf",
+        "idleSound": "sound/weapons/melee/fstrun.wav",
+        "flashColor": [ 0.6, 0.6, 1.0 ],
+        "flashSound": [ "sound/weapons/melee/fstatck.wav" ]
+    },
+    {
+        "name": "lightning_wpf",
+        "idleSound": "sound/weapons/melee/fsthum.wav",
+        "fireSound": "sound/weapons/lightning/lg_hum.wav",
+        "flashColor": [ 0.6, 0.6, 1.0 ],
+        "flashSound": [ "sound/weapons/lightning/lg_fire.wav" ]
+    },
+    {
+        "name": "machinegun_wpf",        
+        "flashColor": [ 1.0, 1.0, 0.0 ],
+        "flashSound": [ 
+            "sound/weapons/machinegun/machgf1b.wav",
+            "sound/weapons/machinegun/machgf2b.wav",
+            "sound/weapons/machinegun/machgf3b.wav",
+            "sound/weapons/machinegun/machgf4b.wav" 
+        ],
+        "brassType": "bullet"
+    },
+    {
+        "name": "shotgun_wpf",
+        "flashColor": [ 1.0, 1.0, 0.0 ],
+        "flashSound": [ "sound/weapons/shotgun/sshotf1b.wav" ],
+        "brassType": "shell"
+    },
+    {
+        "name": "rocket_wpf",
+        "flashColor": [ 1.0, 0.75, 0.0 ],
+        "flashSound": [ "sound/weapons/rocket/rocklf1a.wav" ],
+        "missileModel": "models/ammo/rocket/rocket.md3",
+        "missileSound": "sound/weapons/rocket/rockfly.wav",
+        "missileTrailTime": 2000,
+        "missileTrailRadius": 64,
+        "missileDlight": 200,
+        "missileDlightColor": [ 1.0, 0.75, 0.0 ]
+    },
+    {
+        "name": "grenade_wpf",
+        "flashColor": [ 1.0, 0.7, 0.0 ],
+        "flashSound": [ "sound/weapons/grenade/grenlf1a.wav" ],
+        "missileModel": "models/ammo/grenade1.md3",
+        "missileTrailTime": 700,
+        "missileTrailRadius": 32
+    },
+    {
+        "name": "impact_wpf",
+        "flashColor": [ 1.0, 0.6, 0.0 ],
+        "flashSound": [ "sound/weapons/impactcannon/rocklf1a.wav" ],
+        "missileSound": "sound/weapons/impactcannon/rockfly.wav"
+    },
+    {
+        "name": "plasma_wpf",
+        "flashColor": [ 0.6, 0.6, 1.0 ],
+        "flashSound": [ "sound/weapons/plasma/hyprbf1a.wav" ],
+        "missileSound": "sound/weapons/plasma/lasfly.wav"
+    },
+    {
+        "name": "bfg_wpf",
+        "flashColor": [ 1.0, 0.7, 1.0 ],
+        "flashSound": [ "sound/weapons/bfg/bfg_fire.wav" ],
+        "missileModel": "models/weaphits/bfg.md3",
+        "missileSound": "sound/weapons/rocket/rockfly.wav"
+    }
+]

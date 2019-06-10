@@ -530,6 +530,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	char		*killerName, *obit;
 	qboolean	gibPlayer;
 	int weapon;
+	gentity_t *attacker2;
 
 	if ( self->player->ps.pm_type == PM_DEAD ) {
 		return;
@@ -599,7 +600,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	self->enemy = attacker;
 
 	self->player->ps.persistant[PERS_KILLED]++;
-
+	
 	if (attacker && attacker->player) {
 		attacker->player->lastkilled_player = self->s.number;
 
@@ -702,7 +703,19 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 			}
 		}
 	} else {
-		AddScore( self, self->r.currentOrigin, -1 );
+		attacker2 = &g_entities[self->player->lasthurt_player];
+		if (g_knockback.integer && attacker2 && attacker2->player && level.time - self->player->lasthurt_time < 4000 )
+		{
+			attacker2->player->lastkilled_player = self->s.number;
+			AddScore( attacker2, self->r.currentOrigin, 1 );
+
+			ent->s.eventParm = MOD_KNOCKOUT;
+			ent->s.otherEntityNum2 = attacker2->s.number;
+		}
+		else
+		{
+			AddScore( self, self->r.currentOrigin, -1 );
+		}
 
 		if (g_gametype.integer == GT_GUNGAME && self->player->ps.persistant[PERS_GUNGAME_LEVEL] > 0)
 			self->player->ps.persistant[PERS_GUNGAME_LEVEL]--;
@@ -997,6 +1010,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	float z_rel;
 	int height;
 	float targ_maxs2;
+	qboolean fromWorld;
+	float damagePercent;
 
 	if (!targ->takedamage) {
 		return;
@@ -1022,6 +1037,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	}
 	if ( !attacker ) {
 		attacker = &g_entities[ENTITYNUM_WORLD];
+		fromWorld = qtrue;
 	}
 
 	// shootable doors / buttons don't actually have any health
@@ -1036,6 +1052,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		return;
 	}
 #endif
+
+	damage *= g_damageScale.value;
+
 	// reduce damage by the attacker's handicap value
 	// unless they are rocket jumping
 	if ( attacker->player && attacker != targ ) {
@@ -1061,10 +1080,31 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	} else {
 		VectorNormalize(dir);
 	}
+	
+	if (g_knockout.integer && targ->player)
+	{
+		damagePercent = targ->player->ps.stats[STAT_DAMAGE] + damage;
 
-	knockback = damage;
-	if ( knockback > 200 ) {
-		knockback = 200;
+		if (damagePercent > 999)
+			damagePercent = 999;
+
+		knockback = damage * (0.7745966 * pow(1.001987, damagePercent));
+		//G_Printf("%f %d\n", (0.7745966 * pow(1.001987, damagePercent)), damage);
+
+		if (knockback > INT_MAX)
+			knockback = INT_MAX;
+		else if (knockback < 0)
+			knockback = 0;
+
+		//G_Printf("knockback: %d\n", knockback);
+	}
+	else
+	{
+		knockback = damage;
+
+		if ( knockback > 200 ) {
+			knockback = 200;
+		}
 	}
 	if ( targ->flags & FL_NO_KNOCKBACK ) {
 		knockback = 0;
@@ -1163,6 +1203,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	if ( damage < 1 ) {
 		damage = 1;
 	}
+
 	take = damage;
 
 	// save some from armor
@@ -1202,9 +1243,16 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 
 	if (targ->player) {
 		// set the last player who damaged the target
-		targ->player->lasthurt_player = attacker->s.number;
 		targ->player->lasthurt_mod = mod;
 
+		if (attacker->player && attacker != targ)
+			targ->player->lasthurt_time = level.time;
+
+		if ((g_knockback.integer && attacker->player) || !g_knockback.integer)
+		{
+			targ->player->lasthurt_player = attacker->s.number;
+		}
+		
 		if (attacker->player && targ->health > 0)
 		{
 			targ_maxs2 = targ->s.maxs[2];
@@ -1236,30 +1284,59 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 
 	// do the damage
 	if (take) {
-		targ->health = targ->health - take;
-		if ( targ->player ) {
-			targ->player->ps.stats[STAT_HEALTH] = targ->health;
-		}
-			
-		if ( targ->health <= 0 ) {
-			if ( player )
+		if (g_knockout.integer && targ->player)
+		{
+			float xyzspeed = sqrt(targ->player->ps.velocity[0] * targ->player->ps.velocity[0] +
+								  targ->player->ps.velocity[1] * targ->player->ps.velocity[1] +
+								  targ->player->ps.velocity[2] * targ->player->ps.velocity[2]);
+
+			if (xyzspeed >= g_knockoutMaxVelocity.integer)
 			{
-				targ->flags |= FL_NO_KNOCKBACK;
-
-				if (z_ratio > 0.85)
-					targ->player->lastHitHeadshot = qtrue;
-				else
-					targ->player->lastHitHeadshot = qfalse;
+				targ->player->ps.stats[STAT_HEALTH] = targ->health = -999;
+				targ->enemy = attacker;
+				targ->die(targ, inflictor, attacker, -999, MOD_EXPLODED);
 			}
+			else if (mod == MOD_TRIGGER_HURT || mod == MOD_TELEFRAG || mod == MOD_CRUSH)
+			{
+				targ->player->ps.stats[STAT_HEALTH] = targ->health = -999;
+				targ->enemy = attacker;
+				targ->die(targ, inflictor, attacker, -999, mod);
+			}
+			else
+			{
+				targ->player->ps.stats[STAT_DAMAGE] += take;
 
-			if (targ->health < -999)
-				targ->health = -999;
+				if (targ->player->ps.stats[STAT_DAMAGE] > 999)
+					targ->player->ps.stats[STAT_DAMAGE] = 999;
+			}
+		}
+		else
+		{
+			targ->health = targ->health - take;
+			if ( targ->player ) {
+				targ->player->ps.stats[STAT_HEALTH] = targ->health;
+			}
+				
+			if ( targ->health <= 0 ) {
+				if ( player )
+				{
+					targ->flags |= FL_NO_KNOCKBACK;
 
-			targ->enemy = attacker;
-			targ->die (targ, inflictor, attacker, take, mod);
-			return;
-		} else if ( targ->pain ) {
-			targ->pain (targ, attacker, take);
+					if (z_ratio > 0.88)
+						targ->player->lastHitHeadshot = qtrue;
+					else
+						targ->player->lastHitHeadshot = qfalse;
+				}
+
+				if (targ->health < -999)
+					targ->health = -999;
+
+				targ->enemy = attacker;
+				targ->die (targ, inflictor, attacker, take, mod);
+				return;
+			} else if ( targ->pain ) {
+				targ->pain (targ, attacker, take);
+			}
 		}
 	}
 

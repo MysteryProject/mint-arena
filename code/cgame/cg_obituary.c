@@ -123,8 +123,10 @@ char *modNames2[] = {
     "MOD_KAMIKAZE",
     "MOD_JUICED",
 #endif
+    "MOD_KNOCKOUT",
     "MOD_GRAPPLE",
-    "MOD_SUICIDE_TEAM_CHANGE"};
+    "MOD_SUICIDE_TEAM_CHANGE"
+};
 
 /*
 ===================
@@ -240,6 +242,14 @@ static void CG_AddObituary(char *attackerName, char *targetName, team_t attacker
             
         case MOD_SUICIDE:
             weapString = "Suicide";
+            break;
+
+        case MOD_KNOCKOUT:
+            weapString = "Knocked Out";
+            break;
+
+        case MOD_EXPLODED:
+            weapString = "SpEeD";
             break;
 
         case MI_NONE:

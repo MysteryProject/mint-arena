@@ -940,7 +940,8 @@ vmNetField_t	bg_entityStateFields[] =
 { NETF(constantLight), 32 },
 { NETF(dl_intensity), 32 },
 { NETF(density), 10},
-{ NETF(frame), 16 }
+{ NETF(frame), 16 },
+{ NETF(damage), 16 }
 };
 
 int bg_numEntityStateFields = ARRAY_LEN(bg_entityStateFields);
@@ -1282,7 +1283,7 @@ Returns false if the item should not be picked up.
 This needs to be the same for client side prediction and server use.
 ================
 */
-qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const playerState_t *ps ) {
+qboolean BG_CanItemBeGrabbed( int gametype, qboolean knockout, const entityState_t *ent, const playerState_t *ps ) {
 	gitem_t	*item;
 	int		upperBound;
 	qboolean redArmor = qfalse;
@@ -1330,6 +1331,14 @@ qboolean BG_CanItemBeGrabbed( int gametype, const entityState_t *ent, const play
 	case IT_HEALTH:
 		// small and mega healths will go over the max, otherwise
 		// don't pick up if already at max
+		if (knockout)
+		{
+			if (ps->stats[STAT_DAMAGE] <= 0)
+				return qfalse;
+				
+			return qtrue;
+		} 
+		else
 #ifdef MISSIONPACK
 		if( BG_ItemForItemNum( ps->stats[STAT_PERSISTANT_POWERUP] )->giTag == PW_GUARD ) {
 		}
@@ -1765,6 +1774,8 @@ void BG_PlayerStateToEntityState( playerState_t *ps, entityState_t *s, qboolean 
 		}
 	}
 
+	s->damage = ps->stats[STAT_DAMAGE];
+
 	s->contents = ps->contents;
 	s->loopSound = ps->loopSound;
 	s->tokens = ps->tokens;
@@ -1853,6 +1864,8 @@ void BG_PlayerStateToEntityStateExtraPolate( playerState_t *ps, entityState_t *s
 			s->powerups |= 1 << i;
 		}
 	}
+
+	s->damage = ps->stats[STAT_DAMAGE];
 
 	s->contents = ps->contents;
 	s->loopSound = ps->loopSound;

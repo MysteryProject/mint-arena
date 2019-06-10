@@ -846,6 +846,7 @@ typedef struct {
 	float		bobfracsin;
 	int			bobcycle;
 	float		xyspeed;
+	float xyzspeed;
 
 	// development tool
 	refEntity_t		testModelEntity;
@@ -1342,10 +1343,16 @@ typedef struct {
 	// media
 	cgMedia_t		media;
 
-	int numGunGameLevels;
+	qboolean knockout;
 } cgs_t;
 
 //==============================================================================
+
+extern vec4_t damageColor_0;
+extern vec4_t damageColor_1;
+extern vec4_t damageColor_2;
+extern vec4_t damageColor_3;
+
 
 extern	cgs_t			cgs;
 extern	cg_t			cg;
@@ -1551,6 +1558,9 @@ extern vmCvar_t cg_variants[MAX_SPLITVIEW][WP_NUM_WEAPONS];
 extern vmCvar_t pmove_walljump;
 extern vmCvar_t pmove_crouchslide;
 extern vmCvar_t pmove_aircontrol;
+
+extern vmCvar_t cg_damageDrawScale;
+extern vmCvar_t cg_drawSpeed;
 
 //
 // cg_main.c

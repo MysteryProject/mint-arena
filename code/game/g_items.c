@@ -185,9 +185,9 @@ int Pickup_Holdable( gentity_t *ent, gentity_t *other ) {
 void Add_Ammo (gentity_t *ent, int weapon, int count)
 {
 	bgweapon_defs_t *weaponDef = BG_GetWeaponDefinition(weapon);
-	ent->player->ps.ammo[weaponDef->ammoType] += count;
-	if (ent->player->ps.ammo[weaponDef->ammoType] > 200)
-		ent->player->ps.ammo[weaponDef->ammoType] = 200;
+	ent->player->ps.ammo[weaponDef->ammoType] += count * g_ammoScale.value;
+	if (ent->player->ps.ammo[weaponDef->ammoType] > 200 * g_ammoScale.value)
+		ent->player->ps.ammo[weaponDef->ammoType] = 200 * g_ammoScale.value;
 }
 
 int Pickup_Ammo (gentity_t *ent, gentity_t *other)
@@ -276,12 +276,21 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 		quantity = ent->item->quantity;
 	}
 
-	other->health += quantity;
+	if (g_knockout.integer)
+	{
+		other->player->ps.stats[STAT_DAMAGE] -= quantity * g_damageScale.value; // scale with damage?
 
-	if (other->health > max ) {
-		other->health = max;
+		if (other->player->ps.stats[STAT_DAMAGE] < 0)
+			other->player->ps.stats[STAT_DAMAGE] = 0;
+	} else {
+		other->health += quantity;
+
+		if (other->health > max ) {
+			other->health = max;
+		}
+
+		other->player->ps.stats[STAT_HEALTH] = other->health;
 	}
-	other->player->ps.stats[STAT_HEALTH] = other->health;
 
 	if ( ent->item->quantity == 100 ) {		// mega health respawns slow
 		return RESPAWN_MEGAHEALTH;
@@ -415,7 +424,7 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 		return;		// dead people can't pickup
 
 	// the same pickup rules are used for client side and server side
-	if ( !BG_CanItemBeGrabbed( g_gametype.integer, &ent->s, &other->player->ps ) ) {
+	if ( !BG_CanItemBeGrabbed( g_gametype.integer, g_knockback.integer, &ent->s, &other->player->ps ) ) {
 		return;
 	}
 
