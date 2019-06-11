@@ -40,7 +40,7 @@ bgweapon_defs_t bg_weapons[] =
         400,
         qtrue,
         qtrue,
-        "gauntlet_fire"
+        "gauntlet_wpf"
     },
     {
         WP_MACHINEGUN,
@@ -48,7 +48,7 @@ bgweapon_defs_t bg_weapons[] =
         100,
         qtrue,
         qfalse,
-        "mg_fire"
+        "machinegun_wpf"
     },
     {
         WP_SHOTGUN,
@@ -56,7 +56,7 @@ bgweapon_defs_t bg_weapons[] =
         1000,
         qtrue,
         qfalse,
-        "sg_fire"
+        "shotgun_wpf"
     },
     {
         WP_GRENADE_LAUNCHER,
@@ -64,7 +64,7 @@ bgweapon_defs_t bg_weapons[] =
         800,
         qtrue,
         qfalse,
-        "grenade_fire"
+        "grenade_wpf"
     },    
     {
         WP_ROCKET_LAUNCHER,
@@ -72,7 +72,7 @@ bgweapon_defs_t bg_weapons[] =
         800,
         qtrue,
         qfalse,
-        "rocket_fire"
+        "rocket_wpf"
     },
     {
         WP_LIGHTNING,
@@ -80,7 +80,7 @@ bgweapon_defs_t bg_weapons[] =
         50,
         qtrue,
         qfalse,
-        "lightning_fire"
+        "lightning_wpf"
     },
     {
         WP_PLASMAGUN,
@@ -88,7 +88,7 @@ bgweapon_defs_t bg_weapons[] =
         100,
         qtrue,
         qfalse,
-        "plasma_fire"
+        "plasma_wpf"
     },
     {
         WP_RAILGUN,
@@ -96,7 +96,7 @@ bgweapon_defs_t bg_weapons[] =
         1500,
         qtrue,
         qfalse,
-        "rail_fire"
+        "rail_wpf"
     },
     {
         WP_BFG,
@@ -104,7 +104,7 @@ bgweapon_defs_t bg_weapons[] =
         200,
         qtrue,
         qfalse,
-        "bfg_fire"
+        "bfg_wpf"
     },
     // new weapons
     {
@@ -113,7 +113,7 @@ bgweapon_defs_t bg_weapons[] =
         1,
         qfalse,
         qfalse,
-        "mg_fire"
+        "machinegun_wpf"
     },
     {
         WP_AUTOSHOTTY,
@@ -121,7 +121,7 @@ bgweapon_defs_t bg_weapons[] =
         280,
         qtrue,
         qfalse,
-        "sg_fire"
+        "shotgun_wpf"
     },
     {
         WP_MINIRAIL,
@@ -129,7 +129,7 @@ bgweapon_defs_t bg_weapons[] =
         750,
         qtrue,
         qfalse,
-        "minirail_fire"
+        "minirail_wpf"
     },
     {
         WP_IMPACT_CANNON,
@@ -137,7 +137,7 @@ bgweapon_defs_t bg_weapons[] =
         700,
         qtrue,
         qfalse,
-        "impact_fire"
+        "impact_wpf"
     }
 };
 

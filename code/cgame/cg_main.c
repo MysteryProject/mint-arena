@@ -2852,6 +2852,8 @@ void CG_Ingame_Init( int serverMessageNum, int serverCommandSequence, int maxSpl
 
 	CG_ParseServerinfo();
 
+	CG_ParseFireInfoJSON(BG_LoadFileContents("fire_info.json"));
+
 	// load the new map
 	CG_LoadingString( "collision map" );
 
@@ -2871,8 +2873,6 @@ void CG_Ingame_Init( int serverMessageNum, int serverCommandSequence, int maxSpl
 
 	CG_RegisterPlayers();		// if low on memory, some players will be deferred
 
-	//CG_LoadString("weapons");
-	CG_FireInfoLoad();
 
 #ifdef MISSIONPACK_HUD
 	CG_AssetCache();

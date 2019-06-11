@@ -1202,6 +1202,8 @@ typedef struct {
 extern gunGameInfo_t bg_gunGameInfo;
 void BG_GunGameInfoFromString(const char *info);
 
+char *BG_LoadFileContents(char *filename);
+
 void BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result);
 void	BG_EvaluateTrajectoryDelta( const trajectory_t *tr, int atTime, vec3_t result );
 
