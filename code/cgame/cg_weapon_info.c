@@ -16,11 +16,14 @@
 cg_fireInfo_t cg_fireInfo[MAX_FIREINFO];
 int cg_numFireInfo = 0;
 
-void CG_ParseFireInfoJSON(char *json)
+void CG_ParseFireInfoJSON(void)
 {
     int i, j, k, idx, r;
     jsmn_parser parser;
     jsmntok_t tokens[MAX_TOKENS];
+    char json[8192];
+
+    BG_LoadFileContents(json, "fire_info.json");
 
     jsmn_init(&parser);
     r = jsmn_parse(&parser, json, strlen(json), tokens, sizeof(tokens) / sizeof(tokens[0]));
@@ -29,13 +32,13 @@ void CG_ParseFireInfoJSON(char *json)
 
     if (r < 0)
     {
-        trap_Print( va( S_COLOR_RED "Failed to parse JSON: %d\n", r ) );
+        trap_Print( va( S_COLOR_RED "CG_ParseFireInfoJSON: Failed to parse JSON: %d\n", r ) );
 		return;
     }
 
     if (tokens[0].type != JSMN_ARRAY)
     {
-        trap_Print(S_COLOR_RED "JSON top object is not an array\n");
+        trap_Print(S_COLOR_RED "CG_ParseFireInfoJSON: JSON top object is not an array\n");
         return;
     }
 
@@ -43,7 +46,7 @@ void CG_ParseFireInfoJSON(char *json)
     {
         if (cg_numFireInfo >= MAX_FIREINFO-1)
         {
-            CG_Printf("Reached max fireinfos %d\n", MAX_FIREINFO);
+            CG_Printf("CG_ParseFireInfoJSON: Reached max fireinfos %d\n", MAX_FIREINFO);
             break;
         }
 
@@ -74,13 +77,13 @@ void CG_ParseFireInfoJSON(char *json)
 
                 if (keyLen <= 0)
                 {
-                    CG_Printf("key length <= 0\n");
+                    CG_Printf("CG_ParseFireInfoJSON: key length <= 0\n");
                     break;
                 }
 
                 if (valueLen <= 0)
                 {
-                    CG_Printf("value length <= 0\n");
+                    CG_Printf("CG_ParseFireInfoJSON: value length <= 0\n");
                     break;
                 }
 
@@ -216,7 +219,7 @@ void CG_ParseFireInfoJSON(char *json)
                 }
                 else
                 {
-                    CG_Printf("Could not parse token %s: %s\n", key, value);
+                    CG_Printf("CG_ParseFireInfoJSON: Could not parse token %s: %s\n", key, value);
                 }
             }
             //CG_Printf("Parsed info for %s\n", cg_fireInfo[cg_numFireInfo].identifier);

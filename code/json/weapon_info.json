@@ -1,0 +1,106 @@
+[
+    {
+        "weapon": "WP_GAUNTLET",
+        "ammoType": "WP_GAUNTLET",
+        "attackDelay": 400,
+        "autoAttack": true,
+        "oneHanded": true,
+        "fireInfo": "gauntlet_wpf"
+    },
+    {
+        "weapon": "WP_MACHINEGUN",
+        "ammoType": "WP_MACHINEGUN",
+        "attackDelay": 100,
+        "autoAttack": true,
+        "oneHanded": false,
+        "fireInfo": "machinegun_wpf"
+    },
+    {
+        "weapon": "WP_SHOTGUN",
+        "ammoType": "WP_SHOTGUN",
+        "attackDelay": 1000,
+        "autoAttack": true,
+        "oneHanded": false,
+        "fireInfo": "shotgun_wpf"
+    },
+    {
+        "weapon": "WP_GRENADE_LAUNCHER",
+        "ammoType": "WP_GRENADE_LAUNCHER",
+        "attackDelay": 800,
+        "autoAttack": true,
+        "oneHanded": false,
+        "fireInfo": "grenade_wpf"
+    },
+    {
+        "weapon": "WP_ROCKET_LAUNCHER",
+        "ammoType": "WP_ROCKET_LAUNCHER",
+        "attackDelay": 800,
+        "autoAttack": true,
+        "oneHanded": false,
+        "fireInfo": "rocket_wpf"
+    },
+    {
+        "weapon": "WP_IMPACT_CANNON",
+        "ammoType": "WP_IMPACT_CANNON",
+        "attackDelay": 700,
+        "autoAttack": true,
+        "oneHanded": false,
+        "fireInfo": "impact_wpf"
+    },
+    {
+        "weapon": "WP_LIGHTNING",
+        "ammoType": "WP_LIGHTNING",
+        "attackDelay": 50,
+        "autoAttack": true,
+        "oneHanded": false,
+        "fireInfo": "lightning_wpf"
+    },
+    {
+        "weapon": "WP_PLASMAGUN",
+        "ammoType": "WP_PLASMAGUN",
+        "attackDelay": 100,
+        "autoAttack": true,
+        "oneHanded": false,
+        "fireInfo": "plasma_wpf"
+    },
+    {
+        "weapon": "WP_RAILGUN",
+        "ammoType": "WP_RAILGUN",
+        "attackDelay": 1500,
+        "autoAttack": true,
+        "oneHanded": false,
+        "fireInfo": "rail_wpf"
+    },
+    {
+        "weapon": "WP_BFG",
+        "ammoType": "WP_BFG",
+        "attackDelay": 200,
+        "autoAttack": true,
+        "oneHanded": false,
+        "fireInfo": "bfg_wpf"
+    },
+    {
+        "weapon": "WP_TAPRIFLE",
+        "ammoType": "WP_MACHINEGUN",
+        "attackDelay": 1,
+        "autoAttack": false,
+        "oneHanded": false,
+        "fireInfo": "machinegun_wpf"
+    },
+    {
+        "weapon": "WP_AUTOSHOTTY",
+        "ammoType": "WP_SHOTGUN",
+        "attackDelay": 280,
+        "autoAttack": true,
+        "oneHanded": false,
+        "fireInfo": "shotgun_wpf"
+    },
+    {
+        "weapon": "WP_MINIRAIL",
+        "ammoType": "WP_RAILGUN",
+        "attackDelay": 750,
+        "autoAttack": true,
+        "oneHanded": false,
+        "fireInfo": "minirail_wpf"
+    }
+]

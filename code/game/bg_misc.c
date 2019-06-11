@@ -2608,21 +2608,20 @@ void BG_GunGameInfoFromString(const char *info)
 	}
 }
 
-char *BG_LoadFileContents(char *filename)
+void BG_LoadFileContents(char *buf, char *filename)
 {
     int				len;
 	fileHandle_t	f;
-	char			buf[8192];
 
 	len = trap_FS_FOpenFile( filename, &f, FS_READ );
 	
     if ( !f ) {
-		trap_Print( va( S_COLOR_RED "file not found: %s\n", filename ) );
+		trap_Print( va( S_COLOR_RED "BG_LoadFileContents: file not found: %s\n", filename ) );
 		return;
 	}
 
 	if ( len >= 8192 ) {
-		trap_Print( va( S_COLOR_RED "file too large: %s is %i, max allowed is %i\n", filename, len, MAX_BOTS_TEXT ) );
+		trap_Print( va( S_COLOR_RED "BG_LoadFileContents: file too large: %s is %i, max allowed is %i\n", filename, len, MAX_BOTS_TEXT ) );
 		trap_FS_FCloseFile( f );
 		return;
 	}
@@ -2631,7 +2630,5 @@ char *BG_LoadFileContents(char *filename)
 	buf[len] = 0;
 	trap_FS_FCloseFile( f );
 
-    BG_Printf("Loaded %s.\n", filename);
-
-    return &buf;
+    Com_Printf("Loaded %s.\n", filename);
 }

@@ -32,116 +32,156 @@ Suite 120, Rockville, Maryland 20850 USA.
 #include "../qcommon/q_shared.h"
 #include "bg_public.h"
 
-bgweapon_defs_t bg_weapons[] = 
+#define MAX_WEAPONDEFS WP_NUM_WEAPONS
+#define MAX_TOKENS 1024
+
+const char *weaponEnumStrings[] =
 {
-    {
-        WP_GAUNTLET,
-        WP_GAUNTLET,
-        400,
-        qtrue,
-        qtrue,
-        "gauntlet_wpf"
-    },
-    {
-        WP_MACHINEGUN,
-        WP_MACHINEGUN,
-        100,
-        qtrue,
-        qfalse,
-        "machinegun_wpf"
-    },
-    {
-        WP_SHOTGUN,
-        WP_SHOTGUN,
-        1000,
-        qtrue,
-        qfalse,
-        "shotgun_wpf"
-    },
-    {
-        WP_GRENADE_LAUNCHER,
-        WP_GRENADE_LAUNCHER,
-        800,
-        qtrue,
-        qfalse,
-        "grenade_wpf"
-    },    
-    {
-        WP_ROCKET_LAUNCHER,
-        WP_ROCKET_LAUNCHER,
-        800,
-        qtrue,
-        qfalse,
-        "rocket_wpf"
-    },
-    {
-        WP_LIGHTNING,
-        WP_LIGHTNING,
-        50,
-        qtrue,
-        qfalse,
-        "lightning_wpf"
-    },
-    {
-        WP_PLASMAGUN,
-        WP_PLASMAGUN,
-        100,
-        qtrue,
-        qfalse,
-        "plasma_wpf"
-    },
-    {
-        WP_RAILGUN,
-        WP_RAILGUN,
-        1500,
-        qtrue,
-        qfalse,
-        "rail_wpf"
-    },
-    {
-        WP_BFG,
-        WP_BFG,
-        200,
-        qtrue,
-        qfalse,
-        "bfg_wpf"
-    },
-    // new weapons
-    {
-        WP_TAPRIFLE,
-        WP_MACHINEGUN,
-        1,
-        qfalse,
-        qfalse,
-        "machinegun_wpf"
-    },
-    {
-        WP_AUTOSHOTTY,
-        WP_SHOTGUN,
-        280,
-        qtrue,
-        qfalse,
-        "shotgun_wpf"
-    },
-    {
-        WP_MINIRAIL,
-        WP_RAILGUN,
-        750,
-        qtrue,
-        qfalse,
-        "minirail_wpf"
-    },
-    {
-        WP_IMPACT_CANNON,
-        WP_PLASMAGUN,
-        700,
-        qtrue,
-        qfalse,
-        "impact_wpf"
-    }
+    "WP_NONE",
+    "WP_GAUNTLET",
+    "WP_MACHINEGUN",
+    "WP_SHOTGUN",
+    "WP_GRENADE_LAUNCHER",
+    "WP_ROCKET_LAUNCHER",
+    "WP_LIGHTNING",
+    "WP_RAILGUN",
+    "WP_PLASMAGUN",
+    "WP_BFG",
+    "WP_GRAPPLING_HOOK",
+    "WP_MINIRAIL",
+    "WP_AUTOSHOTTY",
+    "WP_TAPRIFLE",
+    "WP_IMPACT_CANNON",
+    "WP_NUM_WEAPONS"
 };
 
-int bg_numWeapons = ARRAY_LEN(bg_weapons);
+bgweapon_defs_t bg_weapons[MAX_WEAPONDEFS];
+int bg_numWeapons = 0;
+
+void BG_ParseWeaponDefsJSON(void)
+{
+    int i, j, k, r;
+    jsmn_parser parser;
+    jsmntok_t tokens[MAX_TOKENS];
+    char json[8192];
+
+    BG_LoadFileContents(json, "weapon_info.json");
+
+    jsmn_init(&parser);
+    r = jsmn_parse(&parser, json, strlen(json), tokens, sizeof(tokens) / sizeof(tokens[0]));
+
+    //CG_Printf("Parsing json: %d\n", strlen(json), json);
+
+    if (r < 0)
+    {
+        trap_Print( va( S_COLOR_RED "BG_ParseWeaponDefsJSON: Failed to parse JSON: %d\n", r ) );
+		return;
+    }
+
+    if (tokens[0].type != JSMN_ARRAY)
+    {
+        trap_Print(S_COLOR_RED "BG_ParseWeaponDefsJSON: JSON top object is not an array\n");
+        return;
+    }
+
+    for (i = 1; i < r; i++)
+    {
+        if (bg_numWeapons >= MAX_WEAPONDEFS)
+        {
+            Com_Printf("BG_ParseWeaponDefsJSON: Reached max weapondefs %d\n", MAX_WEAPONDEFS);
+            break;
+        }
+
+        //CG_Printf("Token: %.*s\n", tokens[i].end - tokens[i].start, json + tokens[i].start);
+
+        if (tokens[i].type == JSMN_OBJECT)
+        {
+            for (j = 1; i + j < r; j += 2)
+            {
+                jsmntok_t keyToken = tokens[i + j];
+                jsmntok_t valueToken;
+                int keyLen, valueLen;
+                char key[128];
+                char value[MAX_QPATH * 10];
+
+                //Com_Printf("Tokenkey: %.*s\n", keyToken.end - keyToken.start, json + keyToken.start);
+
+                if (keyToken.type == JSMN_OBJECT)
+                {
+                    i += j - 1;
+                    break; // we hit the next item
+                }
+
+                valueToken = tokens[i + j + 1];
+
+                keyLen = keyToken.end - keyToken.start;
+                valueLen = valueToken.end - valueToken.start;
+
+                if (keyLen <= 0)
+                {
+                    Com_Printf("BG_ParseWeaponDefsJSON: key length <= 0\n");
+                    break;
+                }
+
+                if (valueLen <= 0)
+                {
+                    Com_Printf("BG_ParseWeaponDefsJSON: value length <= 0\n");
+                    break;
+                }
+
+                Q_strncpyz(key, json + keyToken.start, sizeof(key));
+                Q_strncpyz(value, json + valueToken.start, sizeof(value));
+
+                key[keyLen] = '\0';
+                value[valueLen] = '\0';
+
+                //Com_Printf("Parsing token %s: %s\n", key, value);
+
+                if (Q_stricmp(key, "weapon") == 0)
+                {
+                    int a;
+                    for(a = WP_NONE + 1; a < WP_NUM_WEAPONS; a++)
+                    {
+                        if (!Q_stricmp(value, weaponEnumStrings[a]))
+                            bg_weapons[bg_numWeapons].weapon = a;
+                    }
+                } 
+                else if (Q_stricmp(key, "ammoType") == 0)
+                {
+                    int a;
+                    for(a = WP_NONE + 1; a < WP_NUM_WEAPONS; a++)
+                    {
+                        if (!Q_stricmp(value, weaponEnumStrings[a]))
+                            bg_weapons[bg_numWeapons].ammoType = a;
+                    }
+                } 
+                else if (Q_stricmp(key, "attackDelay") == 0)
+                {
+                    bg_weapons[bg_numWeapons].attackDelay = atoi(value);
+                }
+                else if (Q_stricmp(key, "autoAttack") == 0)
+                {
+                    bg_weapons[bg_numWeapons].autoAttack = !Q_stricmp(value, "true");
+                }
+                else if (Q_stricmp(key, "oneHanded") == 0)
+                {
+                    bg_weapons[bg_numWeapons].oneHanded = !Q_stricmp(value, "true");
+                }
+                else if (Q_stricmp(key, "fireInfo") == 0)
+                {
+                    bg_weapons[bg_numWeapons].fireInfo = trap_HeapMalloc(strlen(value));
+                    Q_strncpyz(bg_weapons[bg_numWeapons].fireInfo, value, strlen(value) + 1);
+                }
+                else
+                {
+                    Com_Printf("BG_ParseWeaponDefsJSON: Could not parse token %s: %s\n", key, value);
+                }
+            }
+            Com_Printf("BG_ParseWeaponDefsJSON: Parsed info for %s\n", weaponEnumStrings[bg_weapons[bg_numWeapons].weapon]);
+            bg_numWeapons++;
+        }
+    }
+}
 
 bgweapon_defs_t *BG_GetWeaponDefinition(weapon_t weapon)
 {

@@ -602,6 +602,9 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 		g_entities[i].classname = "playerslot";
 	}
 
+	// put this elsewhere?
+	BG_ParseWeaponDefsJSON();
+
 	// let the server system know where the entites are
 	trap_LocateGameData( level.gentities, level.num_entities, sizeof( gentity_t ), 
 		&level.players[0].ps, sizeof( level.players[0] ) );

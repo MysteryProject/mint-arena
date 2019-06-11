@@ -683,32 +683,26 @@ typedef enum {
 
 
 // NOTE: may not have more than MAX_WEAPONS
-typedef enum
-{
-	WP_NONE,
-
-	WP_GAUNTLET,
-	WP_MACHINEGUN,
-	WP_SHOTGUN,
-	WP_GRENADE_LAUNCHER,
-	WP_ROCKET_LAUNCHER,
-	WP_LIGHTNING,
-	WP_RAILGUN,
-	WP_PLASMAGUN,
-	WP_BFG,
-	WP_GRAPPLING_HOOK,
-#ifdef MISSIONPACK
-	WP_NAILGUN,
-	WP_PROX_LAUNCHER,
-	WP_CHAINGUN,
-#endif
-	WP_MINIRAIL,
-	WP_AUTOSHOTTY,
-	WP_TAPRIFLE,
-	WP_IMPACT_CANNON,
-
-	WP_NUM_WEAPONS
+typedef enum {
+    WP_NONE,
+    WP_GAUNTLET,
+    WP_MACHINEGUN,
+    WP_SHOTGUN,
+    WP_GRENADE_LAUNCHER,
+    WP_ROCKET_LAUNCHER,
+    WP_LIGHTNING,
+    WP_RAILGUN,
+    WP_PLASMAGUN,
+    WP_BFG,
+    WP_GRAPPLING_HOOK,
+    WP_MINIRAIL,
+    WP_AUTOSHOTTY,
+    WP_TAPRIFLE,
+    WP_IMPACT_CANNON,
+    WP_NUM_WEAPONS
 } weapon_t;
+
+extern const char *weaponEnumStrings[];
 
 typedef struct
 {
@@ -722,6 +716,7 @@ typedef struct
 
 extern bgweapon_defs_t bg_weapons[];
 extern int bg_numWeapons;
+void BG_ParseWeaponDefsJSON(void);
 bgweapon_defs_t *BG_GetWeaponDefinition(weapon_t weapon);
 
 // reward sounds (stored in ps->persistant[PERS_PLAYEREVENTS])
@@ -1202,7 +1197,7 @@ typedef struct {
 extern gunGameInfo_t bg_gunGameInfo;
 void BG_GunGameInfoFromString(const char *info);
 
-char *BG_LoadFileContents(char *filename);
+void BG_LoadFileContents(char *buf, char *filename);
 
 void BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result);
 void	BG_EvaluateTrajectoryDelta( const trajectory_t *tr, int atTime, vec3_t result );

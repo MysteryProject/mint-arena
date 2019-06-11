@@ -1889,7 +1889,7 @@ typedef struct
 
 extern cg_fireInfo_t cg_fireInfo[];
 extern int cg_numFireInfo;
-void CG_ParseFireInfoJSON(char *json);
+void CG_ParseFireInfoJSON(void);
 cg_fireInfo_t *CG_FireInfo(const char *name);
 
 //

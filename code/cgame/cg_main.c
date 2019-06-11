@@ -2774,6 +2774,9 @@ void CG_Init( connstate_t state, int maxSplitView, int playVideo ) {
 	String_Init();
 #endif
 
+	BG_ParseWeaponDefsJSON();
+	CG_ParseFireInfoJSON();
+
 	UI_Init( cg.connected, maxSplitView );
 
 	// if the user didn't give any commands, run default action
@@ -2851,8 +2854,6 @@ void CG_Ingame_Init( int serverMessageNum, int serverCommandSequence, int maxSpl
 
 
 	CG_ParseServerinfo();
-
-	CG_ParseFireInfoJSON(BG_LoadFileContents("fire_info.json"));
 
 	// load the new map
 	CG_LoadingString( "collision map" );

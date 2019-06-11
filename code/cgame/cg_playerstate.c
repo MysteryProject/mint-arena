@@ -115,28 +115,28 @@ void CG_CheckAmmo( void ) {
 			switch (weapons)
 			{
 			case WP_MACHINEGUN:
-				total = 25;
+				total = 15;
 				break;
 			case WP_SHOTGUN:
-				total = 5;
+				total = 3;
 				break;
 			case WP_GRENADE_LAUNCHER:
-				total = 5;
+				total = 3;
 				break;
 			case WP_ROCKET_LAUNCHER:
-				total = 5;
+				total = 3;
 				break;
 			case WP_LIGHTNING:
-				total = 30;
+				total = 15;
 				break;
 			case WP_RAILGUN:
-				total = 5;
+				total = 3;
 				break;
 			case WP_PLASMAGUN:
-				total = 40;
+				total = 20;
 				break;
 			case WP_BFG:
-				total = 30;
+				total = 10;
 				break;
 			case WP_GAUNTLET:
 			case WP_GRAPPLING_HOOK:
