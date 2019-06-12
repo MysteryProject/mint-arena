@@ -30,6 +30,16 @@
         "fireInfo": "shotgun_wpf"
     },
     {
+        "classname": "weapon_autoshotty",
+        "weapon": "WP_AUTOSHOTTY",
+        "ammoType": "WP_SHOTGUN",
+        "attackDelay": 280,
+        "startAmmo": 15,
+        "autoAttack": true,
+        "oneHanded": false,
+        "fireInfo": "autoshotgun_wpf"
+    },
+    {
         "classname": "weapon_grenadelauncher",
         "weapon": "WP_GRENADE_LAUNCHER",
         "ammoType": "WP_GRENADE_LAUNCHER",
@@ -108,16 +118,6 @@
         "autoAttack": false,
         "oneHanded": false,
         "fireInfo": "taprifle_wpf"
-    },
-    {
-        "classname": "weapon_autoshotty",
-        "weapon": "WP_AUTOSHOTTY",
-        "ammoType": "WP_SHOTGUN",
-        "attackDelay": 280,
-        "startAmmo": 15,
-        "autoAttack": true,
-        "oneHanded": false,
-        "fireInfo": "autoshotgun_wpf"
     },
     {
         "classname": "weapon_minirail",
