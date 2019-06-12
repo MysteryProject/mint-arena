@@ -101,6 +101,43 @@ void CG_ParseFireInfoJSON(void)
                     Q_strncpyz(cg_fireInfo[cg_numFireInfo].identifier, value, strlen(value) + 1);
                     //CG_Printf("indentifier: %s\n", cg_fireInfo[cg_numFireInfo].identifier);
                 } 
+                else if (Q_stricmp(key, "displayModel") == 0)
+                {
+                    char path[MAX_QPATH];
+                    jsmntok_t tok;
+                    int tokLen;
+
+                    for(k = 0; k < valueToken.size && k < 4; k++)
+                    {
+                        tok = tokens[i + j + 2 + k];
+                        tokLen = tok.end - tok.start;
+                        Q_strncpyz(path, json + tok.start, tokLen + 1);
+                        cg_fireInfo[cg_numFireInfo].displayModel[k] = trap_HeapMalloc(strlen(path) + 1);
+                        Q_strncpyz(cg_fireInfo[cg_numFireInfo].displayModel[k], path, strlen(path) + 1);
+                    }
+
+                    j += valueToken.size;
+                }
+                else if (Q_stricmp(key, "icon") == 0)
+                {
+                    cg_fireInfo[cg_numFireInfo].icon = trap_HeapMalloc(strlen(value));
+                    Q_strncpyz(cg_fireInfo[cg_numFireInfo].icon, value, strlen(value) + 1);
+                }
+                else if (Q_stricmp(key, "displayName") == 0)
+                {
+                    cg_fireInfo[cg_numFireInfo].displayName = trap_HeapMalloc(strlen(value));
+                    Q_strncpyz(cg_fireInfo[cg_numFireInfo].displayName, value, strlen(value) + 1);
+                }
+                else if (Q_stricmp(key, "pickupSound") == 0)
+                {
+                    cg_fireInfo[cg_numFireInfo].pickupSound = trap_HeapMalloc(strlen(value));
+                    Q_strncpyz(cg_fireInfo[cg_numFireInfo].pickupSound, value, strlen(value) + 1);
+                }
+                else if (Q_stricmp(key, "sounds") == 0)
+                {
+                    cg_fireInfo[cg_numFireInfo].sounds = trap_HeapMalloc(strlen(value));
+                    Q_strncpyz(cg_fireInfo[cg_numFireInfo].sounds, value, strlen(value) + 1);
+                }
                 else if (Q_stricmp(key, "idleSound") == 0)
                 {
                     cg_fireInfo[cg_numFireInfo].idleSound = trap_HeapMalloc(strlen(value));
@@ -241,4 +278,9 @@ cg_fireInfo_t *CG_FireInfo(const char *name)
 
     CG_Printf("CG_FireInfo: could not find fire info %s\n", name);
     return NULL;
+}
+
+cg_fireInfo_t *CG_FireInfoForWeapon(weapon_t weapon)
+{
+    return CG_FireInfo(BG_GetWeaponDefinition(weapon)->fireInfo);
 }

@@ -1871,7 +1871,11 @@ typedef enum
 typedef struct
 {
 	char *identifier;
-
+	char *displayModel[4];
+	char *icon;
+	char *displayName;
+	char *pickupSound;
+	char *sounds; // only used by prox mine and grenade launcher
 	char *idleSound;
 	char *fireSound;
 	vec3_t flashColor;
@@ -1891,6 +1895,7 @@ extern cg_fireInfo_t cg_fireInfo[];
 extern int cg_numFireInfo;
 void CG_ParseFireInfoJSON(void);
 cg_fireInfo_t *CG_FireInfo(const char *name);
+cg_fireInfo_t *CG_FireInfoForWeapon(weapon_t weapon);
 
 //
 // cg_marks.c

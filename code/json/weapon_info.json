@@ -1,104 +1,130 @@
 [
     {
+        "classname": "weapon_gauntlet",
         "weapon": "WP_GAUNTLET",
         "ammoType": "WP_GAUNTLET",
         "attackDelay": 400,
+        "startAmmo": 0,
         "autoAttack": true,
         "oneHanded": true,
         "fireInfo": "gauntlet_wpf"
     },
     {
+        "classname": "weapon_machinegun",
         "weapon": "WP_MACHINEGUN",
         "ammoType": "WP_MACHINEGUN",
         "attackDelay": 100,
         "autoAttack": true,
+        "startAmmo": 40,
         "oneHanded": false,
         "fireInfo": "machinegun_wpf"
     },
     {
+        "classname": "weapon_shotgun",
         "weapon": "WP_SHOTGUN",
         "ammoType": "WP_SHOTGUN",
         "attackDelay": 1000,
+        "startAmmo": 10,
         "autoAttack": true,
         "oneHanded": false,
         "fireInfo": "shotgun_wpf"
     },
     {
+        "classname": "weapon_grenadelauncher",
         "weapon": "WP_GRENADE_LAUNCHER",
         "ammoType": "WP_GRENADE_LAUNCHER",
         "attackDelay": 800,
+        "startAmmo": 10,
         "autoAttack": true,
         "oneHanded": false,
         "fireInfo": "grenade_wpf"
     },
     {
+        "classname": "weapon_rocketlauncher",
         "weapon": "WP_ROCKET_LAUNCHER",
         "ammoType": "WP_ROCKET_LAUNCHER",
         "attackDelay": 800,
+        "startAmmo": 10,
         "autoAttack": true,
         "oneHanded": false,
         "fireInfo": "rocket_wpf"
     },
     {
+        "classname": "weapon_impactcannon",
         "weapon": "WP_IMPACT_CANNON",
         "ammoType": "WP_IMPACT_CANNON",
         "attackDelay": 700,
+        "startAmmo": 10,
         "autoAttack": true,
         "oneHanded": false,
         "fireInfo": "impact_wpf"
     },
     {
+        "classname": "weapon_lightning",
         "weapon": "WP_LIGHTNING",
         "ammoType": "WP_LIGHTNING",
         "attackDelay": 50,
+        "startAmmo": 100,
         "autoAttack": true,
         "oneHanded": false,
         "fireInfo": "lightning_wpf"
     },
     {
+        "classname": "weapon_plasmagun",
         "weapon": "WP_PLASMAGUN",
         "ammoType": "WP_PLASMAGUN",
         "attackDelay": 100,
+        "startAmmo": 50,
         "autoAttack": true,
         "oneHanded": false,
         "fireInfo": "plasma_wpf"
     },
     {
+        "classname": "weapon_railgun",
         "weapon": "WP_RAILGUN",
         "ammoType": "WP_RAILGUN",
         "attackDelay": 1500,
+        "startAmmo": 10,
         "autoAttack": true,
         "oneHanded": false,
         "fireInfo": "rail_wpf"
     },
     {
+        "classname": "weapon_bfg",
         "weapon": "WP_BFG",
         "ammoType": "WP_BFG",
         "attackDelay": 200,
+        "startAmmo": 20,
         "autoAttack": true,
         "oneHanded": false,
         "fireInfo": "bfg_wpf"
     },
     {
+        "classname": "weapon_taprifle",
         "weapon": "WP_TAPRIFLE",
         "ammoType": "WP_MACHINEGUN",
         "attackDelay": 1,
+        "startAmmo": 20,
         "autoAttack": false,
         "oneHanded": false,
-        "fireInfo": "machinegun_wpf"
+        "fireInfo": "taprifle_wpf"
     },
     {
+        "classname": "weapon_autoshotty",
         "weapon": "WP_AUTOSHOTTY",
         "ammoType": "WP_SHOTGUN",
         "attackDelay": 280,
+        "startAmmo": 15,
         "autoAttack": true,
         "oneHanded": false,
-        "fireInfo": "shotgun_wpf"
+        "fireInfo": "autoshotgun_wpf"
     },
     {
+        "classname": "weapon_minirail",
         "weapon": "WP_MINIRAIL",
         "ammoType": "WP_RAILGUN",
         "attackDelay": 750,
+        "startAmmo": 26,
         "autoAttack": true,
         "oneHanded": false,
         "fireInfo": "minirail_wpf"

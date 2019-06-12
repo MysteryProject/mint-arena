@@ -63,6 +63,39 @@ gitem_t bg_itemlist[] =
 		 0,
 		 /* sounds */ ""}, // leave index 0 alone
 
+		 /* reserved weapon slots */
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 1, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 2, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 3, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 4, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 5, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 6, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 7, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 8, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 9, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 10, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 11, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 12, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 13, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 14, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 15, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 16, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 17, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 18, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 19, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 20, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 21, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 22, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 23, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 24, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 25, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 26, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 27, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 28, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 29, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 30, NULL},
+		{ NULL, NULL, {NULL, NULL, NULL, NULL}, NULL, NULL, 0, IT_BAD, 31, NULL},
+
 		//
 		// ARMOR
 		//
@@ -170,206 +203,6 @@ gitem_t bg_itemlist[] =
 			100,
 			IT_HEALTH,
 			0,
-			/* sounds */ ""},
-
-		//
-		// WEAPONS
-		//
-
-		/*QUAKED weapon_gauntlet (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_gauntlet",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons2/gauntlet/gauntlet.md3",
-			 "models/weapons/gauntlet/gauntlet.md3", NULL, NULL},
-			/* icon */ "icons/iconw_gauntlet",
-			/* pickup */ "Gauntlet",
-			0,
-			IT_WEAPON,
-			WP_GAUNTLET,
-			/* sounds */ ""},
-
-		/*QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_shotgun",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons2/shotgun/shotgun.md3",
-			 "models/weapons/shotgun/shotgun.md3", NULL, NULL},
-			/* icon */ "icons/iconw_shotgun",
-			/* pickup */ "Shotgun",
-			10,
-			IT_WEAPON,
-			WP_SHOTGUN,
-			/* sounds */ ""},
-
-		/*QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_autoshotty",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons/autoshotty/autoshotty.md3",
-			 NULL, NULL, NULL},
-			/* icon */ "icons/iconw_autoshotty",
-			/* pickup */ "Auto-Shotty",
-			25,
-			IT_WEAPON,
-			WP_AUTOSHOTTY,
-			/* sounds */ ""},
-
-		/*QUAKED weapon_machinegun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_machinegun",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons2/machinegun/machinegun.md3",
-			 "models/weapons/machinegun/machinegun.md3", NULL, NULL},
-			/* icon */ "icons/iconw_machinegun",
-			/* pickup */ "Machinegun",
-			40,
-			IT_WEAPON,
-			WP_MACHINEGUN,
-			/* sounds */ ""},
-
-		/*QUAKED weapon_machinegun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_taprifle",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons/taprifle/taprifle.md3",
-			 NULL, NULL, NULL},
-			/* icon */ "icons/iconw_taprifle",
-			/* pickup */ "Tap-Rifle",
-			20,
-			IT_WEAPON,
-			WP_TAPRIFLE,
-			/* sounds */ ""},
-
-		/*QUAKED weapon_grenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_grenadelauncher",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons2/grenadel/grenadel.md3",
-			 "models/weapons/grenadel/grenadel.md3", NULL, NULL},
-			/* icon */ "icons/iconw_grenade",
-			/* pickup */ "Grenade Launcher",
-			10,
-			IT_WEAPON,
-			WP_GRENADE_LAUNCHER,
-			/* sounds */ "sound/weapons/grenade/hgrenb1a.wav sound/weapons/grenade/hgrenb2a.wav"},
-
-		/*QUAKED weapon_rocketlauncher (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_rocketlauncher",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons2/rocketl/rocketl.md3",
-			 "models/weapons/rocketl/rocketl.md3", NULL, NULL},
-			/* icon */ "icons/iconw_rocket",
-			/* pickup */ "Rocket Launcher",
-			10,
-			IT_WEAPON,
-			WP_ROCKET_LAUNCHER,
-			/* sounds */ ""},
-
-		/*QUAKED weapon_lightning (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_lightning",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons2/lightning/lightning.md3",
-			 "models/weapons/lightning/lightning.md3", NULL, NULL},
-			/* icon */ "icons/iconw_lightning",
-			/* pickup */ "Lightning Gun",
-			100,
-			IT_WEAPON,
-			WP_LIGHTNING,
-			/* sounds */ ""},
-
-		/*QUAKED weapon_railgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_railgun",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons2/railgun/railgun.md3",
-			 "models/weapons/railgun/railgun.md3", NULL, NULL},
-			/* icon */ "icons/iconw_railgun",
-			/* pickup */ "Railgun",
-			10,
-			IT_WEAPON,
-			WP_RAILGUN,
-			/* sounds */ ""},
-
-		/*QUAKED weapon_railgun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_minirail",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons/minirail/minirail.md3",
-			 NULL, NULL, NULL},
-			/* icon */ "icons/iconw_minirail",
-			/* pickup */ "Mini-Railgun",
-			26,
-			IT_WEAPON,
-			WP_MINIRAIL,
-			/* sounds */ ""},
-
-		/*QUAKED weapon_plasmagun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_plasmagun",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons2/plasma/plasma.md3",
-			 "models/weapons/plasma/plasma.md3", NULL, NULL},
-			/* icon */ "icons/iconw_plasma",
-			/* pickup */ "Plasma Gun",
-			50,
-			IT_WEAPON,
-			WP_PLASMAGUN,
-			/* sounds */ ""},
-
-		/*QUAKED weapon_plasmagun (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_impactcannon",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons/impactcannon/impactcannon.md3",
-			 NULL, NULL, NULL},
-			/* icon */ "icons/iconw_impactcannon",
-			/* pickup */ "Impact Cannon",
-			25,
-			IT_WEAPON,
-			WP_IMPACT_CANNON,
-			/* sounds */ ""},
-
-		/*QUAKED weapon_bfg (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_bfg",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons2/bfg/bfg.md3",
-			 "models/weapons/bfg/bfg.md3", NULL, NULL},
-			/* icon */ "icons/iconw_bfg",
-			/* pickup */ "BFG10K",
-			20,
-			IT_WEAPON,
-			WP_BFG,
-			/* sounds */ ""},
-
-		/*QUAKED weapon_grapplinghook (.3 .3 1) (-16 -16 -16) (16 16 16) suspended
-*/
-		{
-			"weapon_grapplinghook",
-			"sound/misc/w_pkup.wav",
-			{"models/weapons2/grapple/grapple.md3",
-			 "models/weapons/grapple/grapple.md3", NULL, NULL},
-			/* icon */ "icons/iconw_grapple",
-			/* pickup */ "Grappling Hook",
-			0,
-			IT_WEAPON,
-			WP_GRAPPLING_HOOK,
 			/* sounds */ ""},
 
 		//
@@ -1219,7 +1052,8 @@ BG_FindItem
 */
 gitem_t	*BG_FindItem( const char *pickupName ) {
 	gitem_t	*it;
-	
+	bgweapon_defs_t *wdef;
+
 	for ( it = bg_itemlist + 1 ; it->classname ; it++ ) {
 		if ( !Q_stricmp( it->pickup_name, pickupName ) )
 			return it;

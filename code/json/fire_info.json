@@ -1,6 +1,12 @@
 [
     {
         "name": "rail_wpf",
+        "displayModel": [
+            "models/weapons2/railgun/railgun.md3",
+            "models/weapons/railgun/railgun.md3" 
+        ],
+        "icon": "icons/iconw_railgun",
+        "displayName": "Railgun",
         "idleSound": "sound/weapons/railgun/rg_hum.wav",
         "flashColor": [ 1.0, 0.5, 0.0 ],
         "flashSound": [ "sound/weapons/railgun/railgf1a.wav" ],
@@ -8,6 +14,9 @@
     },
     {
         "name": "minirail_wpf",
+        "displayModel": [ "models/weapons/minirail/minirail.md3" ],
+        "icon": "icons/iconw_minirail",
+        "displayName": "Mini-Railgun",
         "idleSound": "sound/weapons/minirail/rg_hum.wav",
         "flashColor": [ 1.0, 0.5, 0.0 ],
         "flashSound": [ "sound/weapons/minirail/railgf1a.wav" ],
@@ -15,19 +24,51 @@
     },
     {
         "name": "gauntlet_wpf",
+        "displayModel": [
+            "models/weapons2/gauntlet/gauntlet.md3",
+            "models/weapons/gauntlet/gauntlet.md3" 
+        ],
+        "icon": "icons/iconw_gauntlet",
+        "displayName": "Gauntlet",
         "idleSound": "sound/weapons/melee/fstrun.wav",
         "flashColor": [ 0.6, 0.6, 1.0 ],
         "flashSound": [ "sound/weapons/melee/fstatck.wav" ]
     },
     {
         "name": "lightning_wpf",
+        "displayModel": [
+            "models/weapons2/lightning/lightning.md3",
+            "models/weapons/lightning/lightning.md3"
+        ],
+        "icon": "icons/iconw_lightning",
+        "displayName": "Lightning Gun",
         "idleSound": "sound/weapons/melee/fsthum.wav",
         "fireSound": "sound/weapons/lightning/lg_hum.wav",
         "flashColor": [ 0.6, 0.6, 1.0 ],
         "flashSound": [ "sound/weapons/lightning/lg_fire.wav" ]
     },
     {
-        "name": "machinegun_wpf",        
+        "name": "machinegun_wpf",
+        "displayModel": [
+            "models/weapons2/machinegun/machinegun.md3",
+			 "models/weapons/machinegun/machinegun.md3"
+        ],
+        "icon": "icons/iconw_machinegun",
+        "displayName": "Machinegun",
+        "flashColor": [ 1.0, 1.0, 0.0 ],
+        "flashSound": [ 
+            "sound/weapons/machinegun/machgf1b.wav",
+            "sound/weapons/machinegun/machgf2b.wav",
+            "sound/weapons/machinegun/machgf3b.wav",
+            "sound/weapons/machinegun/machgf4b.wav" 
+        ],
+        "brassType": "bullet"
+    },
+    {
+        "name": "taprifle_wpf",
+        "displayModel": [ "models/weapons/taprifle/taprifle.md3" ],
+        "icon": "icons/iconw_taprifle",
+        "displayName": "Tap-Rifle",
         "flashColor": [ 1.0, 1.0, 0.0 ],
         "flashSound": [ 
             "sound/weapons/machinegun/machgf1b.wav",
@@ -39,12 +80,33 @@
     },
     {
         "name": "shotgun_wpf",
+        "displayModel": [
+            "models/weapons2/shotgun/shotgun.md3",
+            "models/weapons/shotgun/shotgun.md3" 
+        ],
+        "icon": "icons/iconw_shotgun",
+        "displayName": "Shotgun",
+        "flashColor": [ 1.0, 1.0, 0.0 ],
+        "flashSound": [ "sound/weapons/shotgun/sshotf1b.wav" ],
+        "brassType": "shell"
+    },
+    {
+        "name": "autoshotgun_wpf",
+        "displayModel": [ "models/weapons/autoshotty/autoshotty.md3" ],
+        "icon": "icons/iconw_autoshotty",
+        "displayName": "Auto-Shotty",
         "flashColor": [ 1.0, 1.0, 0.0 ],
         "flashSound": [ "sound/weapons/shotgun/sshotf1b.wav" ],
         "brassType": "shell"
     },
     {
         "name": "rocket_wpf",
+        "displayModel": [
+            "models/weapons2/rocketl/rocketl.md3",
+            "models/weapons/rocketl/rocketl.md3"
+        ],
+        "icon": "icons/iconw_rocket",
+        "displayName": "Rocket Launcher",
         "flashColor": [ 1.0, 0.75, 0.0 ],
         "flashSound": [ "sound/weapons/rocket/rocklf1a.wav" ],
         "missileModel": "models/ammo/rocket/rocket.md3",
@@ -56,6 +118,13 @@
     },
     {
         "name": "grenade_wpf",
+        "displayModel": [
+            "models/weapons2/grenadel/grenadel.md3",
+            "models/weapons/grenadel/grenadel.md3"
+        ],
+        "icon": "icons/iconw_grenade",
+        "displayName": "Grenade Launcher",
+        "sounds": "sound/weapons/grenade/hgrenb1a.wav sound/weapons/grenade/hgrenb2a.wav",
         "flashColor": [ 1.0, 0.7, 0.0 ],
         "flashSound": [ "sound/weapons/grenade/grenlf1a.wav" ],
         "missileModel": "models/ammo/grenade1.md3",
@@ -64,18 +133,33 @@
     },
     {
         "name": "impact_wpf",
+        "displayModel": [ "models/weapons/impactcannon/impactcannon.md3" ],
+        "icon": "icons/iconw_impactcannon",
+        "displayName": "Impact Cannon",
         "flashColor": [ 1.0, 0.6, 0.0 ],
         "flashSound": [ "sound/weapons/impactcannon/rocklf1a.wav" ],
         "missileSound": "sound/weapons/impactcannon/rockfly.wav"
     },
     {
         "name": "plasma_wpf",
+        "displayModel": [
+            "models/weapons2/plasma/plasma.md3",
+			 "models/weapons/plasma/plasma.md3"
+        ],
+        "icon": "icons/iconw_plasma",
+        "displayName": "Plasma Gun",
         "flashColor": [ 0.6, 0.6, 1.0 ],
         "flashSound": [ "sound/weapons/plasma/hyprbf1a.wav" ],
         "missileSound": "sound/weapons/plasma/lasfly.wav"
     },
     {
         "name": "bfg_wpf",
+        "displayModel": [
+            "models/weapons2/bfg/bfg.md3",
+            "models/weapons/bfg/bfg.md3" 
+        ],
+        "icon": "icons/iconw_bfg",
+        "displayName": "BFG10K",
         "flashColor": [ 1.0, 0.7, 1.0 ],
         "flashSound": [ "sound/weapons/bfg/bfg_fire.wav" ],
         "missileModel": "models/weaphits/bfg.md3",

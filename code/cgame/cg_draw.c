@@ -1313,11 +1313,22 @@ static int CG_DrawPickupItem( int y ) {
 	if ( value ) {
 		fadeColor = CG_FadeColor( cg.cur_lc->itemPickupTime, 3000 );
 		if ( fadeColor ) {
+			gitem_t *item;
+			char *name;
+
 			CG_RegisterItemVisuals( value );
 			trap_R_SetColor( fadeColor );
 			CG_DrawPic( 8, y, ICON_SIZE, ICON_SIZE, cg_items[ value ].icon );
 			trap_R_SetColor( NULL );
-			CG_DrawString( ICON_SIZE + 16, y + (ICON_SIZE/2), BG_ItemForItemNum( value )->pickup_name, UI_VA_CENTER|UI_DROPSHADOW|UI_BIGFONT, fadeColor );
+
+			item = BG_ItemForItemNum(value);
+
+			if (item->giType == IT_WEAPON)
+				name = CG_FireInfoForWeapon(item->giTag)->displayName;
+			else
+				name = item->pickup_name;
+
+			CG_DrawString( ICON_SIZE + 16, y + (ICON_SIZE/2), name, UI_VA_CENTER|UI_DROPSHADOW|UI_BIGFONT, fadeColor );
 		}
 	}
 	

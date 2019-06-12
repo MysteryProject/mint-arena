@@ -644,14 +644,18 @@ void CG_RegisterWeapon( int weaponNum ) {
 	}
 	CG_RegisterItemVisuals( BG_ItemNumForItem( item ) );
 
+	wDef = BG_GetWeaponDefinition(weaponNum);
+	fi = CG_FireInfo(wDef->fireInfo);
+
+
 	// load cmodel before model so filecache works
-	weaponModel = item->world_model[0];
+	weaponModel = fi->displayModel[0];
 
 	weaponInfo->weaponModel = trap_R_RegisterModel(weaponModel);
 
 	if (!weaponInfo->weaponModel)
 	{
-		weaponModel = item->world_model[0];
+		weaponModel = fi->displayModel[0];
 		weaponInfo->weaponModel = trap_R_RegisterModel(weaponModel);
 	}
 	
@@ -661,15 +665,15 @@ void CG_RegisterWeapon( int weaponNum ) {
 		weaponInfo->weaponMidpoint[i] = mins[i] + 0.5 * ( maxs[i] - mins[i] );
 	}
 
-	weaponInfo->weaponIcon = trap_R_RegisterShader( item->icon );
-	weaponInfo->ammoIcon = trap_R_RegisterShader( item->icon );
+	weaponInfo->weaponIcon = trap_R_RegisterShader( fi->icon );
+	weaponInfo->ammoIcon = trap_R_RegisterShader( fi->icon );
 
 	ammo = BG_FindItemForAmmo( weaponNum );
 	if ( ammo && ammo->world_model[0] ) {
 		weaponInfo->ammoModel = trap_R_RegisterModel( ammo->world_model[0] );
 	}
 
-	COM_StripExtension(item->world_model[0], path, sizeof(path));
+	COM_StripExtension(fi->displayModel[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash.md3" );
 	weaponInfo->flashModel = trap_R_RegisterModel( path );
 
@@ -677,16 +681,13 @@ void CG_RegisterWeapon( int weaponNum ) {
 	Q_strcat( path, sizeof(path), "_barrel.md3" );
 	weaponInfo->barrelModel = trap_R_RegisterModel( path );
 
-	COM_StripExtension( item->world_model[0], path, sizeof(path) );
+	COM_StripExtension(fi->displayModel[0], path, sizeof(path) );
 	Q_strcat( path, sizeof(path), "_hand.md3" );
 	weaponInfo->handsModel = trap_R_RegisterModel( path );
 
 	if ( !weaponInfo->handsModel ) {
 		weaponInfo->handsModel = trap_R_RegisterModel( "models/weapons2/shotgun/shotgun_hand.md3" );
 	}
-
-	wDef = BG_GetWeaponDefinition(weaponNum);
-	fi = CG_FireInfo(wDef->fireInfo);
 
 	switch ( weaponNum ) {
 	case WP_LIGHTNING:
@@ -859,7 +860,8 @@ void CG_RegisterItemVisuals( int itemNum ) {
 
 	itemInfo->models[0] = trap_R_RegisterModel( item->world_model[0] );
 
-	itemInfo->icon = trap_R_RegisterShader( item->icon );
+	if (item->icon)
+		itemInfo->icon = trap_R_RegisterShader( item->icon );
 
 	if ( item->giType == IT_WEAPON ) {
 		CG_RegisterWeapon( item->giTag );
@@ -1577,7 +1579,7 @@ void CG_DrawWeaponSelect( void ) {
 
 	// draw the selected name
 	if ( cg_weapons[ cg.cur_lc->weaponSelect ].item ) {
-		name = cg_weapons[ cg.cur_lc->weaponSelect ].item->pickup_name;
+		name = CG_FireInfoForWeapon(cg.cur_lc->weaponSelect)->displayName;
 		if ( name ) {
 			CG_DrawString( SCREEN_WIDTH / 2, y - 6, name, UI_CENTER|UI_VA_BOTTOM|UI_DROPSHADOW|UI_BIGFONT, color );
 		}

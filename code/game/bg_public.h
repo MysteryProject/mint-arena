@@ -706,9 +706,11 @@ extern const char *weaponEnumStrings[];
 
 typedef struct
 {
+	char *classname;
 	weapon_t weapon;
 	weapon_t ammoType;
 	int attackDelay;
+	int startAmmo;
 	qboolean autoAttack;
 	qboolean oneHanded;
 	char *fireInfo;

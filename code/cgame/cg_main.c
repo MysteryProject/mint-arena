@@ -1245,7 +1245,14 @@ static void CG_RegisterItemSounds( int itemNum ) {
 
 	item = BG_ItemForItemNum( itemNum );
 
-	if( item->pickup_sound ) {
+	if (item->giType == IT_WEAPON)
+	{
+		bgweapon_defs_t *wdef = BG_GetWeaponDefinition(itemNum);
+		cg_fireInfo_t *fi = CG_FireInfo(wdef->fireInfo);
+		if (fi->pickupSound)
+			cgs.media.itemPickupSounds[ itemNum ] = trap_S_RegisterSound( fi->pickupSound, qfalse );
+	}
+	else if( item->pickup_sound ) {
 		cgs.media.itemPickupSounds[ itemNum ] = trap_S_RegisterSound( item->pickup_sound, qfalse );
 	}
 
@@ -2750,6 +2757,9 @@ void CG_Init( connstate_t state, int maxSplitView, int playVideo ) {
 	// clear everything
 	CG_ClearState( qtrue, maxSplitView );
 
+	BG_ParseWeaponDefsJSON();
+	CG_ParseFireInfoJSON();
+
 	CG_SetConnectionState( state );
 
 	CG_RegisterCvars();
@@ -2773,9 +2783,6 @@ void CG_Init( connstate_t state, int maxSplitView, int playVideo ) {
 	Init_Display(&cgDC);
 	String_Init();
 #endif
-
-	BG_ParseWeaponDefsJSON();
-	CG_ParseFireInfoJSON();
 
 	UI_Init( cg.connected, maxSplitView );
 

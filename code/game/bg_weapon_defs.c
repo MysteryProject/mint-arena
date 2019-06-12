@@ -137,7 +137,13 @@ void BG_ParseWeaponDefsJSON(void)
 
                 //Com_Printf("Parsing token %s: %s\n", key, value);
 
-                if (Q_stricmp(key, "weapon") == 0)
+                if (Q_stricmp(key, "classname") == 0)
+                {
+                    bg_weapons[bg_numWeapons].classname = trap_HeapMalloc(strlen(value));
+                    Q_strncpyz(bg_weapons[bg_numWeapons].classname, value, strlen(value) + 1);
+                    bg_itemlist[bg_numWeapons + 1].classname = bg_weapons[bg_numWeapons].classname;
+                }
+                else if (Q_stricmp(key, "weapon") == 0)
                 {
                     int a;
                     for(a = WP_NONE + 1; a < WP_NUM_WEAPONS; a++)
@@ -159,6 +165,11 @@ void BG_ParseWeaponDefsJSON(void)
                 {
                     bg_weapons[bg_numWeapons].attackDelay = atoi(value);
                 }
+                else if (Q_stricmp(key, "startAmmo") == 0)
+                {
+                    bg_weapons[bg_numWeapons].startAmmo = atoi(value);
+                    bg_itemlist[bg_numWeapons + 1].quantity = bg_weapons[bg_numWeapons].startAmmo;
+                }
                 else if (Q_stricmp(key, "autoAttack") == 0)
                 {
                     bg_weapons[bg_numWeapons].autoAttack = !Q_stricmp(value, "true");
@@ -177,8 +188,10 @@ void BG_ParseWeaponDefsJSON(void)
                     Com_Printf("BG_ParseWeaponDefsJSON: Could not parse token %s: %s\n", key, value);
                 }
             }
-            Com_Printf("BG_ParseWeaponDefsJSON: Parsed info for %s\n", weaponEnumStrings[bg_weapons[bg_numWeapons].weapon]);
+            Com_Printf("BG_ParseWeaponDefsJSON: Parsed info for %s %d\n", bg_weapons[bg_numWeapons].classname, bg_numWeapons);
             bg_numWeapons++;
+            bg_itemlist[bg_numWeapons].giType = IT_WEAPON;
+            bg_itemlist[bg_numWeapons].giTag = bg_numWeapons;
         }
     }
 }
