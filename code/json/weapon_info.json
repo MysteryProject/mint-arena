@@ -14,8 +14,8 @@
         "weapon": "WP_MACHINEGUN",
         "ammoType": "WP_MACHINEGUN",
         "attackDelay": 100,
-        "autoAttack": true,
         "startAmmo": 40,
+        "autoAttack": true,
         "oneHanded": false,
         "fireInfo": "machinegun_wpf"
     },
@@ -124,7 +124,7 @@
         "weapon": "WP_MINIRAIL",
         "ammoType": "WP_RAILGUN",
         "attackDelay": 750,
-        "startAmmo": 26,
+        "startAmmo": 24,
         "autoAttack": true,
         "oneHanded": false,
         "fireInfo": "minirail_wpf"
