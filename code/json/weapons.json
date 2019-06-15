@@ -1,0 +1,261 @@
+[
+    {
+        "id": "gauntlet",
+        "type": "weapon",
+        "displayName": "Gauntlet",
+        "displayModel": [
+            "models/weapons2/gauntlet/gauntlet.md3",
+            "models/weapons/gauntlet/gauntlet.md3"
+        ],
+        "icon": "icons/iconw_gauntlet",
+        "idleSound": "sound/weapons/melee/fstrun.wav",
+        "flashColor": [ 0.6, 0.6, 1.0 ],
+        "flashSound": [ "sound/weapons/melee/fstatck.wav" ],
+        "oneHanded": true,
+        "attackDelay": 400,
+        "amount": -1,
+    },
+    {
+        "id": "machinegun",
+        "type": "weapon",
+        "displayName": "Machinegun",
+        "displayModel": [
+            "models/weapons2/machinegun/machinegun.md3",
+			"models/weapons/machinegun/machinegun.md3"
+        ],
+        "icon": "icons/iconw_machinegun",
+        "ammoId": "bullets",
+        "ammoName": "Bullets",
+        "ammoModel": "models/powerups/ammo/machinegunam.md3",
+        "ammoIcon": "icons/icona_machinegun",
+        "flashColor": [ 1.0, 1.0, 0.0 ],
+        "flashSound": [ 
+            "sound/weapons/machinegun/machgf1b.wav",
+            "sound/weapons/machinegun/machgf2b.wav",
+            "sound/weapons/machinegun/machgf3b.wav",
+            "sound/weapons/machinegun/machgf4b.wav" 
+        ],
+        "brassType": "bullet",
+        "attackDelay": 100,
+        "amount": 40,
+        "ammoAmount": 50
+    },
+    {
+        "id": "taprifle",
+        "type": "weapon",
+        "displayName": "Tap-Rifle",
+        "displayModel": [ "models/weapons/taprifle/taprifle.md3" ],
+        "icon": "icons/iconw_taprifle",
+        "ammo": "bullets",
+        "flashColor": [ 1.0, 1.0, 0.0 ],
+        "flashSound": [ 
+            "sound/weapons/machinegun/machgf1b.wav",
+            "sound/weapons/machinegun/machgf2b.wav",
+            "sound/weapons/machinegun/machgf3b.wav",
+            "sound/weapons/machinegun/machgf4b.wav" 
+        ],
+        "brassType": "bullet",
+        "attackDelay": 1,
+        "amount": 20,
+        "ammoAmount": 20,
+        "autoAttack": false
+    },
+    {
+        "id": "shotgun",
+        "type": "weapon",
+        "displayName": "Shotgun",
+        "displayModel": [
+            "models/weapons2/shotgun/shotgun.md3",
+			"models/weapons/shotgun/shotgun.md3"
+        ],
+        "icon": "icons/iconw_shotgun",
+        "ammoId": "shells",
+        "ammoName": "Shells",
+        "ammoModel": "models/powerups/ammo/shotgunam.md3",
+        "ammoIcon": "icons/icona_shotgun",
+        "flashColor": [ 1.0, 1.0, 0.0 ],
+        "flashSound": [ "sound/weapons/shotgun/sshotf1b.wav" ],
+        "brassType": "shell",
+        "attackDelay": 1000,
+        "amount": 10,
+        "ammoAmount": 10
+    },
+    {
+        "id": "autoshotty",
+        "type": "weapon",
+        "displayName": "Auto-Shotty",
+        "displayModel": [ "models/weapons/autoshotty/autoshotty.md3" ],
+        "icon": "icons/iconw_autoshotty",
+        "ammo": "shells",
+        "flashColor": [ 1.0, 1.0, 0.0 ],
+        "flashSound": [ "sound/weapons/shotgun/sshotf1b.wav" ],
+        "brassType": "shell",
+        "attackDelay": 280,
+        "amount": 15,
+        "ammoAmount": 10
+    },
+    {
+        "id": "grenadelauncher",
+        "type": "weapon",
+        "displayName": "Grenade Launcher",
+        "displayModel": [
+            "models/weapons2/grenadel/grenadel.md3",
+            "models/weapons/grenadel/grenadel.md3"
+        ],
+        "icon": "icons/iconw_grenade",
+        "ammoId": "grenades",
+        "ammoName": "Grenades",
+        "ammoModel": "models/powerups/ammo/grenadeam.md3",
+        "ammoIcon": "icons/icona_grenade",
+        "sounds": "sound/weapons/grenade/hgrenb1a.wav sound/weapons/grenade/hgrenb2a.wav",
+        "flashColor": [ 1.0, 0.7, 0.0 ],
+        "flashSound": [ "sound/weapons/grenade/grenlf1a.wav" ],
+        "missileModel": "models/ammo/grenade1.md3",
+        "missileTrailTime": 700,
+        "missileTrailRadius": 32,
+        "attackDelay": 800,
+        "amount": 15,
+        "ammoAmount": 5
+    },
+    {
+        "id": "railgun",
+        "type": "weapon",
+        "displayName": "Railgun",
+        "displayModel": [
+            "models/weapons2/railgun/railgun.md3",
+            "models/weapons/railgun/railgun.md3" 
+        ],
+        "icon": "icons/iconw_railgun",
+        "ammoId": "slugs",
+        "ammoName": "Slugs",
+        "ammoModel": "models/powerups/ammo/railgunam.md3",
+        "ammoIcon": "icons/icona_railgun",
+        "idleSound": "sound/weapons/railgun/rg_hum.wav",
+        "flashColor": [ 1.0, 0.5, 0.0 ],
+        "flashSound": [ "sound/weapons/railgun/railgf1a.wav" ],
+        "customShading": true,
+        "attackDelay": 1500,
+        "amount": 10,
+        "ammoAmount": 10
+    },
+    {
+        "id": "minirail",
+        "type": "weapon",
+        "displayName": "Mini-Railgun",
+        "displayModel": [ "models/weapons/minirail/minirail.md3" ],
+        "icon": "icons/iconw_minirail",
+        "ammo": "slugs",
+        "idleSound": "sound/weapons/minirail/rg_hum.wav",
+        "flashColor": [ 1.0, 0.5, 0.0 ],
+        "flashSound": [ "sound/weapons/minirail/railgf1a.wav" ],
+        "customShading": true,
+        "attackDelay": 750,
+        "amount": 20,
+        "ammoAmount": 10
+    },
+    {
+        "id": "plasmagun",
+        "type": "weapon",
+        "displayName": "Plasma Gun",
+        "displayModel": [
+            "models/weapons2/plasma/plasma.md3",
+            "models/weapons/plasma/plasma.md3"
+        ],
+        "icon": "icons/iconw_plasma",
+        "ammoId": "cells",
+        "ammoName": "Cells",
+        "ammoModel": "models/powerups/ammo/plasmaam.md3",
+        "ammoIcon": "icons/icona_plasma",
+        "flashColor": [ 0.6, 0.6, 1.0 ],
+        "flashSound": [ "sound/weapons/plasma/hyprbf1a.wav" ],
+        "missileSound": "sound/weapons/plasma/lasfly.wav",
+        "attackDelay": 100,
+        "amount": 50,
+        "ammoAmount": 30
+    },
+    {
+        "id": "impactcannon",
+        "type": "weapon",
+        "displayName": "Impact Cannon",
+        "displayModel": [ "models/weapons/impactcannon/impactcannon.md3" ],
+        "icon": "icons/iconw_impactcannon",
+        "ammo": "cells",
+        "flashColor": [ 1.0, 0.6, 0.0 ],
+        "flashSound": [ "sound/weapons/impactcannon/rocklf1a.wav" ],
+        "missileSound": "sound/weapons/impactcannon/rockfly.wav",
+        "attackDelay": 700,
+        "amount": 10,
+        "ammoAmount": 10
+    },
+    {
+        "id": "rocketlauncher",
+        "type": "weapon",
+        "displayName": "Rocket Launcher",
+        "displayModel": [
+            "models/weapons2/rocketl/rocketl.md3",
+            "models/weapons/rocketl/rocketl.md3"
+        ],
+        "icon": "icons/iconw_rocket",
+        "ammoId": "rockets",
+        "ammoName": "Rockets",
+        "ammoModel": "models/powerups/ammo/rocketam.md3",
+        "ammoIcon": "icons/icona_rocket",
+        "flashColor": [ 0.6, 0.6, 1.0 ],
+        "flashSound": [ "sound/weapons/rocket/rocklf1a.wav" ],
+        "missileModel": "models/ammo/rocket/rocket.md3",
+        "missileSound": "sound/weapons/rocket/rockfly.wav",
+        "missileTrailTime": 2000,
+        "missileTrailRadius": 64,
+        "missileDlight": 200,
+        "missileDlightColor": [ 1.0, 0.75, 0.0 ],
+        "attackDelay": 800,
+        "amount": 10,
+        "ammoAmount": 5
+    },
+    {
+        "id": "lightning",
+        "type": "weapon",
+        "displayName": "Lightning Gun",
+        "displayModel": [
+            "models/weapons2/lightning/lightning.md3",
+            "models/weapons/lightning/lightning.md3"
+        ],
+        "icon": "icons/iconw_lightning",
+        "ammoId": "rockets",
+        "ammoName": "Rockets",
+        "ammoModel": "models/powerups/ammo/lightningam.md3",
+        "ammoIcon": "icons/icona_lightning",
+        "idleSound": "sound/weapons/melee/fsthum.wav",
+        "fireSound": "sound/weapons/lightning/lg_hum.wav",
+        "flashColor": [ 0.6, 0.6, 1.0 ],
+        "flashSound": [ "sound/weapons/lightning/lg_fire.wav" ],
+        "attackDelay": 50,
+        "amount": 100,
+        "ammoAmount": 60
+    },
+    {
+        "id": "bfg",
+        "type": "weapon",
+        "displayName": "BFG10K",
+        "displayModel": [
+            "models/weapons2/bfg/bfg.md3",
+            "models/weapons/bfg/bfg.md3" 
+        ],
+        "icon": "icons/iconw_bfg",
+        "ammoId": "bfg",
+        "ammoName": "Bfg Ammo",
+        "ammoModel": "models/powerups/ammo/bfgam.md3",
+        "ammoIcon": "icons/icona_bfg",
+        "flashColor": [ 1.0, 0.7, 1.0 ],
+        "flashSound": [ "sound/weapons/bfg/bfg_fire.wav" ],
+        "missileModel": "models/weaphits/bfg.md3",
+        "missileSound": "sound/weapons/rocket/rockfly.wav",
+        "attackDelay": 200,
+        "amount": 20,
+        "ammoAmount": 15
+    },
+    {
+        "id": "grappling",
+        "displayName": "Grappling Hook"
+    }
+]

@@ -1445,10 +1445,7 @@ static void CG_GiveComplete( int localPlayerNum, char *args, int argNum ) {
 	for ( i = 1; i < BG_NumItems(); i++ ) {
 		item = BG_ItemForItemNum( i );
 
-		if (item->giType == IT_WEAPON)
-			name = CG_FireInfoForWeapon(item->giTag)->displayName;
-		else
-			name = item->pickup_name;
+		name = item->displayName;
 
 		//
 		// complete item names with spaces across multiple arguments instead of adding quotes

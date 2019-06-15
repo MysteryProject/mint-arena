@@ -377,10 +377,10 @@ static void CG_TouchItem( centity_t *cent ) {
 #endif
 	if( cgs.gametype == GT_CTF ) {
 		if (cg.cur_lc->predictedPlayerState.persistant[PERS_TEAM] == TEAM_RED &&
-			item->giType == IT_TEAM && item->giTag == PW_REDFLAG)
+			item->type == IT_TEAM && item->localIndex == PW_REDFLAG)
 			return;
 		if (cg.cur_lc->predictedPlayerState.persistant[PERS_TEAM] == TEAM_BLUE &&
-			item->giType == IT_TEAM && item->giTag == PW_BLUEFLAG)
+			item->type == IT_TEAM && item->localIndex == PW_BLUEFLAG)
 			return;
 	}
 
@@ -394,11 +394,11 @@ static void CG_TouchItem( centity_t *cent ) {
 	cent->miscTime = cg.time;
 
 	// if it's a weapon, give them some predicted ammo so the autoswitch will work
-	if ( item->giType == IT_WEAPON ) {
-		cg.cur_lc->predictedPlayerState.stats[ STAT_WEAPONS ] |= 1 << item->giTag;
-		if (!cg.cur_lc->predictedPlayerState.ammo[BG_GetWeaponDefinition(item->giTag)->ammoType])
+	if ( item->type == IT_WEAPON ) {
+		cg.cur_lc->predictedPlayerState.stats[ STAT_WEAPONS ] |= 1 << item->localIndex;
+		if (!cg.cur_lc->predictedPlayerState.ammo[item->localIndex])
 		{
-			cg.cur_lc->predictedPlayerState.ammo[BG_GetWeaponDefinition(item->giTag)->ammoType] = 1;
+			cg.cur_lc->predictedPlayerState.ammo[item->localIndex] = 1;
 		}
 	}
 }

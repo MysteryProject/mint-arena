@@ -87,29 +87,13 @@ CG_LoadingItem
 */
 void CG_LoadingItem( int itemNum ) {
 	gitem_t		*item;
-	bgweapon_defs_t *wdef;
-	cg_fireInfo_t *fi;
 
 	item = BG_ItemForItemNum( itemNum );
 
-	if (item->giType == IT_WEAPON)
-	{
-		wdef = BG_GetWeaponDefinition(itemNum);
-		fi = CG_FireInfo(wdef->fireInfo);
+	if (item->icon && loadingItemIconCount < MAX_LOADING_ITEM_ICONS ) 
+		loadingItemIcons[loadingItemIconCount++] = trap_R_RegisterShaderNoMip( item->icon );
 
-		if (fi->icon && loadingItemIconCount < MAX_LOADING_ITEM_ICONS ) 
-			loadingItemIcons[loadingItemIconCount++] = trap_R_RegisterShaderNoMip( fi->icon );
-
-		CG_LoadingString( fi->displayName );
-	}
-	else
-	{
-		if ( item->icon && loadingItemIconCount < MAX_LOADING_ITEM_ICONS ) {
-			loadingItemIcons[loadingItemIconCount++] = trap_R_RegisterShaderNoMip( item->icon );
-		}
-
-		CG_LoadingString( item->pickup_name );
-	}
+	CG_LoadingString( item->displayName );
 }
 
 /*

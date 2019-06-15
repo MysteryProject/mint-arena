@@ -1527,21 +1527,21 @@ void BotMatch_WhereAreYou(bot_state_t *bs, bot_match_t *match) {
 		}
 
 		//ignore health, ammo, holdables, small armor, and Red Cube and Blue Cube
-		if ( it->giType == IT_HEALTH
-			|| it->giType == IT_AMMO
-			|| it->giType == IT_HOLDABLE
-			|| ( it->giType == IT_ARMOR && it->quantity < 50 )
+		if ( it->type == IT_HEALTH
+			|| it->type == IT_AMMO
+			|| it->type == IT_HOLDABLE
+			|| ( it->type == IT_ARMOR && it->amount < 50 )
 #ifdef MISSIONPACK
-			|| ( it->giType == IT_TEAM && it->giTag == 0 )
+			|| ( it->type == IT_TEAM && it->giTag == 0 )
 #endif
 			) {
 			continue;
 		}
 
-		dist = BotNearestVisibleItem(bs, it->pickup_name, &goal);
+		dist = BotNearestVisibleItem(bs, it->displayName, &goal);
 		if (dist < bestdist) {
 			bestdist = dist;
-			bestitemname = it->pickup_name;
+			bestitemname = it->displayName;
 		}
 	}
 	for (i = 0; nearbyitems[i]; i++) {

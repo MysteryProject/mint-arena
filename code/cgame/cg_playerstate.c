@@ -47,7 +47,6 @@ void CG_CheckAmmo( void ) {
 	int		total;
 	int		previous;
 	int		weapons;
-	bgweapon_defs_t *weapon;
 
 	if (!cg_showLowAmmoPerWeapon[cg.cur_localPlayerNum].integer)
 	{
@@ -57,12 +56,11 @@ void CG_CheckAmmo( void ) {
 		total = 0;
 		for (i = WP_MACHINEGUN; i < WP_NUM_WEAPONS; i++)
 		{
-			weapon = BG_GetWeaponDefinition(i);
 			if (!(weapons & (1 << i)))
 			{
 				continue;
 			}
-			if (cg.cur_ps->ammo[weapon->ammoType] < 0)
+			if (cg.cur_ps->ammo[i] < 0)
 			{
 				continue;
 			}
@@ -75,10 +73,10 @@ void CG_CheckAmmo( void ) {
 #ifdef MISSIONPACK
 			case WP_PROX_LAUNCHER:
 #endif
-				total += cg.cur_ps->ammo[weapon->ammoType] * 1000;
+				total += cg.cur_ps->ammo[i] * 1000;
 				break;
 			default:
-				total += cg.cur_ps->ammo[weapon->ammoType] * 200;
+				total += cg.cur_ps->ammo[i] * 200;
 				break;
 			}
 			if (total >= 5000)
@@ -102,13 +100,12 @@ void CG_CheckAmmo( void ) {
 	else
 	{
 		weapons = cg.cur_ps->weapon;
-		weapon = BG_GetWeaponDefinition(weapons);
 
 		previous = cg.cur_lc->lowAmmoWarning;
 
-		if (cg.cur_ps->ammo[weapon->ammoType] < 0)
+		if (cg.cur_ps->ammo[weapons] < 0)
 			return; // marxy: hopefully this is sufficient
-		else if (cg.cur_ps->ammo[weapon->ammoType] == 0)
+		else if (cg.cur_ps->ammo[weapons] == 0)
 			cg.cur_lc->lowAmmoWarning = 2; // out of ammo
 		else
 		{
@@ -145,7 +142,7 @@ void CG_CheckAmmo( void ) {
 				break;
 			}
 
-			if (cg.cur_ps->ammo[weapon->ammoType] > total)
+			if (cg.cur_ps->ammo[weapons] > total)
 			{
 				previous = cg.cur_lc->lowAmmoWarning = 0; // plenty of ammo
 			}

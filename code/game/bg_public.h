@@ -687,39 +687,30 @@ typedef enum {
     WP_NONE,
     WP_GAUNTLET,
     WP_MACHINEGUN,
+    WP_TAPRIFLE,
     WP_SHOTGUN,
+    WP_AUTOSHOTTY,
     WP_GRENADE_LAUNCHER,
+    WP_RAILGUN,
+    WP_MINIRAIL,
+    WP_PLASMAGUN,
+    WP_IMPACT_CANNON,
     WP_ROCKET_LAUNCHER,
     WP_LIGHTNING,
-    WP_RAILGUN,
-    WP_PLASMAGUN,
     WP_BFG,
     WP_GRAPPLING_HOOK,
-    WP_MINIRAIL,
-    WP_AUTOSHOTTY,
-    WP_TAPRIFLE,
-    WP_IMPACT_CANNON,
     WP_NUM_WEAPONS
 } weapon_t;
 
+typedef enum {
+	BF_NONE,
+	BF_BULLET,
+	BF_SHELL,
+} brassEjectType_t;
+
 extern const char *weaponEnumStrings[];
 
-typedef struct
-{
-	char *classname;
-	weapon_t weapon;
-	weapon_t ammoType;
-	int attackDelay;
-	int startAmmo;
-	qboolean autoAttack;
-	qboolean oneHanded;
-	char *fireInfo;
-} bgweapon_defs_t;
-
-extern bgweapon_defs_t bg_weapons[];
-extern int bg_numWeapons;
-void BG_ParseWeaponDefsJSON(void);
-bgweapon_defs_t *BG_GetWeaponDefinition(weapon_t weapon);
+void BG_LoadItemJSON(void);
 
 // reward sounds (stored in ps->persistant[PERS_PLAYEREVENTS])
 #define	PLAYEREVENT_DENIEDREWARD		0x0001
@@ -1102,6 +1093,8 @@ typedef enum {
 
 //---------------------------------------------------------
 
+extern const char *itemTypeStrings[];
+
 // gitem_t->type
 typedef enum {
 	IT_BAD,
@@ -1118,21 +1111,44 @@ typedef enum {
 } itemType_t;
 
 #define MAX_ITEM_MODELS 4
+#define MAX_FLASH_SOUNDS 4
+#define ITEM_MAX_TEXT 1024
 
 typedef struct gitem_s {
-	char		*classname;	// spawning name
-	char		*pickup_sound;
-	char		*world_model[MAX_ITEM_MODELS];
+	char classname[ITEM_MAX_TEXT]; // spawning name
 
-	char		*icon;
-	char		*pickup_name;	// for printing on pickup
+	itemType_t type; // IT_* flags
+	char displayName[ITEM_MAX_TEXT];
+	char displayModel[MAX_ITEM_MODELS][ITEM_MAX_TEXT];
+	char icon[ITEM_MAX_TEXT];
 
-	int			quantity;		// for ammo how much, or duration of powerup
-	itemType_t  giType;			// IT_* flags
+	int ammoId;
 
-	int			giTag;
+	char pickupSound[ITEM_MAX_TEXT];
+	char sounds[ITEM_MAX_TEXT];
+	char idleSound[ITEM_MAX_TEXT];
+	char fireSound[ITEM_MAX_TEXT];
+	vec3_t flashColor;
+	char flashSound[MAX_FLASH_SOUNDS][ITEM_MAX_TEXT];
+	qboolean customShading;
 
-	char		*sounds;		// string of all sounds this item will use
+	char missileModel[ITEM_MAX_TEXT];
+	char missileSound[ITEM_MAX_TEXT];
+	int missileTrailTime;
+	int missileTrailRadius;
+	int missileDlight;
+	vec3_t missileDlightColor;
+
+	brassEjectType_t brassType;
+
+	qboolean autoAttack;
+	qboolean oneHanded;
+	int attackDelay;
+
+	int amount;
+
+	int	localIndex;
+	qboolean noAmmoDef;
 } gitem_t;
 
 // included in both the game dll and the client
@@ -1198,8 +1214,6 @@ typedef struct {
 } gunGameInfo_t;
 extern gunGameInfo_t bg_gunGameInfo;
 void BG_GunGameInfoFromString(const char *info);
-
-void BG_LoadFileContents(char *buf, char *filename);
 
 void BG_EvaluateTrajectory(const trajectory_t *tr, int atTime, vec3_t result);
 void	BG_EvaluateTrajectoryDelta( const trajectory_t *tr, int atTime, vec3_t result );

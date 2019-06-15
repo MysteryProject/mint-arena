@@ -1725,7 +1725,7 @@ static void PM_TorsoAnimation(void)
 {
 	if (pm->ps->weaponstate == WEAPON_READY)
 	{
-		if (BG_GetWeaponDefinition(pm->ps->weapon)->oneHanded)
+		if (BG_FindItemForWeapon(pm->ps->weapon)->oneHanded)
 			PM_ContinueTorsoAnim(TORSO_STAND2);
 		else
 			PM_ContinueTorsoAnim(TORSO_STAND);
@@ -1743,7 +1743,7 @@ Generates weapon events and modifes the weapon counter
 static void PM_Weapon( void ) {
 	int		addTime;
 	int		newWeapon;
-	bgweapon_defs_t *weaponInfo;
+	gitem_t *item;
 
 	// don't allow attack until all buttons are up
 	if (pm->ps->pm_flags & PMF_RESPAWNED)
@@ -1765,12 +1765,12 @@ static void PM_Weapon( void ) {
 	// check for item using
 	if ( pm->cmd.buttons & BUTTON_USE_HOLDABLE ) {
 		if ( ! ( pm->ps->pm_flags & PMF_USE_ITEM_HELD ) ) {
-			if ( BG_ItemForItemNum( pm->ps->stats[STAT_HOLDABLE_ITEM] )->giTag == HI_MEDKIT
+			if ( BG_ItemForItemNum( pm->ps->stats[STAT_HOLDABLE_ITEM] )->localIndex == HI_MEDKIT
 				&& pm->ps->stats[STAT_HEALTH] >= (pm->ps->stats[STAT_MAX_HEALTH] + 25) ) {
 				// don't use medkit if at max health
 			} else {
 				pm->ps->pm_flags |= PMF_USE_ITEM_HELD;
-				PM_AddEvent( EV_USE_ITEM0 + BG_ItemForItemNum( pm->ps->stats[STAT_HOLDABLE_ITEM] )->giTag );
+				PM_AddEvent( EV_USE_ITEM0 + BG_ItemForItemNum( pm->ps->stats[STAT_HOLDABLE_ITEM] )->localIndex );
 				pm->ps->stats[STAT_HOLDABLE_ITEM] = 0;
 			}
 			return;
@@ -1805,11 +1805,11 @@ static void PM_Weapon( void ) {
 		return;
 	}
 
-	weaponInfo = BG_GetWeaponDefinition(pm->ps->weapon);
+	item = BG_FindItemForWeapon(pm->ps->weapon);
 
 	if ( pm->ps->weaponstate == WEAPON_RAISING ) {
 		pm->ps->weaponstate = WEAPON_READY;
-		if (weaponInfo->oneHanded)
+		if (item->oneHanded)
 			PM_StartTorsoAnim( TORSO_STAND2 );
 		else
 			PM_StartTorsoAnim( TORSO_STAND );		
@@ -1833,7 +1833,7 @@ static void PM_Weapon( void ) {
 		}
 	}
 
-	if (weaponInfo->oneHanded)
+	if (item->oneHanded)
 		PM_StartTorsoAnim(TORSO_ATTACK2);
 	else
 		PM_StartTorsoAnim( TORSO_ATTACK );
@@ -1845,7 +1845,7 @@ static void PM_Weapon( void ) {
 
 
 	// check for out of ammo
-	if (!pm->ps->ammo[weaponInfo->ammoType])
+	if (!pm->ps->ammo[pm->ps->weapon])
 	{
 		PM_AddEvent( EV_NOAMMO );
 		pm->ps->weaponTime += pm_addtime_weaponnoammo;
@@ -1853,13 +1853,13 @@ static void PM_Weapon( void ) {
 	}
 
 	// take an ammo away if not infinite
-	if (pm->ps->ammo[weaponInfo->ammoType] != -1)
-		pm->ps->ammo[weaponInfo->ammoType]--;
+	if (pm->ps->ammo[pm->ps->weapon] != -1)
+		pm->ps->ammo[pm->ps->weapon]--;
 
 	// fire weapon
 	PM_AddEvent( EV_FIRE_WEAPON );
 
-	addTime = weaponInfo->attackDelay;
+	addTime = item->attackDelay;
 
 #ifdef MISSIONPACK
 	if( BG_ItemForItemNum( pm->ps->stats[STAT_PERSISTANT_POWERUP] )->giTag == PW_SCOUT ) {
@@ -1877,7 +1877,7 @@ static void PM_Weapon( void ) {
 
 	pm->ps->weaponTime += addTime;
 
-	if (!weaponInfo->autoAttack)
+	if (!item->autoAttack)
 		pm->ps->weaponstate = WEAPON_FIRED;
 }
 
@@ -2038,7 +2038,7 @@ void PmoveSingle (pmove_t *pmove) {
 
 	// set the firing flag for continuous beam weapons
 	if ( !(pm->ps->pm_flags & PMF_RESPAWNED) && pm->ps->pm_type != PM_INTERMISSION && pm->ps->pm_type != PM_NOCLIP
-		&& ( pm->cmd.buttons & BUTTON_ATTACK ) && pm->ps->ammo[ BG_GetWeaponDefinition(pm->ps->weapon)->ammoType ] ) {
+		&& ( pm->cmd.buttons & BUTTON_ATTACK ) && pm->ps->ammo[pm->ps->weapon] ) {
 		pm->ps->eFlags |= EF_FIRING;
 	} else {
 		pm->ps->eFlags &= ~EF_FIRING;

@@ -1,0 +1,16 @@
+[
+    {
+        "id": "team_CTF_redflag",
+        "type": "team",
+        "displayName": "Red Flag",
+        "icon": "icons/iconf_red1",
+        "displayModel": [ "models/flags/r_flag.md3" ]
+    },
+    {
+        "id": "team_CTF_blueflag",
+        "type": "team",
+        "displayName": "Blue Flag",
+        "icon": "icons/b_flag",
+        "displayModel": [ "models/flags/b_flag.md3" ]
+    }
+]

@@ -115,7 +115,8 @@ static void Variants_UpdateModel(void)
     VectorClear(moveangles);
 
     anim = TORSO_STAND;
-    oneHanded = BG_GetWeaponDefinition(s_variants.weapon)->oneHanded;
+    item = BG_FindItemForWeapon(s_variants.weapon);
+    oneHanded = item->oneHanded;
    
     UI_PlayerInfo_SetModel(&s_variants.playerinfo, s_variants.playerModel, s_variants.playerHead, NULL);
    
@@ -126,10 +127,8 @@ static void Variants_UpdateModel(void)
 
     s_variants.playerinfo.variant = s_variants.variantNum;
 
-    item = BG_FindItemForWeapon(s_variants.weapon);
-
     if (item)
-        s_variants.weaponName.string = item->pickup_name;
+        s_variants.weaponName.string = item->displayName;
 }
 
 static void VariantsMenu_Save(void)

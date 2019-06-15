@@ -1245,15 +1245,20 @@ static void CG_RegisterItemSounds( int itemNum ) {
 
 	item = BG_ItemForItemNum( itemNum );
 
-	if (item->giType == IT_WEAPON)
+	if (item->type == IT_WEAPON)
 	{
-		bgweapon_defs_t *wdef = BG_GetWeaponDefinition(itemNum);
-		cg_fireInfo_t *fi = CG_FireInfo(wdef->fireInfo);
-		if (fi->pickupSound)
-			cgs.media.itemPickupSounds[ itemNum ] = trap_S_RegisterSound( fi->pickupSound, qfalse );
+		cgs.media.itemPickupSounds[ itemNum ] = trap_S_RegisterSound( "sound/misc/w_pkup.wav", qfalse );
 	}
-	else if( item->pickup_sound ) {
-		cgs.media.itemPickupSounds[ itemNum ] = trap_S_RegisterSound( item->pickup_sound, qfalse );
+	else if (item->type == IT_AMMO)
+	{
+		cgs.media.itemPickupSounds[ itemNum ] = trap_S_RegisterSound( "sound/misc/am_pkup.wav", qfalse );
+	}
+	else if (item->type == IT_HOLDABLE)
+	{
+		cgs.media.itemPickupSounds[ itemNum ] = trap_S_RegisterSound( "sound/items/holdable.wav", qfalse );
+	}
+	else if( item->pickupSound ) {
+		cgs.media.itemPickupSounds[ itemNum ] = trap_S_RegisterSound( item->pickupSound, qfalse );
 	}
 
 	// parse the space separated precache string for other media
@@ -2757,8 +2762,7 @@ void CG_Init( connstate_t state, int maxSplitView, int playVideo ) {
 	// clear everything
 	CG_ClearState( qtrue, maxSplitView );
 
-	BG_ParseWeaponDefsJSON();
-	CG_ParseFireInfoJSON();
+	BG_LoadItemJSON();
 
 	CG_SetConnectionState( state );
 

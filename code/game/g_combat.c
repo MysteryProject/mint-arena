@@ -107,7 +107,7 @@ void TossPlayerItems( gentity_t *self ) {
 	}
 
 	if ( weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK && 
-		self->player->ps.ammo[ BG_GetWeaponDefinition(weapon)->ammoType ] && !g_instagib.integer && g_gametype.integer != GT_GUNGAME) {
+		self->player->ps.ammo[ weapon ] && !g_instagib.integer && g_gametype.integer != GT_GUNGAME) {
 		// find the item type for this weapon
 		item = BG_FindItemForWeapon( weapon );
 
@@ -634,7 +634,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 				{
 					weapon = bg_gunGameInfo.levels[attacker->player->ps.persistant[PERS_GUNGAME_LEVEL]];
 					attacker->player->ps.stats[STAT_WEAPONS] = (1 << weapon);
-					attacker->player->ps.ammo[BG_GetWeaponDefinition(weapon)->ammoType] = 99999;
+					attacker->player->ps.ammo[weapon] = 99999;
 					G_AddPredictableEvent(attacker, EV_GUNGAMESWAP, weapon);
 				}
 			}

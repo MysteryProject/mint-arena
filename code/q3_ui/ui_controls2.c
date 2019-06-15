@@ -1479,10 +1479,10 @@ static void Controls_InitWeapons( void ) {
 
 	for ( i = 1; i < BG_NumItems(); i++ ) {
 		item = BG_ItemForItemNum( i );
-		if ( item->giType != IT_WEAPON ) {
+		if ( item->type != IT_WEAPON ) {
 			continue;
 		}
-		trap_R_RegisterModel( item->world_model[0] );
+		trap_R_RegisterModel( item->displayModel[0] );
 	}
 }
 

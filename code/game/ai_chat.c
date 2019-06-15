@@ -333,7 +333,7 @@ char *BotWeaponNameForMeansOfDeath(int mod) {
 	item = BG_FindItemForWeapon( weapon );
 
 	if ( item ) {
-		return item->pickup_name;
+		return item->displayName;
 	}
 
 	return "[unknown weapon]";
@@ -363,7 +363,7 @@ char *BotRandomWeaponName(void) {
 	item = BG_FindItemForWeapon( rnd );
 
 	if ( item ) {
-		return item->pickup_name;
+		return item->displayName;
 	}
 
 	return "[unknown weapon]";

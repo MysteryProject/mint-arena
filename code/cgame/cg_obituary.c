@@ -364,7 +364,7 @@ void CG_ParseObituary(entityState_t *ent)
             if (cgs.gametype == GT_GUNGAME)
             {
                 s = va(S_COLOR_GREEN "%s" S_COLOR_WHITE " complete\nYou are %s place",
-                       CG_FireInfoForWeapon(bg_gunGameInfo.levels[ps->persistant[PERS_GUNGAME_LEVEL] - 1])->displayName,
+                       BG_FindItemForWeapon(bg_gunGameInfo.levels[ps->persistant[PERS_GUNGAME_LEVEL] - 1])->displayName,
                        CG_PlaceString(ps->persistant[PERS_RANK] + 1, qfalse));
             }
             else if (cgs.gametype < GT_TEAM)

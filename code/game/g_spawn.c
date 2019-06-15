@@ -318,13 +318,13 @@ qboolean G_CallSpawn( gentity_t *ent ) {
 		if ( !strcmp(item->classname, ent->classname) ) {
 			if ( g_instagib.integer )
 			{// && item->giType != IT_TEAM ) {
-				if (item->giType == IT_WEAPON || item->giType == IT_AMMO)
+				if (item->type == IT_WEAPON || item->type == IT_AMMO)
 				{
 					tmp = BG_FindItemByClassname(g_instagibWeapon.string);
 
-					if (tmp != NULL && tmp->giType == IT_WEAPON)
+					if (tmp != NULL && tmp->type == IT_WEAPON)
 					{
-						tmp2 = BG_FindItemForAmmo(tmp->giTag);
+						tmp2 = BG_FindItemForAmmo(tmp->localIndex);
 						ent->classname = tmp2->classname;
 						G_SpawnItem(ent, tmp2);
 						return qtrue;
@@ -337,11 +337,11 @@ qboolean G_CallSpawn( gentity_t *ent ) {
 						return qtrue;
 					}
 				}
-				else if (item->giType != IT_TEAM)
+				else if (item->type != IT_TEAM)
 					// only spawn team play items in instagib mode
 					return qfalse;
 			}
-			else if (g_gametype.integer == GT_GUNGAME && item->giType != IT_ARMOR && item->giType != IT_HEALTH)
+			else if (g_gametype.integer == GT_GUNGAME && item->type != IT_ARMOR && item->type != IT_HEALTH)
 			{
 				return qfalse;
 			}

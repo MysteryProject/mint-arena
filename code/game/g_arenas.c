@@ -174,7 +174,7 @@ static gentity_t *SpawnModelOnVictoryPad( gentity_t *pad, vec3_t offset, gentity
 	if( body->s.weapon == WP_NONE )
 		body->s.weapon = WP_MACHINEGUN;
 
-	if (BG_GetWeaponDefinition(body->s.weapon)->oneHanded)
+	if (BG_FindItemForWeapon(body->s.weapon)->oneHanded)
 		body->s.torsoAnim = TORSO_STAND2;
 
 	body->s.event = 0;

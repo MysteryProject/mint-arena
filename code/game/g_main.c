@@ -531,7 +531,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	G_ProcessIPBans();
 
 	// put this elsewhere?
-	BG_ParseWeaponDefsJSON();
+	BG_LoadItemJSON();
 
 	// tell server entity and player state size and network field info
 	trap_SetNetFields( sizeof (entityState_t), sizeof (entityState_t) - sizeof (int), bg_entityStateFields, bg_numEntityStateFields,

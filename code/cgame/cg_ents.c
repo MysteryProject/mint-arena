@@ -386,7 +386,7 @@ static void CG_Item( centity_t *cent ) {
 	}
 
 	item = BG_ItemForItemNum( es->modelindex );
-	if ( cg_simpleItems.integer && item->giType != IT_TEAM ) {
+	if ( cg_simpleItems.integer && item->type != IT_TEAM ) {
 		memset( &ent, 0, sizeof( ent ) );
 		ent.reType = RT_SPRITE;
 		VectorCopy( cent->lerpOrigin, ent.origin );
@@ -407,7 +407,7 @@ static void CG_Item( centity_t *cent ) {
 	memset (&ent, 0, sizeof(ent));
 
 	// autorotate at one of two speeds
-	if ( item->giType == IT_HEALTH ) {
+	if ( item->type == IT_HEALTH ) {
 		VectorCopy( cg.autoAnglesFast, cent->lerpAngles );
 		AxisCopy( cg.autoAxisFast, ent.axis );
 	} else {
@@ -419,8 +419,8 @@ static void CG_Item( centity_t *cent ) {
 	// the weapons have their origin where they attatch to player
 	// models, so we need to offset them or they will rotate
 	// eccentricly
-	if ( item->giType == IT_WEAPON ) {
-		wi = &cg_weapons[item->giTag];
+	if ( item->type == IT_WEAPON ) {
+		wi = &cg_weapons[item->localIndex];
 		cent->lerpOrigin[0] -= 
 			wi->weaponMidpoint[0] * ent.axis[0][0] +
 			wi->weaponMidpoint[1] * ent.axis[1][0] +
@@ -437,7 +437,7 @@ static void CG_Item( centity_t *cent ) {
 		cent->lerpOrigin[2] += 8;	// an extra height boost
 	}
 	
-	if( item->giType == IT_WEAPON ) {
+	if( item->type == IT_WEAPON ) {
 		playerInfo_t *pi = &cgs.playerinfo[cg.cur_ps->playerNum];
 		Byte4Copy( pi->c1RGBA, ent.shaderRGBA );
 	}
@@ -462,7 +462,7 @@ static void CG_Item( centity_t *cent ) {
 	}
 
 	// increase the size of the weapons when they are presented as items
-	if ( item->giType == IT_WEAPON ) {
+	if ( item->type == IT_WEAPON ) {
 		VectorScale( ent.axis[0], 1.5, ent.axis[0] );
 		VectorScale( ent.axis[1], 1.5, ent.axis[1] );
 		VectorScale( ent.axis[2], 1.5, ent.axis[2] );
@@ -484,7 +484,7 @@ static void CG_Item( centity_t *cent ) {
 	// add to refresh list
 	CG_AddRefEntityWithMinLight(&ent);
 
-	if ( item->giType == IT_WEAPON && wi && wi->barrelModel ) {
+	if ( item->type == IT_WEAPON && wi && wi->barrelModel ) {
 		refEntity_t	barrel;
 		vec3_t		angles;
 
@@ -515,11 +515,11 @@ static void CG_Item( centity_t *cent ) {
 
 		VectorClear( spinAngles );
 
-		if ( item->giType == IT_HEALTH || item->giType == IT_POWERUP )
+		if ( item->type == IT_HEALTH || item->type == IT_POWERUP )
 		{
 			if ( ( ent.hModel = cg_items[es->modelindex].models[1] ) != 0 )
 			{
-				if ( item->giType == IT_POWERUP )
+				if ( item->type == IT_POWERUP )
 				{
 					ent.origin[2] += 12;
 					spinAngles[1] = ( cg.time & 1023 ) * 360 / -1024.0f;

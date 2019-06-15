@@ -1179,7 +1179,7 @@ void PlayerSpawn(gentity_t *ent) {
 		player->ps.stats[STAT_WEAPONS] = (1 << weapon);
 
 		for (i = WP_NUM_WEAPONS - 1; i > WP_GAUNTLET; i--)
-			player->ps.ammo[BG_GetWeaponDefinition(i)->ammoType] = 99999;
+			player->ps.ammo[i] = 99999;
 	}
 	else
 	{
@@ -1189,8 +1189,8 @@ void PlayerSpawn(gentity_t *ent) {
 
 			if (it != NULL)
 			{
-				player->ps.stats[STAT_WEAPONS] = (1 << it->giTag);
-				player->ps.ammo[BG_GetWeaponDefinition(it->giTag)->ammoType] = 999;
+				player->ps.stats[STAT_WEAPONS] = (1 << it->localIndex);
+				player->ps.ammo[it->localIndex] = 999;
 			}
 			else
 			{

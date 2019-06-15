@@ -1,0 +1,50 @@
+[
+    {
+        "id": "small",
+        "type": "health",
+        "displayName": "Small Health",
+        "icon": "icons/iconh_green",
+        "displayModel": [ 
+            "models/powerups/health/small_cross.md3",
+            "models/powerups/health/small_sphere.md3" 
+        ],
+        "pickupSound": "sound/items/s_health.wav",
+        "amount": 5
+    },
+    {
+        "id": "",
+        "type": "health",
+        "displayName": "Health",
+        "icon": "icons/iconh_yellow",
+        "displayModel": [ 
+            "models/powerups/health/medium_cross.md3",
+            "models/powerups/health/medium_sphere.md3" 
+        ],
+        "pickupSound": "sound/items/n_health.wav",
+        "amount": 25
+    },
+    {
+        "id": "large",
+        "type": "health",
+        "displayName": "Large Health",
+        "icon": "icons/iconh_red",
+        "displayModel": [ 
+            "models/powerups/health/large_cross.md3",
+            "models/powerups/health/large_sphere.md3" 
+        ],
+        "pickupSound": "sound/items/l_health.wav",
+        "amount": 50
+    },
+    {
+        "id": "mega",
+        "type": "health",
+        "displayName": "Mega Health",
+        "icon": "icons/iconh_mega",
+        "displayModel": [ 
+            "models/powerups/health/mega_cross.md3",
+            "models/powerups/health/mega_sphere.md3" 
+        ],
+        "pickupSound": "sound/items/m_health.wav",
+        "amount": 100
+    }
+]

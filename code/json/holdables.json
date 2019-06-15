@@ -1,0 +1,20 @@
+[
+    {
+        "id": "teleporter",
+        "type": "holdable",
+        "displayName": "Personal Teleporter",
+        "icon": "icons/teleporter",
+        "displayModel": [ "models/powerups/holdable/teleporter.md3" ],
+        "pickupSound": "sound/items/holdable.wav",
+        "amount": 60
+    },
+    {
+        "id": "medkit",
+        "type": "holdable",
+        "displayName": "Medkit",
+        "icon": "icons/medkit",
+        "displayModel": [ "models/powerups/holdable/medkit.md3" ],
+        "pickupSound": "sound/items/holdable.wav",
+        "amount": 60
+    }
+]

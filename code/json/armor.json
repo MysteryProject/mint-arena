@@ -1,0 +1,29 @@
+[
+    {
+        "id": "shard",
+        "type": "armor",
+        "displayName": "Armor Shard",
+        "icon": "icons/iconr_shard",
+        "displayModel": [ "models/powerups/armor/shard.md3" ],
+        "pickupSound": "sound/misc/ar1_pkup.wav",
+        "amount": 5
+    },
+    {
+        "id": "combat",
+        "type": "armor",
+        "displayName": "Armor",
+        "icon": "icons/iconr_yellow",
+        "displayModel": [ "models/powerups/armor/armor_yel.md3" ],
+        "pickupSound": "sound/misc/ar2_pkup.wav",
+        "amount": 50
+    },
+    {
+        "id": "body",
+        "type": "armor",
+        "displayName": "Heavy Armor",
+        "icon": "icons/iconr_red",
+        "displayModel": [ "models/powerups/armor/armor_red.md3" ],
+        "pickupSound": "sound/misc/ar2_pkup.wav",
+        "amount": 100
+    }
+]

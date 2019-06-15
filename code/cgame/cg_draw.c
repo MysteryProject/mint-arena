@@ -432,7 +432,7 @@ static void CG_DrawStatusBar( void ) {
 	// ammo
 	//
 	if ( cent->currentState.weapon ) {
-		value = ps->ammo[BG_GetWeaponDefinition(cent->currentState.weapon)->ammoType];
+		value = ps->ammo[cent->currentState.weapon];
 
 		if ( value > -1 ) {
 			if ( cg.cur_lc->predictedPlayerState.weaponstate == WEAPON_FIRING
@@ -1314,7 +1314,6 @@ static int CG_DrawPickupItem( int y ) {
 		fadeColor = CG_FadeColor( cg.cur_lc->itemPickupTime, 3000 );
 		if ( fadeColor ) {
 			gitem_t *item;
-			char *name;
 
 			CG_RegisterItemVisuals( value );
 			trap_R_SetColor( fadeColor );
@@ -1323,12 +1322,7 @@ static int CG_DrawPickupItem( int y ) {
 
 			item = BG_ItemForItemNum(value);
 
-			if (item->giType == IT_WEAPON)
-				name = CG_FireInfoForWeapon(item->giTag)->displayName;
-			else
-				name = item->pickup_name;
-
-			CG_DrawString( ICON_SIZE + 16, y + (ICON_SIZE/2), name, UI_VA_CENTER|UI_DROPSHADOW|UI_BIGFONT, fadeColor );
+			CG_DrawString( ICON_SIZE + 16, y + (ICON_SIZE/2), item->displayName, UI_VA_CENTER|UI_DROPSHADOW|UI_BIGFONT, fadeColor );
 		}
 	}
 	

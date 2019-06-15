@@ -622,8 +622,6 @@ void CG_RegisterWeapon( int weaponNum ) {
 	vec3_t			mins, maxs;
 	int				i;
 	char *weaponModel;
-	bgweapon_defs_t *wDef;
-	cg_fireInfo_t *fi;
 
 	weaponInfo = &cg_weapons[weaponNum];
 
@@ -644,18 +642,15 @@ void CG_RegisterWeapon( int weaponNum ) {
 	}
 	CG_RegisterItemVisuals( BG_ItemNumForItem( item ) );
 
-	wDef = BG_GetWeaponDefinition(weaponNum);
-	fi = CG_FireInfo(wDef->fireInfo);
-
 
 	// load cmodel before model so filecache works
-	weaponModel = fi->displayModel[0];
+	weaponModel = item->displayModel[0];
 
 	weaponInfo->weaponModel = trap_R_RegisterModel(weaponModel);
 
 	if (!weaponInfo->weaponModel)
 	{
-		weaponModel = fi->displayModel[0];
+		weaponModel = item->displayModel[0];
 		weaponInfo->weaponModel = trap_R_RegisterModel(weaponModel);
 	}
 	
@@ -665,15 +660,17 @@ void CG_RegisterWeapon( int weaponNum ) {
 		weaponInfo->weaponMidpoint[i] = mins[i] + 0.5 * ( maxs[i] - mins[i] );
 	}
 
-	weaponInfo->weaponIcon = trap_R_RegisterShader( fi->icon );
-	weaponInfo->ammoIcon = trap_R_RegisterShader( fi->icon );
+	weaponInfo->weaponIcon = trap_R_RegisterShader( item->icon );
 
 	ammo = BG_FindItemForAmmo( weaponNum );
-	if ( ammo && ammo->world_model[0] ) {
-		weaponInfo->ammoModel = trap_R_RegisterModel( ammo->world_model[0] );
+
+	weaponInfo->ammoIcon = trap_R_RegisterShader( ammo->icon );
+
+	if ( ammo && ammo->displayModel[0] ) {
+		weaponInfo->ammoModel = trap_R_RegisterModel( ammo->displayModel[0] );
 	}
 
-	COM_StripExtension(fi->displayModel[0], path, sizeof(path));
+	COM_StripExtension(item->displayModel[0], path, sizeof(path));
 	Q_strcat( path, sizeof(path), "_flash.md3" );
 	weaponInfo->flashModel = trap_R_RegisterModel( path );
 
@@ -681,7 +678,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 	Q_strcat( path, sizeof(path), "_barrel.md3" );
 	weaponInfo->barrelModel = trap_R_RegisterModel( path );
 
-	COM_StripExtension(fi->displayModel[0], path, sizeof(path) );
+	COM_StripExtension(item->displayModel[0], path, sizeof(path) );
 	Q_strcat( path, sizeof(path), "_hand.md3" );
 	weaponInfo->handsModel = trap_R_RegisterModel( path );
 
@@ -794,43 +791,35 @@ void CG_RegisterWeapon( int weaponNum ) {
 		break;
 	}
 
-	if (fi)
+	if (item->idleSound)
+		weaponInfo->readySound = trap_S_RegisterSound(item->idleSound, qfalse);
+
+	if (item->fireSound)
+		weaponInfo->firingSound = trap_S_RegisterSound(item->fireSound, qfalse);
+
+	VectorCopy(item->flashColor, weaponInfo->flashDlightColor);
+
+	for (i = 0; i < MAX_FLASH_SOUNDS; i++)
 	{
-		if (fi->idleSound)
-			weaponInfo->readySound = trap_S_RegisterSound(fi->idleSound, qfalse);
-
-		if (fi->fireSound)
-			weaponInfo->firingSound = trap_S_RegisterSound(fi->fireSound, qfalse);
-
-		VectorCopy(fi->flashColor, weaponInfo->flashDlightColor);
-
-		for (i = 0; i < 4; i++)
-		{
-			if (fi->flashSound[i])
-				weaponInfo->flashSound[i] = trap_S_RegisterSound(fi->flashSound[i], qfalse);
-		}
-
-		if (fi->missileModel)
-			weaponInfo->missileModel = trap_R_RegisterModel(fi->missileModel);
-
-		weaponInfo->wiTrailTime = fi->missileTrailTime;
-		weaponInfo->trailRadius = fi->missileTrailRadius;
-		weaponInfo->missileDlight = fi->missileDlight;
-
-		VectorCopy(fi->missileDlightColor, weaponInfo->missileDlightColor);
-
-		if (fi->brassType == BF_BULLET)
-			weaponInfo->ejectBrassFunc = CG_MachineGunEjectBrass;
-		else if (fi->brassType == BF_SHELL)
-			weaponInfo->ejectBrassFunc = CG_ShotgunEjectBrass;
-
-		weaponInfo->customShading = fi->customShading;
+		if (item->flashSound[i])
+			weaponInfo->flashSound[i] = trap_S_RegisterSound(item->flashSound[i], qfalse);
 	}
-	else
-	{
-		MAKERGB(weaponInfo->flashDlightColor, 1, 1, 1);
-		weaponInfo->flashSound[0] = trap_S_RegisterSound("sound/weapons/rocket/rocklf1a.wav", qfalse);
-	}
+
+	if (item->missileModel)
+		weaponInfo->missileModel = trap_R_RegisterModel(item->missileModel);
+
+	weaponInfo->wiTrailTime = item->missileTrailTime;
+	weaponInfo->trailRadius = item->missileTrailRadius;
+	weaponInfo->missileDlight = item->missileDlight;
+
+	VectorCopy(item->missileDlightColor, weaponInfo->missileDlightColor);
+
+	if (item->brassType == BF_BULLET)
+		weaponInfo->ejectBrassFunc = CG_MachineGunEjectBrass;
+	else if (item->brassType == BF_SHELL)
+		weaponInfo->ejectBrassFunc = CG_ShotgunEjectBrass;
+
+	weaponInfo->customShading = item->customShading;
 }
 
 /*
@@ -858,22 +847,22 @@ void CG_RegisterItemVisuals( int itemNum ) {
 	memset( itemInfo, 0, sizeof( *itemInfo ) );
 	itemInfo->registered = qtrue;
 
-	itemInfo->models[0] = trap_R_RegisterModel( item->world_model[0] );
+	itemInfo->models[0] = trap_R_RegisterModel( item->displayModel[0] );
 
 	if (item->icon)
 		itemInfo->icon = trap_R_RegisterShader( item->icon );
 
-	if ( item->giType == IT_WEAPON ) {
-		CG_RegisterWeapon( item->giTag );
+	if ( item->type == IT_WEAPON ) {
+		CG_RegisterWeapon( item->localIndex );
 	}
 
 	//
 	// powerups have an accompanying ring or sphere
 	// weapons may have alternate version
 	//
-	if ( item->giType == IT_POWERUP || item->giType == IT_HEALTH || item->giType == IT_WEAPON) {
-		if ( item->world_model[1] ) {
-			itemInfo->models[1] = trap_R_RegisterModel( item->world_model[1] );
+	if ( item->type == IT_POWERUP || item->type == IT_HEALTH || item->type == IT_WEAPON) {
+		if ( item->displayModel[1] ) {
+			itemInfo->models[1] = trap_R_RegisterModel( item->displayModel[1] );
 		}
 	}
 }
@@ -1569,7 +1558,7 @@ void CG_DrawWeaponSelect( void ) {
 		}
 
 		// no ammo cross on top
-		if (!cg.cur_ps->ammo[BG_GetWeaponDefinition(i)->ammoType])
+		if (!cg.cur_ps->ammo[i])
 		{
 			CG_DrawPic( x, y, 32, 32, cgs.media.noammoShader );
 		}
@@ -1579,7 +1568,7 @@ void CG_DrawWeaponSelect( void ) {
 
 	// draw the selected name
 	if ( cg_weapons[ cg.cur_lc->weaponSelect ].item ) {
-		name = CG_FireInfoForWeapon(cg.cur_lc->weaponSelect)->displayName;
+		name = BG_FindItemForWeapon(cg.cur_lc->weaponSelect)->displayName;
 		if ( name ) {
 			CG_DrawString( SCREEN_WIDTH / 2, y - 6, name, UI_CENTER|UI_VA_BOTTOM|UI_DROPSHADOW|UI_BIGFONT, color );
 		}
@@ -1594,7 +1583,7 @@ CG_WeaponSelectable
 ===============
 */
 static qboolean CG_WeaponSelectable( playerState_t *ps, int i ) {
-	if (!ps->ammo[BG_GetWeaponDefinition(i)->ammoType])
+	if (!ps->ammo[i])
 	{
 		return qfalse;
 	}

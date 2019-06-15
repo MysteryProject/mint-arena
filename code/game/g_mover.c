@@ -833,7 +833,7 @@ void Blocked_Door( gentity_t *ent, gentity_t *other ) {
 	// remove anything other than a player
 	if ( !other->player ) {
 		// except CTF flags!!!!
-		if( other->s.eType == ET_ITEM && other->item->giType == IT_TEAM ) {
+		if( other->s.eType == ET_ITEM && other->item->type == IT_TEAM ) {
 			Team_DroppedFlagThink( other );
 			return;
 		}

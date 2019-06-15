@@ -413,7 +413,7 @@ static void CG_UseItem( centity_t *cent ) {
 			CG_CenterPrint( i, "No item to use", SCREEN_HEIGHT * 0.30, 0.5 );
 		} else {
 			item = BG_FindItemForHoldable( itemNum );
-			CG_CenterPrint( i, va("Use %s", item->pickup_name), SCREEN_HEIGHT * 0.30, 0.5 );
+			CG_CenterPrint( i, va("Use %s", item->displayName), SCREEN_HEIGHT * 0.30, 0.5 );
 		}
 	}
 
@@ -464,11 +464,11 @@ static void CG_ItemPickup( int localPlayerNum, int itemNum ) {
 	player->itemPickupTime = cg.time;
 	player->itemPickupBlendTime = cg.time;
 	// see if it should be the grabbed weapon
-	if ( item->giType == IT_WEAPON ) {
+	if ( item->type == IT_WEAPON ) {
 		// select it immediately
-		if ( cg_autoswitch[localPlayerNum].integer && item->giTag != WP_MACHINEGUN ) {
+		if ( cg_autoswitch[localPlayerNum].integer && item->localIndex != WP_MACHINEGUN ) {
 			player->weaponSelectTime = cg.time;
-			player->weaponSelect = bg_itemlist[itemNum].giTag;
+			player->weaponSelect = bg_itemlist[itemNum].localIndex;
 		}
 	}
 
@@ -811,9 +811,9 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 
 			// powerups and team items will have a separate global sound, this one
 			// will be played at prediction time
-			if ( item->giType == IT_POWERUP || item->giType == IT_TEAM) {
+			if ( item->type == IT_POWERUP || item->type == IT_TEAM) {
 				trap_S_StartSound (NULL, es->number, CHAN_AUTO,	cgs.media.n_healthSound );
-			} else if (item->giType == IT_PERSISTANT_POWERUP) {
+			} else if (item->type == IT_PERSISTANT_POWERUP) {
 #ifdef MISSIONPACK
 				switch (item->giTag ) {
 					case PW_SCOUT:
