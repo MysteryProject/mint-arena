@@ -11,6 +11,7 @@
         "idleSound": "sound/weapons/melee/fstrun.wav",
         "flashColor": [ 0.6, 0.6, 1.0 ],
         "flashSound": [ "sound/weapons/melee/fstatck.wav" ],
+        "flashImpulse": false,
         "oneHanded": true,
         "attackDelay": 400,
         "amount": -1,
@@ -111,6 +112,7 @@
         "flashColor": [ 1.0, 0.7, 0.0 ],
         "flashSound": [ "sound/weapons/grenade/grenlf1a.wav" ],
         "missileModel": "models/ammo/grenade1.md3",
+        "missileTrailType": "grenade",
         "missileTrailTime": 700,
         "missileTrailRadius": 32,
         "attackDelay": 800,
@@ -169,6 +171,7 @@
         "flashColor": [ 0.6, 0.6, 1.0 ],
         "flashSound": [ "sound/weapons/plasma/hyprbf1a.wav" ],
         "missileSound": "sound/weapons/plasma/lasfly.wav",
+        "missileTrailType": "plasma",
         "attackDelay": 100,
         "amount": 50,
         "ammoAmount": 30
@@ -183,6 +186,7 @@
         "flashColor": [ 1.0, 0.6, 0.0 ],
         "flashSound": [ "sound/weapons/impactcannon/rocklf1a.wav" ],
         "missileSound": "sound/weapons/impactcannon/rockfly.wav",
+        "missileTrailType": "plasma",
         "attackDelay": 700,
         "amount": 10,
         "ammoAmount": 10
@@ -204,6 +208,7 @@
         "flashSound": [ "sound/weapons/rocket/rocklf1a.wav" ],
         "missileModel": "models/ammo/rocket/rocket.md3",
         "missileSound": "sound/weapons/rocket/rockfly.wav",
+        "missileTrailType": "rocket",
         "missileTrailTime": 2000,
         "missileTrailRadius": 64,
         "missileDlight": 200,
@@ -229,6 +234,7 @@
         "fireSound": "sound/weapons/lightning/lg_hum.wav",
         "flashColor": [ 0.6, 0.6, 1.0 ],
         "flashSound": [ "sound/weapons/lightning/lg_fire.wav" ],
+        "flashImpulse": false,
         "attackDelay": 50,
         "amount": 100,
         "ammoAmount": 60

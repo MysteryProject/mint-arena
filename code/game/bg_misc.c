@@ -1875,6 +1875,7 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
         {
 			if (type == IT_WEAPON)
 			{
+				bg_itemlist[bg_numItems].flashImpulse = qtrue;
 				bg_itemlist[bg_numItems].autoAttack = qtrue;
 				bg_itemlist[bg_numItems].oneHanded = qfalse;
 			}
@@ -1936,6 +1937,10 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
 				else if (Q_stricmp(key, "displayName") == 0)
                 {
 					BG_CopyJSONString(bg_itemlist[bg_numItems].displayName, value);
+                }
+				else if (Q_stricmp(key, "shortName") == 0)
+                {
+					BG_CopyJSONString(bg_itemlist[bg_numItems].shortName, value);
                 }
 				else if (Q_stricmp(key, "displayModel") == 0)
                 {
@@ -2027,6 +2032,10 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
 
                     j += valueToken.size;
                 }
+				else if (Q_stricmp(key, "flashImpulse") == 0)
+                {
+					bg_itemlist[bg_numItems].flashImpulse = !Q_stricmp(value, "true");
+				}
 				else if (Q_stricmp(key, "customShading") == 0)
                 {
 					bg_itemlist[bg_numItems].customShading = !Q_stricmp(value, "true");
@@ -2038,6 +2047,17 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
 				else if (Q_stricmp(key, "missileSound") == 0)
                 {
 					BG_CopyJSONString(bg_itemlist[bg_numItems].missileSound, value);
+                }
+				else if (Q_stricmp(key, "missileTrailType") == 0)
+                {
+                    if (Q_stricmp(value, "rocket") == 0)
+                        bg_itemlist[bg_numItems].missileTrailType = MTT_ROCKET;
+                    else if (Q_stricmp(value, "grenade") == 0)
+                        bg_itemlist[bg_numItems].missileTrailType = MTT_GRENADE;
+                    else if (Q_stricmp(value, "plasma") == 0)
+                        bg_itemlist[bg_numItems].missileTrailType = MTT_PLASMA;
+					else
+						bg_itemlist[bg_numItems].missileTrailType = MTT_NONE;
                 }
 				else if (Q_stricmp(key, "missileTrailTime") == 0)
                 {

@@ -708,6 +708,13 @@ typedef enum {
 	BF_SHELL,
 } brassEjectType_t;
 
+typedef enum {
+	MTT_NONE,
+	MTT_ROCKET,
+	MTT_GRENADE,
+	MTT_PLASMA
+} missileTrialType_t;
+
 extern const char *weaponEnumStrings[];
 
 void BG_LoadItemJSON(void);
@@ -1119,6 +1126,7 @@ typedef struct gitem_s {
 
 	itemType_t type; // IT_* flags
 	char displayName[ITEM_MAX_TEXT];
+	char shortName[ITEM_MAX_TEXT]; // MOD string etc.
 	char displayModel[MAX_ITEM_MODELS][ITEM_MAX_TEXT];
 	char icon[ITEM_MAX_TEXT];
 
@@ -1130,13 +1138,15 @@ typedef struct gitem_s {
 	char fireSound[ITEM_MAX_TEXT];
 	vec3_t flashColor;
 	char flashSound[MAX_FLASH_SOUNDS][ITEM_MAX_TEXT];
+	qboolean flashImpulse;
 	qboolean customShading;
 
 	char missileModel[ITEM_MAX_TEXT];
 	char missileSound[ITEM_MAX_TEXT];
-	int missileTrailTime;
-	int missileTrailRadius;
-	int missileDlight;
+	missileTrialType_t missileTrailType;
+	float missileTrailTime;
+	float missileTrailRadius;
+	float missileDlight;
 	vec3_t missileDlightColor;
 
 	brassEjectType_t brassType;
@@ -1148,7 +1158,6 @@ typedef struct gitem_s {
 	int amount;
 
 	int	localIndex;
-	qboolean noAmmoDef;
 } gitem_t;
 
 // included in both the game dll and the client

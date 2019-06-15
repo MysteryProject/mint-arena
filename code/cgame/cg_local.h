@@ -490,6 +490,7 @@ typedef struct weaponInfo_s {
 
 	sfxHandle_t		readySound;
 	sfxHandle_t		firingSound;
+	qboolean impulseFlash;
 	qboolean customShading;
 } weaponInfo_t;
 
