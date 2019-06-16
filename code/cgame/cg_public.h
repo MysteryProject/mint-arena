@@ -173,6 +173,14 @@ typedef struct {
 	} value;
 } joyevent_t;
 
+// Discord stuff
+typedef enum {
+    GS_MENU,
+	GS_LOADING,
+    GS_SINGLEPLAYER,
+    GS_MULTIPLAYER
+} gamestateDiscord_t;
+
 /*
 ==================================================================
 
@@ -418,6 +426,12 @@ typedef enum {
 	CG_STARTCAMERA,
 	CG_GETCAMERAINFO
 */
+
+	// Discord stuff
+	CG_DISCORD_INIT = 900,
+	CG_DISCORD_UPDATE,
+	CG_DISCORD_CLEAR,
+	CG_DISCORD_SHUTDOWN
 } cgameImport_t;
 
 

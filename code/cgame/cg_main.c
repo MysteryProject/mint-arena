@@ -2804,6 +2804,9 @@ void CG_Init( connstate_t state, int maxSplitView, int playVideo ) {
 			trap_Cvar_Set( "nextmap", "cinematic intro.RoQ" );
 		}
 	}
+
+	if (!cg.connected)
+		trap_DiscordUpdate(GS_MENU, "q3", NULL, 0, 0, cgs.levelStartTime);
 }
 
 /*
@@ -2817,7 +2820,9 @@ Will perform callbacks to make the loading info screen update.
 void CG_Ingame_Init( int serverMessageNum, int serverCommandSequence, int maxSplitView, int playerNum0, int playerNum1, int playerNum2, int playerNum3 ) {
 	int	playerNums[MAX_SPLITVIEW];
 	const char	*s;
-	int			i;
+	int			i, numPlayers;
+
+	trap_DiscordUpdate(GS_LOADING, cgs.mapname, cgs.gametypeName, 0, cgs.maxplayers, cgs.levelStartTime);
 
 	cgs.maxSplitView = Com_Clamp(1, MAX_SPLITVIEW, maxSplitView);
 	cg.numViewports = 1;
@@ -2924,6 +2929,10 @@ void CG_Ingame_Init( int serverMessageNum, int serverCommandSequence, int maxSpl
 	trap_S_ClearLoopingSounds( qtrue );
 
 	CG_RestoreSnapshot();
+
+	trap_DiscordUpdate(cg_singlePlayer.integer ? GS_SINGLEPLAYER : GS_MULTIPLAYER, 
+						Info_ValueForKey(CG_ConfigString( CS_SERVERINFO ), "mapname"), 
+						cgs.gametypeName, 0, cgs.maxplayers, cgs.levelStartTime);
 }
 
 /*

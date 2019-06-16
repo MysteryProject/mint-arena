@@ -883,3 +883,22 @@ qboolean trap_getCameraInfo( int time, vec3_t *origin, vec3_t *angles) {
 }
 */
 
+void trap_DiscordInit(void)
+{
+	syscall(CG_DISCORD_INIT);
+}
+
+void trap_DiscordUpdate(gamestateDiscord_t gameState, const char *mapname, const char *gametype, int numPlayers, int maxPlayers, int startTime)
+{
+	syscall(CG_DISCORD_UPDATE, gameState, mapname, gametype, numPlayers, maxPlayers, startTime);
+}
+
+void trap_DiscordClear()
+{
+	syscall(CG_DISCORD_CLEAR);
+}
+
+void trap_DiscordShutdown()
+{
+	syscall(CG_DISCORD_SHUTDOWN);
+}

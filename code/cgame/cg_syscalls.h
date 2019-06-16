@@ -299,5 +299,10 @@ void		trap_startCamera(int time);
 qboolean	trap_getCameraInfo(int time, vec3_t *origin, vec3_t *angles);
 */
 
+void trap_DiscordInit(void);
+void trap_DiscordUpdate(gamestateDiscord_t gameState, const char *mapname, const char *gametype, int numPlayers, int maxPlayers, int startTime);
+void trap_DiscordClear(void);
+void trap_DiscordShutdown(void);
+
 #endif
 
