@@ -313,7 +313,6 @@ struct gplayer_s {
 	int			damage_knockback;	// impact damage
 	vec3_t		damage_from;		// origin for vector calculation
 	qboolean	damage_fromWorld;	// if true, don't use the damage_from vector
-
 	int			accurateCount;		// for "impressive" reward sound
 
 	int			accuracy_shots;		// total number of shots

@@ -1111,6 +1111,10 @@ typedef struct {
 	sfxHandle_t oneFragSound;
 
 	sfxHandle_t hitSound;
+	sfxHandle_t hitSound0;
+	sfxHandle_t hitSound1;
+	sfxHandle_t hitSound2;
+	sfxHandle_t hitSound3;
 	sfxHandle_t hitSoundHighArmor;
 	sfxHandle_t hitSoundLowArmor;
 	sfxHandle_t hitTeamSound;
@@ -1562,6 +1566,7 @@ extern vmCvar_t pmove_aircontrol;
 
 extern vmCvar_t cg_damageDrawScale;
 extern vmCvar_t cg_drawSpeed;
+extern vmCvar_t cg_hitsounds;
 
 //
 // cg_main.c

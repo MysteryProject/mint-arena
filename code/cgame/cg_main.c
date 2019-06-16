@@ -360,6 +360,7 @@ vmCvar_t	cg_currentSelectedPlayerName[MAX_SPLITVIEW];
 
 vmCvar_t cg_damageDrawScale;
 vmCvar_t cg_drawSpeed;
+vmCvar_t cg_hitsounds;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -574,6 +575,7 @@ static cvarTable_t cgameCvarTable[] = {
 	{&pmove_aircontrol, "pmove_aircontrol", "150.0", CVAR_SYSTEMINFO, RANGE_FLOAT(0, INT_MAX)},
 	{&cg_damageDrawScale, "cg_damageDrawScale", "1", CVAR_ARCHIVE, RANGE_FLOAT(0, INT_MAX)},
 	{&cg_drawSpeed, "cg_drawSpeed", "0", CVAR_ARCHIVE, RANGE_INT(0, 2)},
+	{&cg_hitsounds, "cg_hitsounds", "2", CVAR_ARCHIVE, RANGE_INT(0, 3)}
 };
 
 static userCvarTable_t userCvarTable[] = {
@@ -1412,6 +1414,10 @@ static void CG_RegisterSounds( void ) {
 	cgs.media.landSound = trap_S_RegisterSound( "sound/player/land1.wav", qfalse);
 
 	cgs.media.hitSound = trap_S_RegisterSound( "sound/feedback/hit.wav", qfalse );
+	cgs.media.hitSound0 = trap_S_RegisterSound( "sound/feedback/hit25.wav", qfalse );
+	cgs.media.hitSound1 = trap_S_RegisterSound( "sound/feedback/hit50.wav", qfalse );
+	cgs.media.hitSound2 = trap_S_RegisterSound( "sound/feedback/hit75.wav", qfalse );
+	cgs.media.hitSound3 = trap_S_RegisterSound( "sound/feedback/hit100.wav", qfalse );
 #ifdef MISSIONPACK
 	cgs.media.hitSoundHighArmor = trap_S_RegisterSound( "sound/feedback/hithi.wav", qfalse );
 	cgs.media.hitSoundLowArmor = trap_S_RegisterSound( "sound/feedback/hitlo.wav", qfalse );

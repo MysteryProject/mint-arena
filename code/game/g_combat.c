@@ -1181,19 +1181,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		damage *= 0.5;
 	}
 
-	// add to the attacker's hit counter (if the target isn't a general entity like a prox mine)
-	if ( attacker->player && player
-			&& targ != attacker && targ->health > 0
-			&& targ->s.eType != ET_MISSILE
-			&& targ->s.eType != ET_GENERAL) {
-		if ( OnSameTeam( targ, attacker ) ) {
-			attacker->player->ps.persistant[PERS_HITS]--;
-		} else {
-			attacker->player->ps.persistant[PERS_HITS]++;
-		}
-		attacker->player->ps.persistant[PERS_ATTACKEE_ARMOR] = (targ->health<<8)|(player->ps.stats[STAT_ARMOR]);
-	}
-
 	// always give half damage if hurting self
 	// calculated after knockback, so rocket jumping works
 	if ( targ == attacker) {
@@ -1213,6 +1200,19 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	if ( g_debugDamage.integer ) {
 		G_Printf( "%i: player:%i health:%i damage:%i armor:%i\n", level.time, targ->s.number,
 			targ->health, take, asave );
+	}
+
+	// add to the attacker's hit counter (if the target isn't a general entity like a prox mine)
+	if ( attacker->player && player
+			&& targ != attacker && targ->health > 0
+			&& targ->s.eType != ET_MISSILE
+			&& targ->s.eType != ET_GENERAL) {
+		if ( OnSameTeam( targ, attacker ) ) {
+			attacker->player->ps.persistant[PERS_HITS]--;
+		} else {
+			attacker->player->ps.persistant[PERS_HITS]++;
+		}
+		attacker->player->ps.persistant[PERS_ATTACKEE_ARMOR] += take; //(targ->health<<8)|(player->ps.stats[STAT_ARMOR]);
 	}
 
 	// add to the damage inflicted on a player this frame

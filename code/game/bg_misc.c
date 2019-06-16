@@ -1942,6 +1942,10 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
                 {
 					BG_CopyJSONString(bg_itemlist[bg_numItems].shortName, value);
                 }
+				else if (Q_stricmp(key, "ammo") == 0)
+                {
+					bg_itemlist[bg_numItems].ammoId = BG_ItemNumForItem(BG_FindItemForAmmoName(value));
+				}
 				else if (Q_stricmp(key, "displayModel") == 0)
                 {
                     char path[MAX_QPATH];
@@ -1962,10 +1966,6 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
                 {
 					BG_CopyJSONString(bg_itemlist[bg_numItems].icon, value);
                 }
-				else if (Q_stricmp(key, "ammo") == 0)
-                {
-					bg_itemlist[bg_numItems].ammoId = BG_ItemNumForItem(BG_FindItemForAmmoName(value));
-				}
 				else if (Q_stricmp(key, "ammoId") == 0)
                 {
 					BG_CopyJSONString(bg_itemlist[bg_numItems + WP_NUM_WEAPONS - 1].classname, va("%s%s", itemTypeStrings[IT_AMMO], value));
@@ -2125,11 +2125,11 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
             }
             bg_itemlist[bg_numItems].type = type;
             bg_itemlist[bg_numItems].localIndex = bg_numItemsForType[type];
-            Com_Printf("BG_LoadJSONFile: Parsed info for %s %d %d\n", bg_itemlist[bg_numItems].classname, bg_itemlist[bg_numItems].localIndex, bg_numItems);
+            //Com_Printf("BG_LoadJSONFile: Parsed info for %s %d %d\n", bg_itemlist[bg_numItems].classname, bg_itemlist[bg_numItems].localIndex, bg_numItems);
 
 			if (type == IT_WEAPON)
 			{
-				if (!bg_itemlist[bg_numItems].noAmmoDef)
+				//if (!bg_itemlist[bg_numItems].noAmmoDef)
 				{
 					bg_itemlist[bg_numItems + WP_NUM_WEAPONS - 1].type = IT_AMMO;
             		bg_itemlist[bg_numItems + WP_NUM_WEAPONS - 1].localIndex = bg_itemlist[bg_numItems].localIndex;
