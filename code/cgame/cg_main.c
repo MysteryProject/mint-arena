@@ -2755,54 +2755,46 @@ void CG_SetConnectionState( connstate_t state ) {
 	}
 }
 
-char *placeShortString(int rank)
+int countPlayers(void)
 {
-	if ( rank == 1 ) {
-		return "1st";		
-	} else if ( rank == 2 ) {
-		return "2nd";		
-	} else if ( rank == 3 ) {
-		return "3rd";	
-	} else if ( rank == 11 ) {
-		return "11th";
-	} else if ( rank == 12 ) {
-		return "12th";
-	} else if ( rank == 13 ) {
-		return "13th";
-	} else if ( rank % 10 == 1 ) {
-		return va("%ist", rank);
-	} else if ( rank % 10 == 2 ) {
-		return va("%ind", rank);
-	} else if ( rank % 10 == 3 ) {
-		return va("%ird", rank);
-	} else {
-		return va("%ith", rank);
+	int		i, count = 0;
+	playerInfo_t *pi;
+
+	for ( i = 0 ; i < cgs.maxplayers; i++ ) {
+		pi = &cgs.playerinfo[i];
+		
+		if (pi && pi->infoValid)
+			count++;
 	}
+
+	return count;
 }
 
 void CG_DiscordInGame(void)
 {
-	char *mapname, *hostname;
+	char mapname[1024], hostname[1024], netgame[1024], placestring[1024];
 	const char *info;
-	char buf[1024];
 	playerState_t *ps;
 	const char *state, *details, *largeImageKey, *largeImageText, *smallImageKey, *smallImageText;
-	int partySize, partyMax, startTimestamp;
+	int partySize, partyMax;
 
 	info = CG_ConfigString( CS_SERVERINFO );
-	mapname = Info_ValueForKey(info, "mapname");
 	ps = &cg.snap->pss[0];
 
-	Q_strncpyz(buf, Info_ValueForKey( info, "sv_hostname" ), 1024);
-	Q_CleanStr(buf);
+	Q_strncpyz(mapname, Info_ValueForKey( info, "mapname" ), 1024);
+	Q_strncpyz(netgame, Info_ValueForKey( info, "sv_gametypeNetName" ), 1024);
+	Q_strncpyz(hostname, Info_ValueForKey( info, "sv_hostname" ), 1024);
+	Q_CleanStr(hostname);
+	Q_strncpyz(placestring, CG_PlaceString(ps->persistant[PERS_RANK] + 1, qfalse), 1024);
+	Q_CleanStr(placestring);
 
-	state = CG_ConfigString(CS_MESSAGE);
-	details = va("%s | %d - %d (%s)", Info_ValueForKey( info, "sv_gametypeNetName" ), ps->persistant[PERS_SCORE], ps->persistant[PERS_KILLED], placeShortString(ps->persistant[PERS_RANK] + 1));
+	state = netgame;
+	details = va("%s with %d", placestring, ps->persistant[PERS_SCORE]);
 	largeImageKey = mapname;
-	largeImageText = va("Map: %s", mapname);
+	largeImageText = va("%s (%s)", CG_ConfigString(CS_MESSAGE), mapname);
 	smallImageKey = "q3"; // gamemode based?
-	smallImageText = buf;
-	partySize = 1;
+	smallImageText = hostname;
+	partySize = countPlayers();
 	partyMax = cgs.maxplayers;
 
 	trap_DiscordUpdate(state, details, largeImageKey, largeImageText, smallImageKey, smallImageText, partySize, partyMax, 0);
@@ -2878,7 +2870,7 @@ Will perform callbacks to make the loading info screen update.
 void CG_Ingame_Init( int serverMessageNum, int serverCommandSequence, int maxSplitView, int playerNum0, int playerNum1, int playerNum2, int playerNum3 ) {
 	int	playerNums[MAX_SPLITVIEW];
 	const char	*s;
-	int			i, numPlayers;
+	int			i;
 
 	cgs.maxSplitView = Com_Clamp(1, MAX_SPLITVIEW, maxSplitView);
 	cg.numViewports = 1;
@@ -3095,6 +3087,12 @@ void CG_Refresh( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback
 	}
 
 	CG_RunConsole( state );
+
+	if (cg.time - cg.lastDiscordUpdate >= DISCORD_UPDATE_INTERVAL)
+	{
+		CG_DiscordInGame();
+		cg.lastDiscordUpdate = cg.time;
+	}
 }
 
 /*

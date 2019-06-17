@@ -102,6 +102,8 @@ Suite 120, Rockville, Maryland 20850 USA.
 #define TEAM_OVERLAY_MAXNAME_WIDTH	12
 #define TEAM_OVERLAY_MAXLOCATION_WIDTH	16
 
+#define DISCORD_UPDATE_INTERVAL 20000
+
 typedef enum {
 	FOOTSTEP_NORMAL,
 	FOOTSTEP_BOOT,
@@ -860,6 +862,7 @@ typedef struct {
 	int				cur_localPlayerNum;
 	localPlayer_t	localPlayers[MAX_SPLITVIEW];
 
+	int lastDiscordUpdate;
 } cg_t;
 
 
