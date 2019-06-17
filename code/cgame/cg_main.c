@@ -2775,7 +2775,7 @@ void CG_DiscordInGame(void)
 	char mapname[1024], hostname[1024], netgame[1024], placestring[1024];
 	const char *info;
 	playerState_t *ps;
-	const char *state, *details, *largeImageKey, *largeImageText, *smallImageKey, *smallImageText;
+	const char *details;
 	int partySize, partyMax;
 
 	info = CG_ConfigString( CS_SERVERINFO );
@@ -2788,16 +2788,13 @@ void CG_DiscordInGame(void)
 	Q_strncpyz(placestring, CG_PlaceString(ps->persistant[PERS_RANK] + 1, qfalse), 1024);
 	Q_CleanStr(placestring);
 
-	state = netgame;
-	details = va("%s with %d", placestring, ps->persistant[PERS_SCORE]);
-	largeImageKey = mapname;
-	largeImageText = va("%s (%s)", CG_ConfigString(CS_MESSAGE), mapname);
-	smallImageKey = "q3"; // gamemode based?
-	smallImageText = hostname;
-	partySize = countPlayers();
-	partyMax = cgs.maxplayers;
+	if (cgs.gametype >= GT_TEAM)
+		details = va("Red %d - Blue %d", cg.teamScores[0], cg.teamScores[1]);
+	else
+		details = va("%s with %d", placestring, ps->persistant[PERS_SCORE]);		
+	
 
-	trap_DiscordUpdate(state, details, largeImageKey, largeImageText, smallImageKey, smallImageText, partySize, partyMax, 0);
+	trap_DiscordUpdate(netgame, details, mapname, va("%s (%s)", CG_ConfigString(CS_MESSAGE), mapname), "q3", hostname, countPlayers(), cgs.maxplayers, 0);
 }
 
 void CG_DiscordInMenu(void)
