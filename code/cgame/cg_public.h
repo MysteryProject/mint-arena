@@ -176,10 +176,28 @@ typedef struct {
 // Discord stuff
 typedef enum {
     GS_MENU,
-	GS_LOADING,
     GS_SINGLEPLAYER,
     GS_MULTIPLAYER
 } gamestateDiscord_t;
+
+
+typedef struct DiscordRichPresence {
+    const char* state;   /* max 128 bytes */
+    const char* details; /* max 128 bytes */
+    int startTimestamp;
+    int endTimestamp;
+    const char* largeImageKey;  /* max 32 bytes */
+    const char* largeImageText; /* max 128 bytes */
+    const char* smallImageKey;  /* max 32 bytes */
+    const char* smallImageText; /* max 128 bytes */
+    const char* partyId;        /* max 128 bytes */
+    int partySize;
+    int partyMax;
+    const char* matchSecret;    /* max 128 bytes */
+    const char* joinSecret;     /* max 128 bytes */
+    const char* spectateSecret; /* max 128 bytes */
+    int instance;
+} DiscordRichPresence;
 
 /*
 ==================================================================
@@ -428,10 +446,8 @@ typedef enum {
 */
 
 	// Discord stuff
-	CG_DISCORD_INIT = 900,
-	CG_DISCORD_UPDATE,
-	CG_DISCORD_CLEAR,
-	CG_DISCORD_SHUTDOWN
+	CG_DISCORD_UPDATE = 900,
+	CG_DISCORD_CLEAR
 } cgameImport_t;
 
 

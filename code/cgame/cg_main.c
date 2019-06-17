@@ -2755,6 +2755,64 @@ void CG_SetConnectionState( connstate_t state ) {
 	}
 }
 
+char *placeShortString(int rank)
+{
+	if ( rank == 1 ) {
+		return "1st";		
+	} else if ( rank == 2 ) {
+		return "2nd";		
+	} else if ( rank == 3 ) {
+		return "3rd";	
+	} else if ( rank == 11 ) {
+		return "11th";
+	} else if ( rank == 12 ) {
+		return "12th";
+	} else if ( rank == 13 ) {
+		return "13th";
+	} else if ( rank % 10 == 1 ) {
+		return va("%ist", rank);
+	} else if ( rank % 10 == 2 ) {
+		return va("%ind", rank);
+	} else if ( rank % 10 == 3 ) {
+		return va("%ird", rank);
+	} else {
+		return va("%ith", rank);
+	}
+}
+
+void CG_DiscordInGame(void)
+{
+	char *mapname, *hostname;
+	const char *info;
+	char buf[1024];
+	playerState_t *ps;
+	const char *state, *details, *largeImageKey, *largeImageText, *smallImageKey, *smallImageText;
+	int partySize, partyMax, startTimestamp;
+
+	info = CG_ConfigString( CS_SERVERINFO );
+	mapname = Info_ValueForKey(info, "mapname");
+	ps = &cg.snap->pss[0];
+
+	Q_strncpyz(buf, Info_ValueForKey( info, "sv_hostname" ), 1024);
+	Q_CleanStr(buf);
+
+	state = CG_ConfigString(CS_MESSAGE);
+	details = va("%s | %d - %d (%s)", Info_ValueForKey( info, "sv_gametypeNetName" ), ps->persistant[PERS_SCORE], ps->persistant[PERS_KILLED], placeShortString(ps->persistant[PERS_RANK] + 1));
+	largeImageKey = mapname;
+	largeImageText = va("Map: %s", mapname);
+	smallImageKey = "q3"; // gamemode based?
+	smallImageText = buf;
+	partySize = 1;
+	partyMax = cgs.maxplayers;
+
+	trap_DiscordUpdate(state, details, largeImageKey, largeImageText, smallImageKey, smallImageText, partySize, partyMax, 0);
+}
+
+void CG_DiscordInMenu(void)
+{
+	trap_DiscordUpdate("In the Menus", NULL, "q3", NULL, NULL, NULL, 0, 0, 0);
+}
+
 /*
 =================
 CG_Init
@@ -2806,7 +2864,7 @@ void CG_Init( connstate_t state, int maxSplitView, int playVideo ) {
 	}
 
 	if (!cg.connected)
-		trap_DiscordUpdate(GS_MENU, "q3", NULL, 0, 0, cgs.levelStartTime);
+		CG_DiscordInMenu();
 }
 
 /*
@@ -2821,8 +2879,6 @@ void CG_Ingame_Init( int serverMessageNum, int serverCommandSequence, int maxSpl
 	int	playerNums[MAX_SPLITVIEW];
 	const char	*s;
 	int			i, numPlayers;
-
-	trap_DiscordUpdate(GS_LOADING, cgs.mapname, cgs.gametypeName, 0, cgs.maxplayers, cgs.levelStartTime);
 
 	cgs.maxSplitView = Com_Clamp(1, MAX_SPLITVIEW, maxSplitView);
 	cg.numViewports = 1;
@@ -2930,9 +2986,7 @@ void CG_Ingame_Init( int serverMessageNum, int serverCommandSequence, int maxSpl
 
 	CG_RestoreSnapshot();
 
-	trap_DiscordUpdate(cg_singlePlayer.integer ? GS_SINGLEPLAYER : GS_MULTIPLAYER, 
-						Info_ValueForKey(CG_ConfigString( CS_SERVERINFO ), "mapname"), 
-						cgs.gametypeName, 0, cgs.maxplayers, cgs.levelStartTime);
+	CG_DiscordInGame();
 }
 
 /*

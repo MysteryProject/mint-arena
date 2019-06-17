@@ -199,7 +199,7 @@ int bg_numPlayerStateFields = ARRAY_LEN(bg_playerStateFields);
 // may not contain spaces, dpmaster will reject the server
 const char *bg_netGametypeNames[GT_MAX_GAME_TYPE] = {
 	"FFA",
-	"GunGame"
+	"GunGame",
 	"Tournament",
 	"SP",
 	"TeamDM",
@@ -467,7 +467,7 @@ Returns false if the item should not be picked up.
 This needs to be the same for client side prediction and server use.
 ================
 */
-qboolean BG_CanItemBeGrabbed( int gametype, qboolean knockout, const entityState_t *ent, const playerState_t *ps ) {
+qboolean BG_CanItemBeGrabbed( int gametype, int knockout, const entityState_t *ent, const playerState_t *ps ) {
 	gitem_t	*item;
 	int		upperBound;
 	qboolean redArmor = qfalse;

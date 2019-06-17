@@ -685,20 +685,25 @@ typedef enum {
 // NOTE: may not have more than MAX_WEAPONS
 typedef enum {
     WP_NONE,
+
     WP_GAUNTLET,
     WP_MACHINEGUN,
-    WP_TAPRIFLE,
     WP_SHOTGUN,
-    WP_AUTOSHOTTY,
     WP_GRENADE_LAUNCHER,
-    WP_RAILGUN,
-    WP_MINIRAIL,
-    WP_PLASMAGUN,
-    WP_IMPACT_CANNON,
     WP_ROCKET_LAUNCHER,
     WP_LIGHTNING,
+    WP_RAILGUN,
+    WP_PLASMAGUN,
     WP_BFG,
+
     WP_GRAPPLING_HOOK,
+
+		// new
+    WP_TAPRIFLE,
+    WP_AUTOSHOTTY,
+    WP_MINIRAIL,
+    WP_IMPACT_CANNON,
+
     WP_NUM_WEAPONS
 } weapon_t;
 
@@ -1174,7 +1179,7 @@ gitem_t	*BG_FindItemForHoldable( holdable_t pw );
 #define	BG_ItemForItemNum(x) (&bg_itemlist[(x)])
 #define	BG_ItemNumForItem(x) ((x)-bg_itemlist)
 
-qboolean	BG_CanItemBeGrabbed( int gametype, qboolean knockout, const entityState_t *ent, const playerState_t *ps );
+qboolean	BG_CanItemBeGrabbed( int gametype, int knockout, const entityState_t *ent, const playerState_t *ps );
 
 
 // g_dmflags->integer flags

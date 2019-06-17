@@ -80,9 +80,9 @@ char *weaponStrings[] =
     "Plasmagun",
     "BFG10K",
     "GPHook",
-    "Mini-Railgun",
-    "Auto-Shotty",
     "Tap-Rifle",
+    "Auto-Shotty",
+    "Mini-Railgun",
     "Impact Cannon"
 };
 

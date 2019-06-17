@@ -8,7 +8,7 @@
             "models/weapons/gauntlet/gauntlet.md3"
         ],
         "icon": "icons/iconw_gauntlet",
-        "idleSound": "sound/weapons/melee/fstrun.wav",
+        "fireSound": "sound/weapons/melee/fstrun.wav",
         "flashColor": [ 0.6, 0.6, 1.0 ],
         "flashSound": [ "sound/weapons/melee/fstatck.wav" ],
         "flashImpulse": false,
@@ -42,26 +42,6 @@
         "ammoAmount": 50
     },
     {
-        "id": "taprifle",
-        "type": "weapon",
-        "displayName": "Tap-Rifle",
-        "displayModel": [ "models/weapons/taprifle/taprifle.md3" ],
-        "icon": "icons/iconw_taprifle",
-        "ammo": "bullets",
-        "flashColor": [ 1.0, 1.0, 0.0 ],
-        "flashSound": [ 
-            "sound/weapons/machinegun/machgf1b.wav",
-            "sound/weapons/machinegun/machgf2b.wav",
-            "sound/weapons/machinegun/machgf3b.wav",
-            "sound/weapons/machinegun/machgf4b.wav" 
-        ],
-        "brassType": "bullet",
-        "attackDelay": 1,
-        "amount": 20,
-        "ammoAmount": 20,
-        "autoAttack": false
-    },
-    {
         "id": "shotgun",
         "type": "weapon",
         "displayName": "Shotgun",
@@ -79,20 +59,6 @@
         "brassType": "shell",
         "attackDelay": 1000,
         "amount": 10,
-        "ammoAmount": 10
-    },
-    {
-        "id": "autoshotty",
-        "type": "weapon",
-        "displayName": "Auto-Shotty",
-        "displayModel": [ "models/weapons/autoshotty/autoshotty.md3" ],
-        "icon": "icons/iconw_autoshotty",
-        "ammo": "shells",
-        "flashColor": [ 1.0, 1.0, 0.0 ],
-        "flashSound": [ "sound/weapons/shotgun/sshotf1b.wav" ],
-        "brassType": "shell",
-        "attackDelay": 280,
-        "amount": 15,
         "ammoAmount": 10
     },
     {
@@ -118,79 +84,7 @@
         "attackDelay": 800,
         "amount": 15,
         "ammoAmount": 5
-    },
-    {
-        "id": "railgun",
-        "type": "weapon",
-        "displayName": "Railgun",
-        "displayModel": [
-            "models/weapons2/railgun/railgun.md3",
-            "models/weapons/railgun/railgun.md3" 
-        ],
-        "icon": "icons/iconw_railgun",
-        "ammoId": "slugs",
-        "ammoName": "Slugs",
-        "ammoModel": "models/powerups/ammo/railgunam.md3",
-        "ammoIcon": "icons/icona_railgun",
-        "idleSound": "sound/weapons/railgun/rg_hum.wav",
-        "flashColor": [ 1.0, 0.5, 0.0 ],
-        "flashSound": [ "sound/weapons/railgun/railgf1a.wav" ],
-        "customShading": true,
-        "attackDelay": 1500,
-        "amount": 10,
-        "ammoAmount": 10
-    },
-    {
-        "id": "minirail",
-        "type": "weapon",
-        "displayName": "Mini-Railgun",
-        "displayModel": [ "models/weapons/minirail/minirail.md3" ],
-        "icon": "icons/iconw_minirail",
-        "ammo": "slugs",
-        "idleSound": "sound/weapons/minirail/rg_hum.wav",
-        "flashColor": [ 1.0, 0.5, 0.0 ],
-        "flashSound": [ "sound/weapons/minirail/railgf1a.wav" ],
-        "customShading": true,
-        "attackDelay": 750,
-        "amount": 20,
-        "ammoAmount": 10
-    },
-    {
-        "id": "plasmagun",
-        "type": "weapon",
-        "displayName": "Plasma Gun",
-        "displayModel": [
-            "models/weapons2/plasma/plasma.md3",
-            "models/weapons/plasma/plasma.md3"
-        ],
-        "icon": "icons/iconw_plasma",
-        "ammoId": "cells",
-        "ammoName": "Cells",
-        "ammoModel": "models/powerups/ammo/plasmaam.md3",
-        "ammoIcon": "icons/icona_plasma",
-        "flashColor": [ 0.6, 0.6, 1.0 ],
-        "flashSound": [ "sound/weapons/plasma/hyprbf1a.wav" ],
-        "missileSound": "sound/weapons/plasma/lasfly.wav",
-        "missileTrailType": "plasma",
-        "attackDelay": 100,
-        "amount": 50,
-        "ammoAmount": 30
-    },
-    {
-        "id": "impactcannon",
-        "type": "weapon",
-        "displayName": "Impact Cannon",
-        "displayModel": [ "models/weapons/impactcannon/impactcannon.md3" ],
-        "icon": "icons/iconw_impactcannon",
-        "ammo": "cells",
-        "flashColor": [ 1.0, 0.6, 0.0 ],
-        "flashSound": [ "sound/weapons/impactcannon/rocklf1a.wav" ],
-        "missileSound": "sound/weapons/impactcannon/rockfly.wav",
-        "missileTrailType": "plasma",
-        "attackDelay": 700,
-        "amount": 10,
-        "ammoAmount": 10
-    },
+    },  
     {
         "id": "rocketlauncher",
         "type": "weapon",
@@ -240,6 +134,48 @@
         "ammoAmount": 60
     },
     {
+        "id": "railgun",
+        "type": "weapon",
+        "displayName": "Railgun",
+        "displayModel": [
+            "models/weapons2/railgun/railgun.md3",
+            "models/weapons/railgun/railgun.md3" 
+        ],
+        "icon": "icons/iconw_railgun",
+        "ammoId": "slugs",
+        "ammoName": "Slugs",
+        "ammoModel": "models/powerups/ammo/railgunam.md3",
+        "ammoIcon": "icons/icona_railgun",
+        "idleSound": "sound/weapons/railgun/rg_hum.wav",
+        "flashColor": [ 1.0, 0.5, 0.0 ],
+        "flashSound": [ "sound/weapons/railgun/railgf1a.wav" ],
+        "customShading": true,
+        "attackDelay": 1500,
+        "amount": 10,
+        "ammoAmount": 10
+    },
+    {
+        "id": "plasmagun",
+        "type": "weapon",
+        "displayName": "Plasma Gun",
+        "displayModel": [
+            "models/weapons2/plasma/plasma.md3",
+            "models/weapons/plasma/plasma.md3"
+        ],
+        "icon": "icons/iconw_plasma",
+        "ammoId": "cells",
+        "ammoName": "Cells",
+        "ammoModel": "models/powerups/ammo/plasmaam.md3",
+        "ammoIcon": "icons/icona_plasma",
+        "flashColor": [ 0.6, 0.6, 1.0 ],
+        "flashSound": [ "sound/weapons/plasma/hyprbf1a.wav" ],
+        "missileSound": "sound/weapons/plasma/lasfly.wav",
+        "missileTrailType": "plasma",
+        "attackDelay": 100,
+        "amount": 50,
+        "ammoAmount": 30
+    },
+    {
         "id": "bfg",
         "type": "weapon",
         "displayName": "BFG10K",
@@ -263,5 +199,69 @@
     {
         "id": "grappling",
         "displayName": "Grappling Hook"
-    }
+    },
+    {
+        "id": "taprifle",
+        "type": "weapon",
+        "displayName": "Tap-Rifle",
+        "displayModel": [ "models/weapons/taprifle/taprifle.md3" ],
+        "icon": "icons/iconw_taprifle",
+        "ammo": "bullets",
+        "flashColor": [ 1.0, 1.0, 0.0 ],
+        "flashSound": [ 
+            "sound/weapons/machinegun/machgf1b.wav",
+            "sound/weapons/machinegun/machgf2b.wav",
+            "sound/weapons/machinegun/machgf3b.wav",
+            "sound/weapons/machinegun/machgf4b.wav" 
+        ],
+        "brassType": "bullet",
+        "attackDelay": 1,
+        "amount": 20,
+        "ammoAmount": 20,
+        "autoAttack": false
+    },
+    {
+        "id": "autoshotty",
+        "type": "weapon",
+        "displayName": "Auto-Shotty",
+        "displayModel": [ "models/weapons/autoshotty/autoshotty.md3" ],
+        "icon": "icons/iconw_autoshotty",
+        "ammo": "shells",
+        "flashColor": [ 1.0, 1.0, 0.0 ],
+        "flashSound": [ "sound/weapons/shotgun/sshotf1b.wav" ],
+        "brassType": "shell",
+        "attackDelay": 280,
+        "amount": 15,
+        "ammoAmount": 10
+    },
+    {
+        "id": "minirail",
+        "type": "weapon",
+        "displayName": "Mini-Railgun",
+        "displayModel": [ "models/weapons/minirail/minirail.md3" ],
+        "icon": "icons/iconw_minirail",
+        "ammo": "slugs",
+        "idleSound": "sound/weapons/minirail/rg_hum.wav",
+        "flashColor": [ 1.0, 0.5, 0.0 ],
+        "flashSound": [ "sound/weapons/minirail/railgf1a.wav" ],
+        "customShading": true,
+        "attackDelay": 750,
+        "amount": 20,
+        "ammoAmount": 10
+    },
+    {
+        "id": "impactcannon",
+        "type": "weapon",
+        "displayName": "Impact Cannon",
+        "displayModel": [ "models/weapons/impactcannon/impactcannon.md3" ],
+        "icon": "icons/iconw_impactcannon",
+        "ammo": "cells",
+        "flashColor": [ 1.0, 0.6, 0.0 ],
+        "flashSound": [ "sound/weapons/impactcannon/rocklf1a.wav" ],
+        "missileSound": "sound/weapons/impactcannon/rockfly.wav",
+        "missileTrailType": "plasma",
+        "attackDelay": 700,
+        "amount": 10,
+        "ammoAmount": 10
+    },
 ]
