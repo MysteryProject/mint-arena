@@ -120,8 +120,8 @@
             "models/weapons/lightning/lightning.md3"
         ],
         "icon": "icons/iconw_lightning",
-        "ammoId": "rockets",
-        "ammoName": "Rockets",
+        "ammoId": "lightning",
+        "ammoName": "Bolts",
         "ammoModel": "models/powerups/ammo/lightningam.md3",
         "ammoIcon": "icons/icona_lightning",
         "idleSound": "sound/weapons/melee/fsthum.wav",

@@ -2776,7 +2776,6 @@ void CG_DiscordInGame(void)
 	const char *info;
 	playerState_t *ps;
 	const char *details;
-	int partySize, partyMax;
 
 	info = CG_ConfigString( CS_SERVERINFO );
 	ps = &cg.snap->pss[0];

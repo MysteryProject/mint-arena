@@ -1873,6 +1873,8 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
 
         if (tokens[i].type == JSMN_OBJECT)
         {
+			qboolean definedAmmo = qfalse;
+
 			if (type == IT_WEAPON)
 			{
 				bg_itemlist[bg_numItems].flashImpulse = qtrue;
@@ -1888,7 +1890,7 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
                 char key[128];
                 char value[MAX_QPATH * 10];
 
-                if (keyToken.type == JSMN_OBJECT)
+				if (keyToken.type == JSMN_OBJECT)
                 {
                     i += j - 1;
                     break; // we hit the next item
@@ -1968,20 +1970,21 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
                 }
 				else if (Q_stricmp(key, "ammoId") == 0)
                 {
-					BG_CopyJSONString(bg_itemlist[bg_numItems + WP_NUM_WEAPONS - 1].classname, va("%s%s", itemTypeStrings[IT_AMMO], value));
+					BG_CopyJSONString(bg_itemlist[bg_numItemsForType[IT_AMMO] + WP_NUM_WEAPONS - 1].classname, va("%s%s", itemTypeStrings[IT_AMMO], value));
 					bg_itemlist[bg_numItems].ammoId = BG_ItemNumForItem(BG_FindItemForAmmoName(value));
-                }
+					definedAmmo = qtrue;
+				}
 				else if (Q_stricmp(key, "ammoName") == 0)
                 {
-					BG_CopyJSONString(bg_itemlist[bg_numItems + WP_NUM_WEAPONS - 1].displayName, value);
+					BG_CopyJSONString(bg_itemlist[bg_numItemsForType[IT_AMMO] + WP_NUM_WEAPONS - 1].displayName, value);
                 }
 				else if (Q_stricmp(key, "ammoModel") == 0)
                 {
-					BG_CopyJSONString(bg_itemlist[bg_numItems + WP_NUM_WEAPONS - 1].displayModel[0], value);
+					BG_CopyJSONString(bg_itemlist[bg_numItemsForType[IT_AMMO] + WP_NUM_WEAPONS - 1].displayModel[0], value);
                 }
 				else if (Q_stricmp(key, "ammoIcon") == 0)
                 {
-					BG_CopyJSONString(bg_itemlist[bg_numItems + WP_NUM_WEAPONS - 1].icon, value);
+					BG_CopyJSONString(bg_itemlist[bg_numItemsForType[IT_AMMO] + WP_NUM_WEAPONS - 1].icon, value);
                 }
 				else if (Q_stricmp(key, "pickupSound") == 0)
                 {
@@ -2116,7 +2119,7 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
                 }
 				else if (Q_stricmp(key, "ammoAmount") == 0)
                 {
-                    bg_itemlist[bg_numItems + WP_NUM_WEAPONS - 1].amount = atoi(value);
+                    bg_itemlist[bg_numItemsForType[IT_AMMO] + WP_NUM_WEAPONS - 1].amount = atoi(value);
                 }
                 else
                 {
@@ -2127,15 +2130,12 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
             bg_itemlist[bg_numItems].localIndex = bg_numItemsForType[type];
             //Com_Printf("BG_LoadJSONFile: Parsed info for %s %d %d\n", bg_itemlist[bg_numItems].classname, bg_itemlist[bg_numItems].localIndex, bg_numItems);
 
-			if (type == IT_WEAPON)
+			if (type == IT_WEAPON && definedAmmo)
 			{
-				//if (!bg_itemlist[bg_numItems].noAmmoDef)
-				{
-					bg_itemlist[bg_numItems + WP_NUM_WEAPONS - 1].type = IT_AMMO;
-            		bg_itemlist[bg_numItems + WP_NUM_WEAPONS - 1].localIndex = bg_itemlist[bg_numItems].localIndex;
-					bg_numItemsForType[IT_AMMO]++;
-					bg_itemlist[bg_numItems].ammoId = bg_numItems + WP_NUM_WEAPONS - 1;
-				}
+				bg_itemlist[bg_numItemsForType[IT_AMMO] + WP_NUM_WEAPONS - 1].type = IT_AMMO;
+				bg_itemlist[bg_numItemsForType[IT_AMMO] + WP_NUM_WEAPONS - 1].localIndex = bg_itemlist[bg_numItems].localIndex;
+				bg_itemlist[bg_numItems].ammoId = bg_numItemsForType[IT_AMMO] + WP_NUM_WEAPONS - 1;
+				bg_numItemsForType[IT_AMMO]++;
 			}
 
             bg_numItems++;
@@ -2144,13 +2144,15 @@ void BG_LoadJSONFile(const char *filename, itemType_t type)
     }
 
 	if (type == IT_WEAPON)
-		bg_numItems += WP_NUM_WEAPONS; // skip over the slots being used for the ammo items
+		bg_numItems += bg_numItemsForType[IT_AMMO] - 1; // skip over the slots being used for the ammo items
 }
 
 qboolean initialised = qfalse;
 
 void BG_LoadItemJSON(void)
 {
+	int i;
+
 	if (initialised)
 		return;
 
@@ -2169,6 +2171,5 @@ void BG_LoadItemJSON(void)
 	BG_FindItemByClassname("team_CTF_redflag")->localIndex = PW_REDFLAG;
 	BG_FindItemByClassname("team_CTF_blueflag")->localIndex = PW_BLUEFLAG;
 
-	//bg_itemlist[bg_numItems].classname = NULL;
 	initialised = qtrue;
 }
