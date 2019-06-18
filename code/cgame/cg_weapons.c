@@ -645,14 +645,7 @@ void CG_RegisterWeapon( int weaponNum ) {
 
 	// load cmodel before model so filecache works
 	weaponModel = item->displayModel[0];
-
 	weaponInfo->weaponModel = trap_R_RegisterModel(weaponModel);
-
-	if (!weaponInfo->weaponModel)
-	{
-		weaponModel = item->displayModel[0];
-		weaponInfo->weaponModel = trap_R_RegisterModel(weaponModel);
-	}
 	
 	// calc midpoint for rotation
 	trap_R_ModelBounds( weaponInfo->weaponModel, mins, maxs, 0, 0, 0 );
@@ -664,10 +657,13 @@ void CG_RegisterWeapon( int weaponNum ) {
 
 	ammo = BG_FindItemForAmmo( weaponNum );
 
-	weaponInfo->ammoIcon = trap_R_RegisterShader( ammo->icon );
+	if (ammo)
+	{
+		if (ammo->icon[0])
+			weaponInfo->ammoIcon = trap_R_RegisterShader( ammo->icon );
 
-	if ( ammo && ammo->displayModel[0] ) {
-		weaponInfo->ammoModel = trap_R_RegisterModel( ammo->displayModel[0] );
+		if (ammo->displayModel[0][0] )
+			weaponInfo->ammoModel = trap_R_RegisterModel( ammo->displayModel[0] );
 	}
 
 	COM_StripExtension(item->displayModel[0], path, sizeof(path));
@@ -749,21 +745,21 @@ void CG_RegisterWeapon( int weaponNum ) {
 		break;
 	}
 
-	if (item->idleSound)
+	if (item->idleSound[0])
 		weaponInfo->readySound = trap_S_RegisterSound(item->idleSound, qfalse);
 
-	if (item->fireSound)
+	if (item->fireSound[0])
 		weaponInfo->firingSound = trap_S_RegisterSound(item->fireSound, qfalse);
 
 	VectorCopy(item->flashColor, weaponInfo->flashDlightColor);
 
 	for (i = 0; i < MAX_FLASH_SOUNDS; i++)
 	{
-		if (item->flashSound[i])
+		if (item->flashSound[i][0])
 			weaponInfo->flashSound[i] = trap_S_RegisterSound(item->flashSound[i], qfalse);
 	}
 
-	if (item->missileModel)
+	if (item->missileModel[0])
 		weaponInfo->missileModel = trap_R_RegisterModel(item->missileModel);
 
 	weaponInfo->wiTrailTime = item->missileTrailTime;
@@ -816,7 +812,7 @@ void CG_RegisterItemVisuals( int itemNum ) {
 
 	itemInfo->models[0] = trap_R_RegisterModel( item->displayModel[0] );
 
-	if (item->icon)
+	if (item->icon[0])
 		itemInfo->icon = trap_R_RegisterShader( item->icon );
 
 	if ( item->type == IT_WEAPON ) {
@@ -944,7 +940,7 @@ static void CG_LightningBolt( centity_t *cent, vec3_t origin ) {
 	vec3_t   muzzlePoint, endPoint;
 	int      anim;
 
-	if (cent->currentState.weapon != 12) { // marxy: hack, wp_lightning
+	if (cent->currentState.weapon != WP_LIGHTNING) {
 		return;
 	}
 
@@ -1761,8 +1757,6 @@ void CG_OutOfAmmoChange( int localPlayerNum ) {
 void CG_GunGameWeaponSwap(int localPlayerNum, weapon_t weapon)
 {
 	localPlayer_t *player;
-	playerState_t *ps;
-	int i;
 
 	if (cg.localPlayers[localPlayerNum].playerNum == -1)
 		return;
