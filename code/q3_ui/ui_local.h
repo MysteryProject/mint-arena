@@ -34,6 +34,15 @@ Suite 120, Rockville, Maryland 20850 USA.
 #include "../cgame/cg_local.h"
 #include "../ui/ui_public.h"
 
+void UI_assert(qboolean expression);
+
+#define NK_SIZE_TYPE unsigned long long
+#define NK_POINTER_TYPE unsigned long long
+#define NK_ASSERT(x) assert(x)
+#define MK_INCLUDE_DEFAULT_FONT
+
+#include "nuklear.h"
+
 typedef void (*voidfunc_f)(void);
 
 extern vmCvar_t	ui_ffa_fraglimit;
