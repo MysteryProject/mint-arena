@@ -30,16 +30,14 @@ UI_Init
 
 struct nk_allocator alloc;
 
-static void*
-nkmalloc(nk_handle unused, void *old,nk_size size)
+static void *nkmalloc(nk_handle unused, void *old,nk_size size)
 {
     NK_UNUSED(unused);
     NK_UNUSED(old);
     return trap_HeapMalloc(size);
 }
 
-static void
-nkmfree(nk_handle unused, void *ptr)
+static void nkmfree(nk_handle unused, void *ptr)
 {
     NK_UNUSED(unused);
     trap_HeapFree(ptr);

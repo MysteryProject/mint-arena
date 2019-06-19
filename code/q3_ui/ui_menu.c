@@ -317,7 +317,7 @@ void UI_MainMenu(void)
 
 	y = 134;
 	s_main.debug.generic.type = MTYPE_PTEXT;
-	s_main.debug.generic.flags = QMF_CENTER_JUSTIFY | QMF_PULSEIFFOCUS | QMF_DEVELOPER;
+	s_main.debug.generic.flags = QMF_CENTER_JUSTIFY | QMF_PULSEIFFOCUS; //| QMF_DEVELOPER;
 	s_main.debug.generic.x = 320;
 	s_main.debug.generic.y = y;
 	s_main.debug.generic.id = ID_DEBUG;

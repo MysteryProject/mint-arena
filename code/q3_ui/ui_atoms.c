@@ -696,6 +696,9 @@ void UI_KeyEvent( int key, qboolean down ) {
 		return;
 	}
 
+	if (uis.activemenu->key2)
+		s = uis.activemenu->key2( key, down );
+
 	if (!down) {
 		return;
 	}
@@ -896,6 +899,24 @@ UI_Shutdown
 void UI_Shutdown( void ) {
 }
 
+static void *nkmalloc(nk_handle unused, void *old,nk_size size)
+{
+    NK_UNUSED(unused);
+    NK_UNUSED(old);
+    return trap_HeapMalloc(size);
+}
+
+static void nkmfree(nk_handle unused, void *ptr)
+{
+    NK_UNUSED(unused);
+    trap_HeapFree(ptr);
+}
+
+static float nk_q3font_get_text_width(nk_handle handle, float height, const char *text, int len)
+{
+	return Text_Width(text, (fontInfo_t *)handle.ptr, 1.0, 0);
+}
+
 /*
 =================
 UI_Init
@@ -918,6 +939,15 @@ void UI_Init( qboolean inGameLoad, int maxSplitView ) {
 
 	uis.activemenu = NULL;
 	uis.menusp     = 0;
+	// nuklear
+	uis.nAllocator.userdata.ptr = 0;
+	uis.nAllocator.alloc = nkmalloc;
+	uis.nAllocator.free = nkmfree;
+	uis.nFont.font = &uis.textFont;
+	uis.nFont.nFont.userdata = nk_handle_ptr(&uis.nFont);
+	uis.nFont.nFont.height = uis.textFont.pointSize + 2;
+	uis.nFont.nFont.width = nk_q3font_get_text_width;
+	nk_init(&uis.nContext, &uis.nAllocator, &uis.nFont.nFont);
 }
 
 /*

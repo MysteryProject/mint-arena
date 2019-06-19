@@ -188,6 +188,7 @@ typedef struct _tag_menuframework
 
 	void (*draw) (void);
 	sfxHandle_t (*key) (int key);
+	sfxHandle_t (*key2) (int key, qboolean down);
 
 	qboolean	wrapAround;
 	qboolean	fullscreen;
@@ -548,6 +549,11 @@ qboolean UI_RegisterPlayerModelname( uiPlayerInfo_t *pi, const char *modelSkinNa
 //
 // ui_atoms.c
 //
+struct q3Font {
+	fontInfo_t *font;
+	struct nk_user_font nFont;
+};
+
 typedef struct {
 	int					frametime;
 	int					realtime;
@@ -572,6 +578,11 @@ typedef struct {
 	qboolean			firstdraw;
 	int					maxSplitView;
 	qboolean			bannerNumbers;
+
+	// nuklear
+	struct nk_context nContext;
+	struct nk_allocator nAllocator;
+	struct q3Font nFont;
 } uiStatic_t;
 
 extern void			UI_LerpColor(vec4_t a, vec4_t b, vec4_t c, float t);
