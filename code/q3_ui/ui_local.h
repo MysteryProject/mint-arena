@@ -36,10 +36,9 @@ Suite 120, Rockville, Maryland 20850 USA.
 
 void UI_assert(qboolean expression);
 
-#define NK_SIZE_TYPE unsigned long long
-#define NK_POINTER_TYPE unsigned long long
+#define NK_SIZE_TYPE size_t
+#define NK_POINTER_TYPE size_t
 #define NK_ASSERT(x) assert(x)
-#define MK_INCLUDE_DEFAULT_FONT
 
 #include "nuklear.h"
 
