@@ -914,7 +914,7 @@ static void nkmfree(nk_handle unused, void *ptr)
 
 static float nk_q3font_get_text_width(nk_handle handle, float height, const char *text, int len)
 {
-	return Text_Width(text, (fontInfo_t *)handle.ptr, 1.0, 0);
+	return Text_Width(text, &uis.textFont, uis.textFont.pointSize / 48.0f, 0);
 }
 
 /*

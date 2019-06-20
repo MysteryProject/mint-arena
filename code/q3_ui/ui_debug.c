@@ -1309,32 +1309,16 @@ overview(struct nk_context *ctx)
     return !nk_window_is_closed(ctx, "Overview");
 }
 
+struct nk_style_button button_style;
+
 static void DebugDraw(void)
 {
     const struct nk_command *cmd;
 	vec4_t color;
-    int property;
 
     nk_input_motion(&uis.nContext, uis.cursorx, uis.cursory);
     nk_input_end(&uis.nContext);
 
-    /*
-    if (nk_begin(&uis.nContext, "Debug Menu", nk_rect(0, 0, 640, 480), 0))
-    {
-        static int active = 0;
-
-        nk_layout_row_dynamic(&uis.nContext, 120, 1);
-        // label
-        nk_label(&uis.nContext, "Text Widget", NK_TEXT_ALIGN_CENTERED | NK_TEXT_ALIGN_MIDDLE);
-
-        {
-            static struct nk_colorf pColor = { 0.0, 0.0, 0.0, 0.0 };
-
-            //pColor = nk_color_picker(&uis.nContext, pColor, NK_RGBA);
-        }
-    }
-    nk_end(&uis.nContext);
-    */
     overview(&uis.nContext);
 
     // reset before the next frame
@@ -1403,10 +1387,40 @@ static void DebugDraw(void)
         } break;
         case NK_COMMAND_LINE: {
             const struct nk_command_line *line = (const struct nk_command_line*)cmd;
-            NKTOQ3COLOR(line->color, color);
-            trap_R_SetColor(color);
-            trap_R_DrawStretchPic( line->begin.x, line->begin.y, line->end.x - line->begin.x, line->end.y - line->begin.y, 0, 0, 0, 0, cgs.media.whiteShader );
-            trap_R_SetColor(NULL);
+            vec2_t a, b;
+            polyVert_t verts[2];
+
+            a[0] = line->begin.x;
+            a[1] = line->begin.y;
+            CG_AdjustFrom640(&a[0], &a[1], NULL, NULL);
+
+            b[0] = line->end.x;
+            b[1] = line->end.y;
+            CG_AdjustFrom640(&b[0], &b[1], NULL, NULL);
+
+			NKTOQ3COLOR2(line->color, color);
+
+            verts[0].xyz[0] = a[0];
+            verts[0].xyz[1] = a[1];
+            verts[0].xyz[2] = 0;
+            verts[0].modulate[0] = color[0];
+            verts[0].modulate[1] = color[1];
+            verts[0].modulate[2] = color[2];
+            verts[0].modulate[3] = color[3];
+            verts[0].st[0] = 0;
+            verts[0].st[1] = 0;
+            
+            verts[1].xyz[0] = b[0];
+            verts[1].xyz[1] = b[1];
+            verts[1].xyz[2] = 0;
+            verts[1].modulate[0] = color[0];
+            verts[1].modulate[1] = color[1];
+            verts[1].modulate[2] = color[2];
+            verts[1].modulate[3] = color[3];
+            verts[1].st[0] = 0;
+            verts[1].st[1] = 0;
+
+            trap_R_Add2dPolys(verts, 2, cgs.media.whiteShader );
         } break;
         case NK_COMMAND_IMAGE: {
             const struct nk_command_image *image = (const struct nk_command_image*)cmd;
@@ -1487,7 +1501,7 @@ static void DebugDraw(void)
         case NK_COMMAND_TEXT: {
             const struct nk_command_text *t = (const struct nk_command_text*)cmd;
 			NKTOQ3COLOR(t->foreground, color);
-			CG_DrawStringCommon(t->x, t->y, t->string, 0, &uis.textFont, color, 0, 0, 0, 0, -1, -1, 0);
+            CG_DrawStringCommon(t->x, t->y, t->string, 0, &uis.textFont, color, 0, 0, 0, 0, -1, -1, 0);
         } break;
         default:
             CG_Printf("No handler for nuklear type %d\n", cmd->type);

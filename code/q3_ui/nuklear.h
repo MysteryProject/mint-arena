@@ -9119,9 +9119,9 @@ nk_draw_text(struct nk_command_buffer *b, struct nk_rect r,
     /* make sure text fits inside bounds */
     text_width = font->width(font->userdata, font->height, string, length);
     if (text_width > r.w){
-        int glyphs = 0;
-        float txt_width = (float)text_width;
-        length = nk_text_clamp(font, string, length, r.w, &glyphs, &txt_width, 0,0);
+        //int glyphs = 0;
+        //float txt_width = (float)text_width;
+        //length = nk_text_clamp(font, string, length, r.w, &glyphs, &txt_width, 0,0);
     }
 
     if (!length) return;
