@@ -40,6 +40,27 @@ void UI_assert(qboolean expression);
 #define NK_POINTER_TYPE size_t
 #define NK_ASSERT(x) assert(x)
 
+#define Vector2Dot(x,y) ((x)[0]*(y)[0]+(x)[1]*(y)[1])
+#define Vector2Copy(a, b) ((b)[0]=(a)[0],(b)[1]=(a)[1])
+#define Vector2Set(v, x, y) ((v)[0]=(x), (v)[1]=(y))
+
+#define NKTOQ3COLOR(nk, c) (c[0] = nk.r / 255.0f, c[1] = nk.g/ 255.0f, c[2] = nk.b/ 255.0f, c[3] = nk.a/ 255.0f)
+#define NKTOQ3COLOR2(nk, c) (c[0] = nk.r, c[1] = nk.g, c[2] = nk.b, c[3] = nk.a)
+#define MAKEPOLYVERT(vert, vec, color) (vert.xyz[0] = vec.x, \
+                                        vert.xyz[1] = vec.y, \
+                                        vert.xyz[2] = 0, \
+                                        vert.modulate[0] = color[0], \
+                                        vert.modulate[1] = color[1], \
+                                        vert.modulate[2] = color[2], \
+                                        vert.modulate[3] = color[3])
+#define MAKEPOLYVERT2(vert, x, y, color) (vert.xyz[0] = x, \
+                                        vert.xyz[1] = y, \
+                                        vert.xyz[2] = 0, \
+                                        vert.modulate[0] = color[0], \
+                                        vert.modulate[1] = color[1], \
+                                        vert.modulate[2] = color[2], \
+                                        vert.modulate[3] = color[3])
+										
 #include "nuklear.h"
 
 typedef void (*voidfunc_f)(void);
