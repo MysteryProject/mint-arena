@@ -171,6 +171,7 @@ endif
 BD=$(BUILD_DIR)/debug-$(PLATFORM)-$(ARCH)
 BR=$(BUILD_DIR)/release-$(PLATFORM)-$(ARCH)
 CMDIR=$(MOUNT_DIR)/qcommon
+LUADIR=$(MOUNT_DIR)/lua
 BLIBDIR=$(MOUNT_DIR)/botlib
 GDIR=$(MOUNT_DIR)/game
 CGDIR=$(MOUNT_DIR)/cgame
@@ -849,6 +850,7 @@ makedirs:
 	@$(MKDIR) $(B)/$(BASEGAME)/botlib
 	@$(MKDIR) $(B)/$(BASEGAME)/game
 	@$(MKDIR) $(B)/$(BASEGAME)/ui
+	@$(MKDIR) $(B)/$(BASEGAME)/lua
 	@$(MKDIR) $(B)/$(BASEGAME)/qcommon
 	@$(MKDIR) $(B)/$(BASEGAME)/vm
 	@$(MKDIR) $(B)/$(MISSIONPACK)/cgame
@@ -1137,7 +1139,41 @@ Q3CGOBJ = \
   $(B)/$(BASEGAME)/qcommon/q_json.o \
   $(B)/$(BASEGAME)/qcommon/q_math.o \
   $(B)/$(BASEGAME)/qcommon/q_shared.o \
-  $(B)/$(BASEGAME)/qcommon/q_unicode.o
+  $(B)/$(BASEGAME)/qcommon/q_unicode.o \
+  \
+  $(B)/$(BASEGAME)/lua/lapi.o \
+  $(B)/$(BASEGAME)/lua/lcode.o \
+  $(B)/$(BASEGAME)/lua/lctype.o \
+  $(B)/$(BASEGAME)/lua/ldebug.o \
+  $(B)/$(BASEGAME)/lua/ldo.o \
+  $(B)/$(BASEGAME)/lua/ldump.o \
+  $(B)/$(BASEGAME)/lua/lfunc.o \
+  $(B)/$(BASEGAME)/lua/lgc.o \
+  $(B)/$(BASEGAME)/lua/llex.o \
+  $(B)/$(BASEGAME)/lua/lmem.o \
+  $(B)/$(BASEGAME)/lua/lobject.o \
+  $(B)/$(BASEGAME)/lua/lopcodes.o \
+  $(B)/$(BASEGAME)/lua/lparser.o \
+  $(B)/$(BASEGAME)/lua/lstate.o \
+  $(B)/$(BASEGAME)/lua/lstring.o \
+  $(B)/$(BASEGAME)/lua/ltable.o \
+  $(B)/$(BASEGAME)/lua/ltm.o \
+  $(B)/$(BASEGAME)/lua/lundump.o \
+  $(B)/$(BASEGAME)/lua/lvm.o \
+  $(B)/$(BASEGAME)/lua/lzio.o \
+  $(B)/$(BASEGAME)/lua/lauxlib.o \
+  $(B)/$(BASEGAME)/lua/lbaselib.o \
+  $(B)/$(BASEGAME)/lua/lbitlib.o \
+  $(B)/$(BASEGAME)/lua/lcorolib.o \
+  $(B)/$(BASEGAME)/lua/ldblib.o \
+  $(B)/$(BASEGAME)/lua/liolib.o \
+  $(B)/$(BASEGAME)/lua/lmathlib.o \
+  $(B)/$(BASEGAME)/lua/loslib.o \
+  $(B)/$(BASEGAME)/lua/lstrlib.o \
+  $(B)/$(BASEGAME)/lua/ltablib.o \
+  $(B)/$(BASEGAME)/lua/lutf8lib.o \
+  $(B)/$(BASEGAME)/lua/loadlib.o \
+  $(B)/$(BASEGAME)/lua/linit.o
 
 Q3CGVMOBJ = $(Q3CGOBJ:%.o=%.asm)
 
@@ -1510,6 +1546,12 @@ $(B)/$(BASEGAME)/qcommon/%.o: $(CMDIR)/%.c
 	$(DO_SHLIB_CC)
 
 $(B)/$(BASEGAME)/qcommon/%.asm: $(CMDIR)/%.c $(Q3LCC)
+	$(DO_Q3LCC)
+
+$(B)/$(BASEGAME)/lua/%.o: $(LUADIR)/%.c
+	$(DO_SHLIB_CC)
+
+$(B)/$(BASEGAME)/lua/%.asm: $(LUADIR)/%.c $(Q3LCC)
 	$(DO_Q3LCC)
 
 $(B)/$(MISSIONPACK)/qcommon/%.o: $(CMDIR)/%.c
