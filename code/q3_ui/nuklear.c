@@ -149,28 +149,7 @@ void NK_DrawCircleFilled(float x, float y, float w, float h, vec4_t color)
 	trap_R_Add2dPolys( verts, CIRCLE_VERTS, cgs.media.whiteShader );
 }
 
-void NK_DrawTriangleFilled(vec2_t a, vec2_t b, vec2_t c, vec4_t color)
-{
-    polyVert_t verts[3];
 
-    CG_AdjustFrom640(&a[0], &a[1], NULL, NULL);
-    CG_AdjustFrom640(&b[0], &b[1], NULL, NULL);
-    CG_AdjustFrom640(&c[0], &c[1], NULL, NULL);
-
-    Vector2Copy(a, verts[0].xyz);
-    Vector4Copy(color, verts[0].modulate);
-    Vector2Set(verts[0].st, 0, 0);
-
-    Vector2Copy(b, verts[1].xyz);
-    Vector4Copy(color, verts[1].modulate);
-    Vector2Set(verts[1].st, 0, 1);
-
-    Vector2Copy(c, verts[2].xyz);
-    Vector4Copy(color, verts[2].modulate);
-    Vector2Set(verts[2].st, 1, 1);
-
-    trap_R_Add2dPolys(verts, 3, cgs.media.whiteShader);
-}
 
 void NK_RenderCommandList(struct nk_context *ctx)
 {
@@ -180,56 +159,10 @@ void NK_RenderCommandList(struct nk_context *ctx)
     nk_foreach(cmd, ctx)
     {
 		switch (cmd->type) {
-        case NK_COMMAND_RECT_MULTI_COLOR: {
-            const struct nk_command_rect_multi_color *rmc = (const struct nk_command_rect_multi_color*)cmd;
-            vec4_t colors[4];
-			NKTOQ3COLOR2(rmc->left, colors[0]);
-			NKTOQ3COLOR2(rmc->top, colors[1]);
-            NKTOQ3COLOR2(rmc->right, colors[2]);
-			NKTOQ3COLOR2(rmc->bottom, colors[3]);
-            NK_DrawRectMultiColor(rmc->x, rmc->y, rmc->w, rmc->h, colors);
-        } break;
-        case NK_COMMAND_LINE: {
-            const struct nk_command_line *line = (const struct nk_command_line*)cmd;
-            vec2_t a, b;
-            Vector2Set(a, line->begin.x, line->begin.y);
-            Vector2Set(b, line->end.x, line->end.y);
-			NKTOQ3COLOR2(line->color, color);
-            NK_DrawLine(a, b, line->line_thickness, color);
-        }
-        break;
         case NK_COMMAND_IMAGE: {
             const struct nk_command_image *image = (const struct nk_command_image*)cmd;
 			NKTOQ3COLOR(image->col, color);
             NK_DrawImage(image->x, image->y, image->w, image->h, image->img.handle.id, color);
-        } break;
-        case NK_COMMAND_CIRCLE_FILLED: {
-            const struct nk_command_circle_filled *cf = (const struct nk_command_circle_filled*)cmd;
-			NKTOQ3COLOR(cf->color, color);
-            NK_DrawCircleFilled(cf->x, cf->y, cf->w, cf->h, color);
-        } break;
-        case NK_COMMAND_TRIANGLE_FILLED: {
-            const struct nk_command_triangle_filled *trf = (const struct nk_command_triangle_filled*)cmd;
-            vec2_t a, b, c;
-            Vector2Set(a, trf->a.x, trf->a.y);
-            Vector2Set(b, trf->b.x, trf->b.y);
-            Vector2Set(c, trf->c.x, trf->c.y);
-			NKTOQ3COLOR2(trf->color, color);
-            NK_DrawTriangleFilled(a, b, c, color);
-        } break;
-        case NK_COMMAND_SCISSOR: {
-            const struct nk_command_scissor *s = (const struct nk_command_scissor*)cmd;
-            CG_SetClipRegion(s->x, s->y, s->w, s->h);
-        } break;
-        case NK_COMMAND_RECT_FILLED: {
-            const struct nk_command_rect_filled *fr = (const struct nk_command_rect_filled *)cmd;
-			NKTOQ3COLOR(fr->color, color);
-            CG_FillRect(fr->x, fr->y, fr->w, fr->h, color);
-        } break;
-        case NK_COMMAND_RECT: {
-            const struct nk_command_rect *r = (const struct nk_command_rect *)cmd;
-			NKTOQ3COLOR(r->color, color);
-            CG_DrawRect(r->x, r->y, r->w, r->h, 2, color);
         } break;
         case NK_COMMAND_TEXT: {
             const struct nk_command_text *t = (const struct nk_command_text*)cmd;

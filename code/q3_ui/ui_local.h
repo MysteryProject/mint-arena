@@ -34,11 +34,13 @@ Suite 120, Rockville, Maryland 20850 USA.
 #include "../cgame/cg_local.h"
 #include "../ui/ui_public.h"
 
+/*
 void UI_assert(qboolean expression);
 
 #define NK_SIZE_TYPE size_t
 #define NK_POINTER_TYPE size_t
 #define NK_ASSERT(x) assert(x)
+*/
 
 #define Vector2Dot(x,y) ((x)[0]*(y)[0]+(x)[1]*(y)[1])
 #define Vector2Copy(a, b) ((b)[0]=(a)[0],(b)[1]=(a)[1])
@@ -61,8 +63,6 @@ void UI_assert(qboolean expression);
                                         vert.modulate[2] = color[2], \
                                         vert.modulate[3] = color[3])
 										
-#include "nuklear.h"
-
 typedef void (*voidfunc_f)(void);
 
 extern vmCvar_t	ui_ffa_fraglimit;
@@ -569,10 +569,6 @@ qboolean UI_RegisterPlayerModelname( uiPlayerInfo_t *pi, const char *modelSkinNa
 //
 // ui_atoms.c
 //
-struct q3Font {
-	fontInfo_t *font;
-	struct nk_user_font nFont;
-};
 
 typedef struct {
 	int					frametime;
@@ -598,11 +594,6 @@ typedef struct {
 	qboolean			firstdraw;
 	int					maxSplitView;
 	qboolean			bannerNumbers;
-
-	// nuklear
-	struct nk_context nContext;
-	struct nk_allocator nAllocator;
-	struct q3Font nFont;
 } uiStatic_t;
 
 extern void			UI_LerpColor(vec4_t a, vec4_t b, vec4_t c, float t);

@@ -29,6 +29,7 @@ Suite 120, Rockville, Maryland 20850 USA.
 */
 
 #include "ui_local.h"
+#include "ui_lua.h"
 
 #define Option 10
 
@@ -77,102 +78,72 @@ static void NewText(menutext_s *mtext, char *string, int flags, int style, int i
     mtext->style = style | UI_DROPSHADOW | UI_CENTER;
 }
 
-#define MAX_CROSSHAIRS 45
-
-struct nk_image testImage;
-struct nk_image crosshairImage;
-
-qhandle_t crosshairs[MAX_CROSSHAIRS];
-int crosshairNum = 0;
-
-struct nk_style_button button_style;
-
-void NK_RenderCommandList(struct nk_context *ctx);
 
 void HandleCrosshairChange(int num)
 {
-    crosshairNum += num;
-
-    if (crosshairNum < 0)
-        crosshairNum = MAX_CROSSHAIRS;
-    else if (crosshairNum >= MAX_CROSSHAIRS)
-        crosshairNum = 0;
-
-    crosshairImage = nk_image_id(crosshairs[crosshairNum]);    
 }
 
-struct nk_colorf color;
+lua_State *L;
 
-static void DebugDraw(void)
-{
-    struct nk_vec2 padding, spacing;
-
-    nk_input_motion(&uis.nContext, uis.cursorx, uis.cursory);
-    nk_input_end(&uis.nContext);
-
-    padding = uis.nContext.style.window.padding;
-    spacing = uis.nContext.style.window.spacing;
-
-    uis.nContext.style.window.padding.x = 0;
-    uis.nContext.style.window.padding.y = 0;
-    uis.nContext.style.window.spacing.x = 0;
-    uis.nContext.style.window.spacing.y = 0;
-
-    if (nk_begin(&uis.nContext, "Settings", nk_rect(160, 0, 320, 480), 0))
-    {
-        nk_layout_row_dynamic(&uis.nContext, 320, 1);
-        nk_image_color(&uis.nContext, crosshairImage, nk_rgba_cf(color));
-
-        nk_layout_row_dynamic(&uis.nContext, 25, 1);
-        nk_property_float(&uis.nContext, "#R", 0, &color.r, 1.0f, 0.01f, 0.005f);
-        nk_property_float(&uis.nContext, "#G", 0, &color.g, 1.0f, 0.01f, 0.005f);
-        nk_property_float(&uis.nContext, "#B", 0, &color.b, 1.0f, 0.01f, 0.005f);
-        nk_property_float(&uis.nContext, "#A", 0, &color.a, 1.0f, 0.01f, 0.005f);
-    }
-    nk_end(&uis.nContext);
-
-    uis.nContext.style.window.padding = padding;
-    uis.nContext.style.window.spacing = spacing;
-
-    NK_RenderCommandList(&uis.nContext);
-
-    // reset before the next frame
-    nk_input_begin(&uis.nContext);
-}
-
-static sfxHandle_t DebugKey( int key, qboolean down ) {
-    int nKey = -1;
-
-    //CG_Printf("Key event %d\n", key);
-
-    switch(key)
-    {
-        case K_MOUSE1:
-            nk_input_button(&uis.nContext, NK_BUTTON_LEFT, uis.cursorx, uis.cursory, down);
-            break;
-        case K_ENTER:
-            nKey = NK_KEY_ENTER;
-            break;
-        default:
-            break;
-    }
-
-    if (nKey != -1)
-    {
-        nk_input_key(&uis.nContext, nKey, down);
-        //nk_input_key(&uis.nContext, nKey, qfalse); // FIXME: hack around
-    }
-    else
-        nk_input_char(&uis.nContext, key);
-
-    return Menu_DefaultKey( NULL, key );
-}
+int luaopen_moonnuklear(lua_State *L);
 
 /*
 =================
 Menu Init
 =================
 */
+
+static int report (lua_State *L, int status) {
+  const char *msg;
+  if (status) {
+    msg = lua_tostring(L, -1);
+    if (msg == NULL) msg = "(error with no message)";
+    //fprintf(stderr, "status=%d, %s\n", status, msg);
+    Com_Printf("status=%d, %s\n", status, msg);
+    lua_pop(L, 1);
+  }
+  return status;
+}
+
+char basedir[MAX_STRING_CHARS];
+
+void LuaHook_Init(void)
+{
+    /* push functions and arguments */
+    lua_getglobal(L, "main"); // main ui table
+    lua_getfield(L, -1, "init"); // ui:init
+
+    lua_pushvalue(L, -2); // push 'self' as first arg
+    
+    /* do the call (1 arguments, 1 result) */
+    if (lua_pcall(L, 1, 0, 0) != 0)
+    {
+        Com_Error(ERR_DROP, "error running function `main:init': %s", lua_tostring(L, -1));
+        return;
+    }
+}
+
+void LuaHook_Draw(void)
+{
+    /* push functions and arguments */
+    lua_getglobal(L, "main"); // main ui table
+    lua_getfield(L, -1, "draw"); // ui:init
+
+    lua_pushvalue(L, -2); // push 'self' as first arg
+    
+    /* do the call (1 arguments, 1 result) */
+    if (lua_pcall(L, 1, 0, 0) != 0)
+    {
+        Com_Error(ERR_DROP, "error running function `main:draw': %s", lua_tostring(L, -1));
+        return;
+    }
+}
+
+static void DebugDraw(void)
+{
+    LuaHook_Draw();
+}
+
 void MenuInit(void)
 {
     memset(&m_debug, 0, sizeof(m_debug));
@@ -182,13 +153,28 @@ void MenuInit(void)
 
     NewText(&m_debug.option, "Option", 0, 0, Option);
 
-    testImage = nk_image_id(cgs.media.consoleShader);
-    crosshairImage = nk_image_id(crosshairs[0]);
-
     m_debug.menu.draw = DebugDraw;
-    m_debug.menu.key2 = DebugKey;
 
-    Menu_AddItem(&m_debug.menu, &m_debug.option);
+    //Menu_AddItem(&m_debug.menu, &m_debug.option);
+
+    // lua
+    trap_Cvar_VariableStringBuffer( "fs_basepath", basedir, sizeof( basedir ) );
+
+    L = luaL_newstate();
+    luaopen_base(L);
+
+    luaopen_moonnuklear(L);
+
+    lua_RegisterUtil(L);
+    lua_RegisterCgame(L);
+    lua_RegisterSyscalls(L);
+
+    if (report(L, luaL_loadfile(L, va("%s/baseq3/lua/main.lua", basedir)) || lua_pcall(L, 0,0,0)))
+    {
+        Com_Printf("Lua Error!\n");
+    }
+
+    LuaHook_Init();
 }
 
 /*
@@ -198,11 +184,6 @@ Menu Main
 */
 void MenuMain(void)
 {
-    int i = 0;
-
-    for (i = 0; i < NUM_CROSSHAIRS; i++)
-        crosshairs[i] = trap_R_RegisterShader(va("crosshairs/crosshair%d", i + 1));
-
     MenuInit();
     UI_PushMenu(&m_debug.menu);
 }

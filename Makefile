@@ -172,6 +172,7 @@ BD=$(BUILD_DIR)/debug-$(PLATFORM)-$(ARCH)
 BR=$(BUILD_DIR)/release-$(PLATFORM)-$(ARCH)
 CMDIR=$(MOUNT_DIR)/qcommon
 LUADIR=$(MOUNT_DIR)/lua
+MOONDIR=$(MOUNT_DIR)/moonnuklear
 BLIBDIR=$(MOUNT_DIR)/botlib
 GDIR=$(MOUNT_DIR)/game
 CGDIR=$(MOUNT_DIR)/cgame
@@ -851,6 +852,7 @@ makedirs:
 	@$(MKDIR) $(B)/$(BASEGAME)/game
 	@$(MKDIR) $(B)/$(BASEGAME)/ui
 	@$(MKDIR) $(B)/$(BASEGAME)/lua
+	@$(MKDIR) $(B)/$(BASEGAME)/moon
 	@$(MKDIR) $(B)/$(BASEGAME)/qcommon
 	@$(MKDIR) $(B)/$(BASEGAME)/vm
 	@$(MKDIR) $(B)/$(MISSIONPACK)/cgame
@@ -1090,7 +1092,6 @@ Q3CGOBJ = \
   $(B)/$(BASEGAME)/cgame/cg_view.o \
   $(B)/$(BASEGAME)/cgame/cg_weapons.o \
   \
-  $(B)/$(BASEGAME)/ui/nuklear.o \
   $(B)/$(BASEGAME)/ui/ui_main.o \
   $(B)/$(BASEGAME)/ui/ui_addbots.o \
   $(B)/$(BASEGAME)/ui/ui_atoms.o \
@@ -1108,6 +1109,7 @@ Q3CGOBJ = \
   $(B)/$(BASEGAME)/ui/ui_ingame_selectplayer.o \
   $(B)/$(BASEGAME)/ui/ui_joystick.o \
   $(B)/$(BASEGAME)/ui/ui_loadconfig.o \
+  $(B)/$(BASEGAME)/ui/ui_lua.o \
   $(B)/$(BASEGAME)/ui/ui_menu.o \
   $(B)/$(BASEGAME)/ui/ui_mfield.o \
   $(B)/$(BASEGAME)/ui/ui_mods.o \
@@ -1173,7 +1175,32 @@ Q3CGOBJ = \
   $(B)/$(BASEGAME)/lua/ltablib.o \
   $(B)/$(BASEGAME)/lua/lutf8lib.o \
   $(B)/$(BASEGAME)/lua/loadlib.o \
-  $(B)/$(BASEGAME)/lua/linit.o
+  $(B)/$(BASEGAME)/lua/linit.o \
+  \
+  $(B)/$(BASEGAME)/moon/atlas.o \
+  $(B)/$(BASEGAME)/moon/buffer.o \
+  $(B)/$(BASEGAME)/moon/canvas.o \
+  $(B)/$(BASEGAME)/moon/context.o \
+  $(B)/$(BASEGAME)/moon/cursor.o \
+  $(B)/$(BASEGAME)/moon/edit.o \
+  $(B)/$(BASEGAME)/moon/enums.o \
+  $(B)/$(BASEGAME)/moon/flags.o \
+  $(B)/$(BASEGAME)/moon/font.o \
+  $(B)/$(BASEGAME)/moon/image.o \
+  $(B)/$(BASEGAME)/moon/input.o \
+  $(B)/$(BASEGAME)/moon/layout.o \
+  $(B)/$(BASEGAME)/moon/main.o \
+  $(B)/$(BASEGAME)/moon/nuklear.o \
+  $(B)/$(BASEGAME)/moon/objects.o \
+  $(B)/$(BASEGAME)/moon/panel.o \
+  $(B)/$(BASEGAME)/moon/structs.o \
+  $(B)/$(BASEGAME)/moon/style.o \
+  $(B)/$(BASEGAME)/moon/tracing.o \
+  $(B)/$(BASEGAME)/moon/udata.o \
+  $(B)/$(BASEGAME)/moon/utils.o \
+  $(B)/$(BASEGAME)/moon/versions.o \
+  $(B)/$(BASEGAME)/moon/widgets.o \
+  $(B)/$(BASEGAME)/moon/window.o
 
 Q3CGVMOBJ = $(Q3CGOBJ:%.o=%.asm)
 
@@ -1552,6 +1579,12 @@ $(B)/$(BASEGAME)/lua/%.o: $(LUADIR)/%.c
 	$(DO_SHLIB_CC)
 
 $(B)/$(BASEGAME)/lua/%.asm: $(LUADIR)/%.c $(Q3LCC)
+	$(DO_Q3LCC)
+
+$(B)/$(BASEGAME)/moon/%.o: $(MOONDIR)/%.c
+	$(DO_SHLIB_CC)
+
+$(B)/$(BASEGAME)/moon/%.asm: $(MOONDIR)/%.c $(Q3LCC)
 	$(DO_Q3LCC)
 
 $(B)/$(MISSIONPACK)/qcommon/%.o: $(CMDIR)/%.c

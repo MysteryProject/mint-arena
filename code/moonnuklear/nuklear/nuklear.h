@@ -1514,7 +1514,7 @@ NK_API void nk_end(struct nk_context *ctx);
 /// Finds and returns a window from passed name
 ///
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~c
-/// struct nk_window *nk_window_find(struct nk_context *ctx, const char *name);
+/// void nk_end(struct nk_context *ctx);
 /// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ///
 /// Parameter   | Description
@@ -5635,7 +5635,7 @@ template<typename T> struct nk_alignof{struct Big {T x; char c;}; enum {
 
 /* standard library headers */
 #ifdef NK_INCLUDE_DEFAULT_ALLOCATOR
-//#include <stdlib.h> /* malloc, free */
+#include <stdlib.h> /* malloc, free */
 #endif
 #ifdef NK_INCLUDE_STANDARD_IO
 #include <stdio.h> /* fopen, fclose,... */
@@ -9118,12 +9118,13 @@ nk_draw_text(struct nk_command_buffer *b, struct nk_rect r,
 
     /* make sure text fits inside bounds */
     text_width = font->width(font->userdata, font->height, string, length);
+    /* marxy: ignore this for now
     if (text_width > r.w){
-        //int glyphs = 0;
-        //float txt_width = (float)text_width;
-        //length = nk_text_clamp(font, string, length, r.w, &glyphs, &txt_width, 0,0);
+        int glyphs = 0;
+        float txt_width = (float)text_width;
+        length = nk_text_clamp(font, string, length, r.w, &glyphs, &txt_width, 0,0);
     }
-
+    */
     if (!length) return;
     cmd = (struct nk_command_text*)
         nk_command_buffer_push(b, NK_COMMAND_TEXT, sizeof(*cmd) + (nk_size)(length + 1));
@@ -15813,7 +15814,7 @@ nk_panel_end(struct nk_context *ctx)
         nk_fill_rect(out, empty_space, 0, style->window.background);
 
         /* fill right empty space */
-        empty_space.x = layout->bounds.x + layout->bounds.w;
+        empty_space.x = layout->bounds.x + layout->bounds.w - layout->border;
         empty_space.y = layout->bounds.y;
         empty_space.w = panel_padding.x + layout->border;
         empty_space.h = layout->bounds.h;
@@ -18419,6 +18420,7 @@ nk_tree_element_image_push_hashed_base(struct nk_context *ctx, enum nk_tree_type
     struct nk_rect header = {0,0,0,0};
     struct nk_rect sym = {0,0,0,0};
     struct nk_text text;
+    (void)text; //@@
 
     nk_flags ws = 0;
     enum nk_widget_layout_states widget_state;
@@ -25277,7 +25279,6 @@ nk_tooltipfv(struct nk_context *ctx, const char *fmt, va_list args)
 ///    - [yy]: Minor version with non-breaking API and library changes
 ///    - [zz]: Bug fix version with no direct changes to API
 ///
-/// - 2019/06/12 (4.00.3) - Fix panel background drawing bug
 /// - 2018/10/31 (4.00.2) - Added NK_KEYSTATE_BASED_INPUT to "fix" state based backends
                             like GLFW without breaking key repeat behavior on event based.
 /// - 2018/04/01 (4.00.1) - Fixed calling `nk_convert` multiple time per single frame
