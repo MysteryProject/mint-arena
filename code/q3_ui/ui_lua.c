@@ -34,9 +34,7 @@ static int lua_Printf(lua_State *L)
 
 static int lua_Exit(lua_State *L)
 {
-    LuaHook_Shutdown(L);
-
-    lua_close(L);
+//    LuaHook_Shutdown(L);
 
     UI_PopMenu();
 
@@ -137,8 +135,7 @@ static int lua_DrawRectMultiColor(lua_State *L)
     Vector4Copy(bottom, verts[3].modulate);
     Vector2Set(verts[3].st, 1, 0);
 
-    trap_R_Add2dPolys(verts, 4, cgs.media.whiteShader);
-
+    trap_R_Add2dPolys(verts, 4, uis.whiteShader);
     return 0;
 }
 
@@ -185,8 +182,7 @@ static int lua_DrawLine(lua_State *L)
     Vector4Copy(color, verts[3].modulate);
     Vector2Set(verts[3].st, 1, 0);
 
-    trap_R_Add2dPolys(verts, 4, cgs.media.whiteShader );
-
+    trap_R_Add2dPolys(verts, 4, uis.whiteShader);
     return 0;
 }
 
@@ -199,7 +195,7 @@ static int lua_DrawTriangleFilled(lua_State *L)
     float *color = moonnuklear_checkfloatlist(L, 4, &count, &err);
     //
     polyVert_t verts[3];
-
+    
     CG_AdjustFrom640(&a[0], &a[1], NULL, NULL);
     CG_AdjustFrom640(&b[0], &b[1], NULL, NULL);
     CG_AdjustFrom640(&c[0], &c[1], NULL, NULL);
@@ -216,17 +212,28 @@ static int lua_DrawTriangleFilled(lua_State *L)
     Vector4Copy(color, verts[2].modulate);
     Vector2Set(verts[2].st, 1, 1);
 
-    trap_R_Add2dPolys(verts, 3, cgs.media.whiteShader);
-
+    trap_R_Add2dPolys(verts, 3, uis.whiteShader);
     return 0;
 }
 
+static int lua_GetMousePosition(lua_State *L)
+{
+    lua_pushnumber(L, uis.cursorx);
+    lua_pushnumber(L, uis.cursory);
+    return 2;
+}
+
 #define lua_registerenum(L,n,v) (lua_pushnumber(L, v), lua_setglobal(L, n))
+#define LUA_ENUM(L, name) \
+  lua_pushnumber(L, name); \
+  lua_setglobal(L, #name);
 
 void lua_RegisterUtil(lua_State *L)
 {
     lua_register(L, "printf", lua_Printf);
     lua_register(L, "_exit", lua_Exit);
+
+    lua_register(L, "GetMousePosition", lua_GetMousePosition);
 
     lua_register(L, "cos", lua_cos);
     lua_register(L, "sin", lua_sin);
@@ -236,38 +243,54 @@ void lua_RegisterUtil(lua_State *L)
     lua_register(L, "NK_DrawLine", lua_DrawLine);
     lua_register(L, "NK_DrawTriangleFilled", lua_DrawTriangleFilled);
 
-    lua_registerenum(L, "whiteShader", cgs.media.whiteShader);
+    LUA_ENUM(L, K_CHAR_FLAG);
 
     // horizontal alignment
-    lua_registerenum(L, "UI_LEFT", UI_LEFT);
-    lua_registerenum(L, "UI_CENTER", UI_CENTER);
-    lua_registerenum(L, "UI_RIGHT", UI_RIGHT);
-    lua_registerenum(L, "UI_FORMATMASK", UI_FORMATMASK);
+    LUA_ENUM(L, UI_LEFT);
+    LUA_ENUM(L, UI_CENTER);
+    LUA_ENUM(L, UI_RIGHT);
+    LUA_ENUM(L, UI_FORMATMASK);
 
     // vertical alignment
-    lua_registerenum(L, "UI_VA_TOP", UI_VA_TOP);
-    lua_registerenum(L, "UI_VA_CENTER", UI_VA_CENTER);
-    lua_registerenum(L, "UI_VA_BOTTOM", UI_VA_BOTTOM);
-    lua_registerenum(L, "UI_VA_FORMATMASK", UI_VA_FORMATMASK);
+    LUA_ENUM(L, UI_VA_TOP);
+    LUA_ENUM(L, UI_VA_CENTER);
+    LUA_ENUM(L, UI_VA_BOTTOM);
+    LUA_ENUM(L, UI_VA_FORMATMASK);
 
     // font selection
-    lua_registerenum(L, "UI_SMALLFONT", UI_SMALLFONT);
-    lua_registerenum(L, "UI_BIGFONT", UI_BIGFONT);
-    lua_registerenum(L, "UI_GIANTFONT", UI_GIANTFONT);
-    lua_registerenum(L, "UI_TINYFONT", UI_TINYFONT);
-    lua_registerenum(L, "UI_NUMBERFONT", UI_NUMBERFONT);
-    lua_registerenum(L, "UI_CONSOLEFONT", UI_CONSOLEFONT);
-    lua_registerenum(L, "UI_FONTMASK", UI_FONTMASK);
+    LUA_ENUM(L, UI_SMALLFONT);
+    LUA_ENUM(L, UI_BIGFONT);
+    LUA_ENUM(L, UI_GIANTFONT);
+    LUA_ENUM(L, UI_TINYFONT);
+    LUA_ENUM(L, UI_NUMBERFONT);
+    LUA_ENUM(L, UI_CONSOLEFONT);
+    LUA_ENUM(L, UI_FONTMASK);
 
     // other flags
-    lua_registerenum(L, "UI_DROPSHADOW", UI_DROPSHADOW);
-    lua_registerenum(L, "UI_BLINK", UI_BLINK);
-    lua_registerenum(L, "UI_INVERSE", UI_INVERSE);
-    lua_registerenum(L, "UI_PULSE", UI_PULSE);
-    lua_registerenum(L, "UI_FORCECOLOR", UI_FORCECOLOR);
-    lua_registerenum(L, "UI_GRADIENT", UI_GRADIENT);
-    lua_registerenum(L, "UI_NOSCALE", UI_NOSCALE);
-    lua_registerenum(L, "UI_INMOTION", UI_INMOTION);
+    LUA_ENUM(L, UI_DROPSHADOW);
+    LUA_ENUM(L, UI_BLINK);
+    LUA_ENUM(L, UI_INVERSE);
+    LUA_ENUM(L, UI_PULSE);
+    LUA_ENUM(L, UI_FORCECOLOR);
+    LUA_ENUM(L, UI_GRADIENT);
+    LUA_ENUM(L, UI_NOSCALE);
+    LUA_ENUM(L, UI_INMOTION);
+
+    LUA_ENUM(L, K_TAB);
+    LUA_ENUM(L, K_ENTER);
+    LUA_ENUM(L, K_ESCAPE);
+    LUA_ENUM(L, K_SPACE);
+    LUA_ENUM(L, K_BACKSPACE);
+    LUA_ENUM(L, K_CAPSLOCK);
+    LUA_ENUM(L, K_UPARROW);
+    LUA_ENUM(L, K_DOWNARROW);
+    LUA_ENUM(L, K_LEFTARROW);
+    LUA_ENUM(L, K_RIGHTARROW);
+    LUA_ENUM(L, K_MOUSE1);
+    LUA_ENUM(L, K_MOUSE2);
+    LUA_ENUM(L, K_MOUSE3);
+    LUA_ENUM(L, K_MOUSE4);
+    LUA_ENUM(L, K_MOUSE5);
 }
 
 static int lua_CG_DrawRect(lua_State *L)

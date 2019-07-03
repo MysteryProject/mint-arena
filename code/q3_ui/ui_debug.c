@@ -144,6 +144,22 @@ static void DebugDraw(void)
     LuaHook_Draw();
 }
 
+static sfxHandle_t DebugKey(int key, qboolean down)
+{
+    lua_getglobal(L, "main");
+    lua_getfield(L, -1, "key_event");
+    lua_pushvalue(L, -2);
+    lua_pushnumber(L, key);
+    lua_pushboolean(L, down);
+
+    if (lua_pcall(L, 3, 0, 0) != 0)
+    {
+        Com_Error(ERR_DROP, "error running function `main:key_event`: %s", lua_tostring(L, -1));
+    }
+
+    return menu_null_sound;
+}
+
 void MenuInit(void)
 {
     memset(&m_debug, 0, sizeof(m_debug));
@@ -154,26 +170,32 @@ void MenuInit(void)
     NewText(&m_debug.option, "Option", 0, 0, Option);
 
     m_debug.menu.draw = DebugDraw;
+    m_debug.menu.key2 = DebugKey;
 
     //Menu_AddItem(&m_debug.menu, &m_debug.option);
 
     // lua
     trap_Cvar_VariableStringBuffer( "fs_basepath", basedir, sizeof( basedir ) );
 
-    L = luaL_newstate();
-    luaopen_base(L);
+    //if (L != NULL)
+    //    lua_close(L);
 
-    luaopen_moonnuklear(L);
-
-    lua_RegisterUtil(L);
-    lua_RegisterCgame(L);
-    lua_RegisterSyscalls(L);
-
-    if (report(L, luaL_loadfile(L, va("%s/baseq3/lua/main.lua", basedir)) || lua_pcall(L, 0,0,0)))
+    if (L == NULL)
     {
-        Com_Printf("Lua Error!\n");
-    }
+        L = luaL_newstate();
+        luaopen_base(L);
 
+        luaopen_moonnuklear(L);
+
+        lua_RegisterUtil(L);
+        lua_RegisterCgame(L);
+        lua_RegisterSyscalls(L);
+
+        if (report(L, luaL_loadfile(L, va("%s/baseq3/lua/main.lua", basedir)) || lua_pcall(L, 0,0,0)))
+        {
+            Com_Printf("Lua Error!\n");
+        }
+    }
     LuaHook_Init();
 }
 
