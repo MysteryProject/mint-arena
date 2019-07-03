@@ -183,7 +183,7 @@ void MenuInit(void)
     if (L == NULL)
     {
         L = luaL_newstate();
-        luaopen_base(L);
+        luaL_openlibs(L);
 
         luaopen_moonnuklear(L);
 
@@ -191,7 +191,10 @@ void MenuInit(void)
         lua_RegisterCgame(L);
         lua_RegisterSyscalls(L);
 
-        if (report(L, luaL_loadfile(L, va("%s/baseq3/lua/main.lua", basedir)) || lua_pcall(L, 0,0,0)))
+        lua_pushstring(L, va("%s\\baseq3\\lua\\", basedir));
+        lua_setglobal(L, "BASE_DIR");
+
+        if (report(L, luaL_loadfile(L, va("%s\\baseq3\\lua\\main.lua", basedir)) || lua_pcall(L, 0,0,0)))
         {
             Com_Printf("Lua Error!\n");
         }

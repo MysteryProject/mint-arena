@@ -223,6 +223,13 @@ static int lua_GetMousePosition(lua_State *L)
     return 2;
 }
 
+static int lua_strlen(lua_State *L)
+{
+    const char *str = lua_tostring(L, 1);
+    lua_pushnumber(L, strlen(str));
+    return 1;
+}
+
 #define lua_registerenum(L,n,v) (lua_pushnumber(L, v), lua_setglobal(L, n))
 #define LUA_ENUM(L, name) \
   lua_pushnumber(L, name); \
@@ -237,6 +244,7 @@ void lua_RegisterUtil(lua_State *L)
 
     lua_register(L, "cos", lua_cos);
     lua_register(L, "sin", lua_sin);
+    lua_register(L, "strlen", lua_strlen);
 
     lua_register(L, "NK_DrawCircleFilled", lua_DrawCircleFilled);
     lua_register(L, "NK_DrawRectMultiColor", lua_DrawRectMultiColor);
