@@ -724,7 +724,8 @@ static int command_polyline(lua_State *L, nk_command_t *pp)
 static int command_image(lua_State *L, nk_command_t *pp)
     {
     nk_command_image_t *p = (nk_command_image_t*)pp;
-    pushimage(L, &p->img); lua_setfield(L, -2, "image");
+    //pushimage(L, &p->img); lua_setfield(L, -2, "image");
+    SetInteger(img.handle.id, "handle"); // marxy: hack
     SetInteger(x, "x");
     SetInteger(y, "y");
     SetInteger(w, "w");

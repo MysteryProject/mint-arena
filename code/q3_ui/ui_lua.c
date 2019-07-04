@@ -351,9 +351,25 @@ static int lua_CG_SetClipRegion(lua_State *L)
 static int lua_TextWidth(lua_State *L)
 {
     const char *text = lua_tostring(L, 1);
-    float width = Text_Width(text, &uis.textFont, uis.textFont.pointSize / 48.0f, 0);
+    float width = CG_DrawStrlenCommon(text, 0, &uis.textFont, 0);
     lua_pushnumber(L, width);
     return 1;
+}
+
+static int lua_DrawImage(lua_State *L)
+{
+    float x = lua_tonumber(L, 1);
+    float y = lua_tonumber(L, 2);
+    float w = lua_tonumber(L, 3);
+    float h = lua_tonumber(L, 4);
+    qhandle_t handle = lua_tonumber(L, 5);
+    int count, err;
+    float *color = moonnuklear_checkfloatlist(L, 5, &count, &err);
+
+    trap_R_SetColor(color);
+    CG_DrawPic(x, y, w, h, handle);
+    trap_R_SetColor(NULL);
+    return 0;
 }
 
 void lua_RegisterCgame(lua_State *L)
@@ -362,7 +378,8 @@ void lua_RegisterCgame(lua_State *L)
     lua_register(L, "CG_FillRect", lua_CG_FillRect);
     lua_register(L, "CG_DrawString", lua_CG_DrawString);
     lua_register(L, "CG_SetClipRegion", lua_CG_SetClipRegion);
-    lua_register(L, "Text_Width", lua_TextWidth);
+    lua_register(L, "CG_DrawImage", lua_DrawImage);
+    lua_register(L, "CG_DrawStrlen", lua_TextWidth);
 }
 
 static int lua_RegisterShader(lua_State *L)

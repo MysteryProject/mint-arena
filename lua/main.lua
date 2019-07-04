@@ -10,9 +10,17 @@ local started = false
 
 local menus = {
     ['main'] = require('main_menu'),
-    ['sp'] = require('singleplayer_menu')
+    ['sp'] = require('singleplayer_menu'),
+    ['mp'] = require('multiplayer_menu'),
+    ['setup'] = require('setup_menu'),
+    ['demos'] = require('demos_menu'),
+    ['cin'] = require('cinematics_menu')
 }
 local active_menu = nil
+
+function setMenu(name)
+    active_menu = menus[name]
+end
 
 function color255(color)
     return {
@@ -53,13 +61,14 @@ function RenderCommandList(ctx)
         elseif cmd.type == nk.COMMAND_TEXT then
             CG_DrawString(cmd.x, cmd.y, cmd.text, UI_BIGFONT, cmd.foreground)
         elseif cmd.type == nk.COMMAND_IMAGE then
+            CG_DrawImage(cmd.x, cmd.y, cmd.w, cmd.h, cmd.handle)
         end
     end
     ctx:clear()
 end
 
 function _TextWidth(height, text)
-    return strlen(text) * 8 + 4
+    return CG_DrawStrlen(text)
 end
 
 function EmptyFunc(x, y, z)
@@ -70,7 +79,6 @@ function main:init()
 
     ctx = nk.init()
 
-    crosshairImage = nk.new_image(trap_R_RegisterShader("crosshairs/crosshair1"))
     font = nk.new_user_font(18, _TextWidth, 0, EmptyFunc)
 
     nk.style_set_font(ctx, font)
@@ -103,8 +111,7 @@ function main:draw()
     nk.input_motion(ctx, GetMousePosition());
     nk.input_end(ctx)
     
-    local newmenu = active_menu:draw(ctx)
-    active_menu = menus[newmenu]
+    active_menu:draw(ctx)
 
     RenderCommandList(ctx)
     nk.input_begin(ctx)

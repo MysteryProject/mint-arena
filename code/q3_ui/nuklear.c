@@ -7,12 +7,7 @@ void UI_assert(qboolean expression)
         Com_Printf("assert failed");
 }
 
-void NK_DrawImage(float x, float y, float w, float h, qhandle_t handle, vec4_t color)
-{
-    trap_R_SetColor(color);
-    CG_DrawPic(x, y, w, h, handle);
-    trap_R_SetColor(NULL);
-}
+
 
 void NK_RenderCommandList(struct nk_context *ctx)
 {
