@@ -384,11 +384,22 @@ void lua_RegisterCgame(lua_State *L)
 
 static int lua_RegisterShader(lua_State *L)
 {
-    lua_pushnumber(L, trap_R_RegisterShader(lua_tostring(L, 1)));
+    const char *shader = lua_tostring(L, 1);
+    int handle = trap_R_RegisterShader(shader);
+    lua_pushnumber(L, handle);
+    return 1;
+}
+
+static int lua_RegisterShaderNoMip(lua_State *L)
+{
+    const char *shader = lua_tostring(L, 1);
+    int handle = trap_R_RegisterShaderNoMip(shader);
+    lua_pushnumber(L, handle);
     return 1;
 }
 
 void lua_RegisterSyscalls(lua_State *L)
 {
     lua_register(L, "trap_R_RegisterShader", lua_RegisterShader);
+    lua_register(L, "trap_R_RegisterShaderNoMip", lua_RegisterShaderNoMip);
 }

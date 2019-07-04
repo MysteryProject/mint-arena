@@ -5,18 +5,19 @@ local img = nil
 local img_handle = nil
 
 function menu:init()
-    img_handle = trap_R_RegisterShader("crosshairs/crosshair1")
+    img_handle = trap_R_RegisterShaderNoMip('menuback')
     img = nk.new_image(img_handle)
 end
 
 function menu:draw(ctx)
+    nk.style_push_color(ctx, 'window.background', { 0, 0, 0, 1 })
+    nk.style_push_style_item(ctx, 'window.fixed_background', img)
+
     if nk.window_begin(ctx, "Lua Menu", {0, 0, 640, 480}, 0) 
     then
         local btnFlags = nk.TEXT_ALIGN_CENTERED | nk.TEXT_ALIGN_MIDDLE
 
-        nk.layout_row_dynamic(ctx, 50, 3)
-        nk.spacing(ctx, 1)
-        nk.image(ctx, img)
+        nk.layout_row_dynamic(ctx, 50, 1)
         
         nk.layout_row_dynamic(ctx, 25, 3)
 
@@ -45,6 +46,8 @@ function menu:draw(ctx)
         end)
     end
     nk.window_end(ctx)
+    nk.style_pop_style_item(ctx)
+    nk.style_pop_color(ctx)
 end
 
 function menu:shutdown()
