@@ -123,7 +123,7 @@ static void Variants_UpdateModel(void)
     if (oneHanded)
         anim = TORSO_STAND2;
 
-    UI_PlayerInfo_SetInfo(&s_variants.playerinfo, LEGS_IDLE, anim, viewangles, moveangles, s_variants.weapon, qfalse);
+    UI_PlayerInfo_SetInfo(&s_variants.playerinfo, s_variants.localPlayerNum, LEGS_IDLE, anim, viewangles, moveangles, s_variants.weapon, qfalse);
 
     s_variants.playerinfo.variant = s_variants.variantNum;
 
