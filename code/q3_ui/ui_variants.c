@@ -94,10 +94,9 @@ static void Variants_UpdateModel(void)
 {
     vec3_t viewangles;
     vec3_t moveangles;
-    int i;
     gitem_t *item;
     qboolean oneHanded;
-    int anim;
+    int anim, i;
 
     for (i = 0; i < MAX_CAMOS; i++)
     {
@@ -114,15 +113,11 @@ static void Variants_UpdateModel(void)
     viewangles[ROLL] = 0;
     VectorClear(moveangles);
 
-    anim = TORSO_STAND;
     item = BG_FindItemForWeapon(s_variants.weapon);
     oneHanded = item->oneHanded;
+    anim = oneHanded ? TORSO_STAND2: TORSO_STAND;
    
     UI_PlayerInfo_SetModel(&s_variants.playerinfo, s_variants.playerModel, s_variants.playerHead, NULL);
-   
-    if (oneHanded)
-        anim = TORSO_STAND2;
-
     UI_PlayerInfo_SetInfo(&s_variants.playerinfo, s_variants.localPlayerNum, LEGS_IDLE, anim, viewangles, moveangles, s_variants.weapon, qfalse);
 
     s_variants.playerinfo.variant = s_variants.variantNum;
