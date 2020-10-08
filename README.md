@@ -1,11 +1,11 @@
 **Changes**
 
-  * Unreal tournament kill awards, see [New Client CVARS](New-Cvars#other)
-  * Instagib weapon server command, see [New Server CVARS](New-Cvars#misc)
-  * New obituary feed similar to battlefield 4, see [Obituary Feed CVARS](New-Cvars#obituary-feed)
-  * New mapcycle config server command, see [New Server CVARS](New-Cvars#misc)
+  * Unreal tournament kill awards, see [New Client CVARS](../../wiki/New-Cvars#other)
+  * Instagib weapon server command, see [New Server CVARS](../../wiki/New-Cvars#misc)
+  * New obituary feed similar to battlefield 4, see [Obituary Feed CVARS](../../wiki/New-Cvars#obituary-feed)
+  * New mapcycle config server command, see [New Server CVARS](../../wiki/New-Cvars#misc)
   * New weapons: Mini-Railgun, Auto-Shotty, Tap-Rifle, Impact Cannon
-  * New [Game Modes](Game-Modes)
+  * New [Game Modes](../../wiki/Game-Modes)
 
 **Custom Spearmint Q3** game code.
 
