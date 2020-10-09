@@ -31,6 +31,7 @@ extern "C" {
 #include <stdint.h>
 #include "../lua/lua.h"
 #include "../lua/lauxlib.h"
+#include "compat-5.3.h"
 
 #ifndef Malloc
 #define Malloc moonnuklear_Malloc

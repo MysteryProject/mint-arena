@@ -89,6 +89,7 @@ Adjusted for resolution and screen aspect ratio
 ================
 */
 void CG_AdjustFrom640( float *x, float *y, float *w, float *h ) {
+	return;
 	int viewXBias = 0;
 	int viewYBias = 0;
 

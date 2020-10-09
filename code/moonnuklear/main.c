@@ -67,10 +67,13 @@ int luaopen_moonnuklear(lua_State *L)
     moonnuklear_open_panel(L);
     moonnuklear_open_input(L);
 
-#if 1
-    /* Add functions implemented in Lua @@ */
     lua_pushvalue(L, -1); 
     lua_setglobal(L, "moonnuklear");
+#if 0
+    /* Add functions implemented in Lua @@ */
+    lua_pushvalue(L, -1); lua_setglobal(L, "moonnuklear");
+    if(luaL_dostring(L, "require('moonnuklear.utils')") != 0) lua_error(L);
+    lua_pushnil(L);  lua_setglobal(L, "moonnuklear");
 #endif
 
     return 1;

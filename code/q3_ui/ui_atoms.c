@@ -736,7 +736,7 @@ void UI_MouseEvent( int localPlayerNum, int dx, int dy )
 	ay = 0;
 	aw = 1;
 	ah = 1;
-	CG_AdjustFrom640( &ax, &ay, &aw, &ah );
+	//CG_AdjustFrom640( &ax, &ay, &aw, &ah );
 
 	xbias = ax/aw;
 	ybias = ay/ah;

@@ -125,7 +125,7 @@ int udata_unref(lua_State *L, uint64_t id)
 //  printf("unref object %lu\n", id);
     udata_t *udata = udata_search(id);
     if(!udata) 
-        return luaL_error(L, "unref: invalid object identifier %p", (void*)id);
+        return luaL_error(L, "invalid object identifier %p", (void*)id);
     if(udata->ref != LUA_NOREF)
         {
         luaL_unref(L, LUA_REGISTRYINDEX, udata->ref);
@@ -141,7 +141,7 @@ int udata_free(lua_State *L, uint64_t id)
     udata_t *udata = udata_search(id);
 //  printf("free object %lu\n", id);
     if(!udata) 
-        return luaL_error(L, "free: invalid object identifier %p", (void*)id);
+        return luaL_error(L, "invalid object identifier %p", (void*)id);
     /* release all references */
     if(udata->ref != LUA_NOREF)
         luaL_unref(L, LUA_REGISTRYINDEX, udata->ref);
@@ -156,7 +156,7 @@ int udata_push(lua_State *L, uint64_t id)
     {
     udata_t *udata = udata_search(id);
     if(!udata) 
-        return luaL_error(L, "push: invalid object identifier %p", (void*)id);
+        return luaL_error(L, "invalid object identifier %p", (void*)id);
     if(udata->ref == LUA_NOREF)
         return luaL_error(L, "unreferenced object");
     if(lua_rawgeti(L, LUA_REGISTRYINDEX, udata->ref) != LUA_TUSERDATA)

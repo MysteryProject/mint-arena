@@ -43,8 +43,8 @@ Suite 120, Rockville, Maryland 20850 USA.
 
 // all drawing is done to a 640*480 virtual screen size
 // and will be automatically scaled to the real resolution
-#define	SCREEN_WIDTH		640
-#define	SCREEN_HEIGHT		480
+#define	SCREEN_WIDTH		1920
+#define	SCREEN_HEIGHT		1080
 
 #define TINYCHAR_WIDTH		8
 #define TINYCHAR_HEIGHT		8

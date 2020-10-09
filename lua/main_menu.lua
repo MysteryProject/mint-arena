@@ -13,7 +13,7 @@ function menu:draw(ctx)
     nk.style_push_color(ctx, 'window.background', { 0, 0, 0, 1 })
     nk.style_push_style_item(ctx, 'window.fixed_background', img)
 
-    if nk.window_begin(ctx, "Lua Menu", {0, 0, 640, 480}, 0) 
+    if nk.window_begin(ctx, "Lua Menu", {0, 0, 1920, 1080}, 0) 
     then
         local btnFlags = nk.TEXT_ALIGN_CENTERED | nk.TEXT_ALIGN_MIDDLE
 

@@ -79,7 +79,7 @@ function main:init()
 
     ctx = nk.init()
 
-    font = nk.new_user_font(18, _TextWidth, 0, EmptyFunc)
+    font = nk.new_user_font(12, _TextWidth, 0, EmptyFunc)
 
     nk.style_set_font(ctx, font)
 
