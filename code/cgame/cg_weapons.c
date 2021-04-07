@@ -1481,21 +1481,37 @@ void CG_DrawWeaponSelect( void ) {
 	int		bits;
 	int		count;
 	int		x, y;
+	int		dx, dy;
+	int		weaponSelect;
 	char	*name;
 	float	*color;
-
-	CG_SetScreenPlacement(PLACE_CENTER, PLACE_BOTTOM);
+	char	buf[16];
 
 	// don't display if dead
-	if ( cg.cur_lc->predictedPlayerState.stats[STAT_HEALTH] <= 0 ) {
+	if ( cg.cur_lc->predictedPlayerState.stats[STAT_HEALTH] <= 0 || cg_drawWeaponSelect[cg.cur_localPlayerNum].integer == 0 ) {
 		return;
 	}
 
-	color = CG_FadeColor( cg.cur_lc->weaponSelectTime, WEAPON_SELECT_TIME );
-	if ( !color ) {
-		return;
-	}
+	if ( cg_drawWeaponSelect[cg.cur_localPlayerNum].integer < 0 ) {
+		color = colorWhite;
+	} else {
+		color = CG_FadeColor( cg.cur_lc->weaponSelectTime, WEAPON_SELECT_TIME );
+		if ( !color ) {
+			return;
+		}
+ 	}
 	trap_R_SetColor( color );
+
+	weaponSelect = abs( cg_drawWeaponSelect[cg.cur_localPlayerNum].integer );
+
+	// set screen placement
+	if ( weaponSelect == 3 ) {
+		CG_SetScreenPlacement(PLACE_RIGHT, PLACE_BOTTOM);
+	} else if ( weaponSelect == 4 ) {
+		CG_SetScreenPlacement(PLACE_LEFT, PLACE_BOTTOM);
+	} else {
+		CG_SetScreenPlacement(PLACE_CENTER, PLACE_BOTTOM);
+	}
 
 	// showing weapon select clears pickup item display, but not the blend blob
 	cg.cur_lc->itemPickupTime = 0;
@@ -1509,8 +1525,22 @@ void CG_DrawWeaponSelect( void ) {
 		}
 	}
 
-	x = 320 - count * 20;
-	y = 380;
+	if ( weaponSelect == 3 ) {
+		x = 640 - ICON_SIZE + 8;
+		y = 240 - count * 20;
+		dx = 0;
+		dy = 40;
+	} else if ( weaponSelect == 4 ) {
+		x = 0 + 6;
+		y = 240 - count * 20;
+		dx = 0;
+		dy = 40;
+	} else {
+		x = 320 - count * 20;
+		y = 380;
+		dx = 40;
+		dy = 0;
+	}
 
 	for ( i = 1 ; i < MAX_WEAPONS ; i++ ) {
 		if ( !( bits & ( 1 << i ) ) ) {
@@ -1530,13 +1560,16 @@ void CG_DrawWeaponSelect( void ) {
 		// no ammo cross on top
 		if ( !cg.cur_ps->ammo[ i ] ) {
 			CG_DrawPic( x, y, 32, 32, cgs.media.noammoShader );
+		}else if ( weaponSelect > 1 && cg.cur_ps->ammo[i] > 0 ) {
+			CG_DrawString(x + 32 + 2, y, va("%i", cg.cur_ps->ammo[i]), UI_RIGHT|UI_TINYFONT, color);
 		}
 
-		x += 40;
+		x += dx;
+		y += dy;
 	}
 
 	// draw the selected name
-	if ( cg_weapons[ cg.cur_lc->weaponSelect ].item ) {
+	if ( cg_weapons[ cg.cur_lc->weaponSelect ].item && weaponSelect == 1 ) {
 		name = cg_weapons[ cg.cur_lc->weaponSelect ].item->pickup_name;
 		if ( name ) {
 			CG_DrawString( SCREEN_WIDTH / 2, y - 6, name, UI_CENTER|UI_VA_BOTTOM|UI_DROPSHADOW|UI_BIGFONT, color );

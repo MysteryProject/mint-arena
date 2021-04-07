@@ -1,0 +1,1 @@
+- Added weapon select option `cg_drawWeaponSelect`

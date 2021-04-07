@@ -1,0 +1,2 @@
+#!/bin/sh
+make PLATFORM=mingw32 COMPILE_PLATFORM=mingw32 ARCH=x86_64

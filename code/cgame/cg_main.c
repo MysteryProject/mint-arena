@@ -334,6 +334,8 @@ vmCvar_t	cg_currentSelectedPlayer[MAX_SPLITVIEW];
 vmCvar_t	cg_currentSelectedPlayerName[MAX_SPLITVIEW];
 #endif
 
+vmCvar_t cg_drawWeaponSelect[MAX_SPLITVIEW]; // q3e weapon select
+
 typedef struct {
 	vmCvar_t	*vmCvar;
 	char		*cvarName;
@@ -553,7 +555,7 @@ static userCvarTable_t userCvarTable[] = {
 	{ cg_thirdPersonAngle, "cg_thirdPersonAngle", "0", CVAR_CHEAT, RANGE_ALL },
 	{ cg_thirdPersonHeight, "cg_thirdPersonHeight", "24", 0, RANGE_INT( 0, 32 ) },
 	{ cg_thirdPersonSmooth, "cg_thirdPersonSmooth", "0", 0, RANGE_ALL }, // this cvar exists because it's behavior is too buggy to enable by default
-
+	{ cg_drawWeaponSelect, "cg_drawWeaponSelect", "1", CVAR_ARCHIVE, RANGE_INT(-4, 4) },
 #ifdef MISSIONPACK
 	{ cg_currentSelectedPlayer, "cg_currentSelectedPlayer", "0", CVAR_ARCHIVE, RANGE_ALL },
 	{ cg_currentSelectedPlayerName, "cg_currentSelectedPlayerName", "", CVAR_ARCHIVE, RANGE_ALL }

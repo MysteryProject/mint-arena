@@ -1489,6 +1489,8 @@ extern	vmCvar_t		cg_currentSelectedPlayer[MAX_SPLITVIEW];
 extern	vmCvar_t		cg_currentSelectedPlayerName[MAX_SPLITVIEW];
 #endif
 
+extern vmCvar_t cg_drawWeaponSelect[MAX_SPLITVIEW]; // q3e weapon select
+
 //
 // cg_main.c
 //

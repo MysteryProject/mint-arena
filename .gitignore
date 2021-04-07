@@ -3,6 +3,7 @@ Makefile.local
 *.swp
 *tags
 misc/code_blocks/*.layout
+.vscode
 
 # OS X
 ####################
