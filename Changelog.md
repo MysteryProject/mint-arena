@@ -1,1 +1,1 @@
-- Added weapon select option `cg_drawWeaponSelect`
+- Added weapon select option `cg_drawWeaponSelect` (credits: Quake3e)
