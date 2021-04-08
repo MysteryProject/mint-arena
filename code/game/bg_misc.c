@@ -1021,6 +1021,7 @@ int bg_numPlayerStateFields = ARRAY_LEN(bg_playerStateFields);
 // may not contain spaces, dpmaster will reject the server
 const char *bg_netGametypeNames[GT_MAX_GAME_TYPE] = {
 	"FFA",
+	"GG",
 	"Tournament",
 	"SP",
 	"TeamDM",
@@ -1034,6 +1035,7 @@ const char *bg_netGametypeNames[GT_MAX_GAME_TYPE] = {
 
 const char *bg_displayGametypeNames[GT_MAX_GAME_TYPE] = {
 	"Free For All",
+	"Gun Game",
 	"Tournament",
 	"Single Player",
 	"Team Deathmatch",
@@ -1585,8 +1587,9 @@ char *eventnames[] = {
 	"EV_TAUNT_FOLLOWME",
 	"EV_TAUNT_GETFLAG",
 	"EV_TAUNT_GUARDBASE",
-	"EV_TAUNT_PATROL"
+	"EV_TAUNT_PATROL",
 
+	"EV_GUNGAMESWAP"
 };
 
 /*
@@ -2370,3 +2373,119 @@ qboolean PC_ReadStructure(int source, structdef_t *def, void *structure)
 	} //end while
 	return qtrue;
 } //end of the function ReadStructure
+
+//
+gunGameInfo_t bg_gunGameInfo;
+
+gunGameInfo_t bg_classicGunGameInfo = {
+	9,
+	{
+		WP_MACHINEGUN,
+		WP_SHOTGUN,
+		WP_GRENADE_LAUNCHER,
+		WP_ROCKET_LAUNCHER,
+		WP_LIGHTNING,
+		WP_RAILGUN,
+		WP_PLASMAGUN,
+		WP_BFG,
+		WP_GAUNTLET
+	}
+};
+
+char **str_split(char *str, char delim, int *numSplits) {
+	char **ret;
+	int retLen;
+	char *c;
+
+	if ((str == NULL) || (delim == '\0')) {
+		/* Either of those will cause problems */
+		ret = NULL;
+		retLen = -1;
+	} else {
+		retLen = 0;
+		c = str;
+
+		/* Pre-calculate number of elements */
+		do {
+			if (*c == delim) {
+				retLen++;
+			}
+
+			c++;
+		} while (*c != '\0');
+
+		ret = trap_HeapMalloc((retLen + 1) * sizeof(*ret));
+		ret[retLen] = NULL;
+
+		c = str;
+		retLen = 1;
+		ret[0] = str;
+
+		do {
+			if (*c == delim) {
+				ret[retLen++] = &c[1];
+				*c = '\0';
+			}
+
+			c++;
+		} while (*c != '\0');
+	}
+
+	if (numSplits != NULL) {
+		*numSplits = retLen;
+	}
+
+	return ret;
+}
+
+void BG_GunGameInfoFromString(const char *info) {
+	char *strCpy;
+	char **split;
+	int num;
+	int i;
+
+	if (Q_stricmp(info, "classic") == 0) {
+		bg_gunGameInfo = bg_classicGunGameInfo;
+	} else {
+		strCpy = trap_HeapMalloc(strlen(info) * sizeof(*strCpy));
+		strcpy(strCpy, info);
+
+		split = str_split(strCpy, '/', &num);
+
+		if (num > MAX_GUNGAME_LEVELS) {
+			num = MAX_GUNGAME_LEVELS; // limit this for now
+		}
+
+		bg_gunGameInfo.numLevels = num;
+
+		if (split == NULL) {
+			trap_Print("str_split returned NULL");
+		} else {
+			for (i = 0; i < num; i++) {
+				if (Q_stricmp(split[i], "mg") == 0)
+					bg_gunGameInfo.levels[i] = WP_MACHINEGUN;
+				else if (Q_stricmp(split[i], "sg") == 0)
+					bg_gunGameInfo.levels[i] = WP_SHOTGUN;
+				else if (Q_stricmp(split[i], "gl") == 0)
+					bg_gunGameInfo.levels[i] = WP_GRENADE_LAUNCHER;
+				else if (Q_stricmp(split[i], "rl") == 0)
+					bg_gunGameInfo.levels[i] = WP_ROCKET_LAUNCHER;
+				else if (Q_stricmp(split[i], "lg") == 0)
+					bg_gunGameInfo.levels[i] = WP_LIGHTNING;
+				else if (Q_stricmp(split[i], "rg") == 0)
+					bg_gunGameInfo.levels[i] = WP_RAILGUN;
+				else if (Q_stricmp(split[i], "pg") == 0)
+					bg_gunGameInfo.levels[i] = WP_PLASMAGUN;
+				else if (Q_stricmp(split[i], "bfg") == 0)
+					bg_gunGameInfo.levels[i] = WP_BFG;
+				else if (Q_stricmp(split[i], "g") == 0)
+					bg_gunGameInfo.levels[i] = WP_GAUNTLET;
+				else
+					bg_gunGameInfo.levels[i] = WP_MACHINEGUN;
+			}
+		}
+
+		trap_HeapFree(split);
+		trap_HeapFree(strCpy);
+	}
+}

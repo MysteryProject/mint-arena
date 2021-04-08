@@ -115,6 +115,7 @@ vmCvar_t	g_proxMineTimeout;
 #endif
 vmCvar_t	g_playerCapsule;
 vmCvar_t	g_instagib;
+vmCvar_t 	g_gunGameWeapons;
 
 static cvarTable_t		gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -128,6 +129,7 @@ static cvarTable_t		gameCvarTable[] = {
 	// latched vars
 	{ &g_gametype, "g_gametype", "0", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH, GCF_DO_RESTART, RANGE_INT(0, GT_MAX_GAME_TYPE-1)  },
 	{ &g_instagib, "g_instagib", "0", CVAR_LATCH, GCF_DO_RESTART, RANGE_BOOL },
+	{ &g_gunGameWeapons, "g_gunGameWeapons", "classic", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, GCF_DO_RESTART, RANGE_ALL },
 
 	{ &g_maxplayers, "sv_maxclients", "8", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, RANGE_ALL },
 	{ &g_maxGamePlayers, "g_maxGameClients", "0", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, RANGE_INT(0, MAX_CLIENTS-1) },
@@ -601,6 +603,8 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 
 	G_RemapTeamShaders();
 
+	BG_GunGameInfoFromString(g_gunGameWeapons.string);
+
 	// clear ready players from intermission
 	trap_SetConfigstring( CS_PLAYERS_READY, "" );
 	trap_SetConfigstring( CS_INTERMISSION, "" );
@@ -966,6 +970,16 @@ int QDECL SortRanks( const void *a, const void *b ) {
 		return -1;
 	}
 
+	// then sort by gungame level
+	if ( g_gametype.integer == GT_GUNGAME ) {
+		if ( ca->ps.persistant[PERS_GUNGAME_LEVEL] > cb->ps.persistant[PERS_GUNGAME_LEVEL] ) {
+			return -1;
+		}
+		if ( ca->ps.persistant[PERS_GUNGAME_LEVEL] < cb->ps.persistant[PERS_GUNGAME_LEVEL] ) {
+			return 1;
+		}
+	}
+
 	// then sort by score
 	if ( ca->ps.persistant[PERS_SCORE]
 		> cb->ps.persistant[PERS_SCORE] ) {
@@ -1053,7 +1067,12 @@ void CalculateRanks( void ) {
 		score = 0;
 		for ( i = 0;  i < level.numPlayingPlayers; i++ ) {
 			cl = &level.players[ level.sortedPlayers[i] ];
-			newScore = cl->ps.persistant[PERS_SCORE];
+
+			if (g_gametype.integer == GT_GUNGAME)
+				newScore = cl->ps.persistant[PERS_GUNGAME_LEVEL];
+			else
+				newScore = cl->ps.persistant[PERS_SCORE];
+
 			if ( i == 0 || newScore != score ) {
 				rank = i;
 				// assume we aren't tied until the next player is checked
@@ -1074,6 +1093,17 @@ void CalculateRanks( void ) {
 	if ( g_gametype.integer >= GT_TEAM ) {
 		trap_SetConfigstring( CS_SCORES1, va("%i", level.teamScores[TEAM_RED] ) );
 		trap_SetConfigstring( CS_SCORES2, va("%i", level.teamScores[TEAM_BLUE] ) );
+	} else if (g_gametype.integer == GT_GUNGAME) {
+		if ( level.numConnectedPlayers == 0 ) {
+			trap_SetConfigstring( CS_SCORES1, va("%i", SCORE_NOT_PRESENT) );
+			trap_SetConfigstring( CS_SCORES2, va("%i", SCORE_NOT_PRESENT) );
+		} else if ( level.numConnectedPlayers == 1 ) {
+			trap_SetConfigstring(CS_SCORES1, va("%i", level.players[level.sortedPlayers[0]].ps.persistant[PERS_GUNGAME_LEVEL]));
+			trap_SetConfigstring( CS_SCORES2, va("%i", SCORE_NOT_PRESENT) );
+		} else {
+			trap_SetConfigstring(CS_SCORES1, va("%i", level.players[level.sortedPlayers[0]].ps.persistant[PERS_GUNGAME_LEVEL]));
+			trap_SetConfigstring(CS_SCORES2, va("%i", level.players[level.sortedPlayers[1]].ps.persistant[PERS_GUNGAME_LEVEL]));
+		}
 	} else {
 		if ( level.numConnectedPlayers == 0 ) {
 			trap_SetConfigstring( CS_SCORES1, va("%i", SCORE_NOT_PRESENT) );
@@ -1570,33 +1600,51 @@ void CheckExitRules( void ) {
 		}
 	}
 
-	if ( g_gametype.integer < GT_CTF && g_fraglimit.integer ) {
-		if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
-			trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
-			LogExit( "Fraglimit hit." );
-			return;
-		}
+	if ( g_gametype.integer < GT_CTF ) {
+		if (g_gametype.integer == GT_GUNGAME) {
+			for (i = 0; i < g_maxplayers.integer; i++) {
+				cl = level.players + i;
+				if (cl->pers.connected != CON_CONNECTED) {
+					continue;
+				}
+				if (cl->sess.sessionTeam != TEAM_FREE) {
+					continue;
+				}
 
-		if ( level.teamScores[TEAM_BLUE] >= g_fraglimit.integer ) {
-			trap_SendServerCommand( -1, "print \"Blue hit the fraglimit.\n\"" );
-			LogExit( "Fraglimit hit." );
-			return;
-		}
-
-		for ( i=0 ; i< g_maxplayers.integer ; i++ ) {
-			cl = level.players + i;
-			if ( cl->pers.connected != CON_CONNECTED ) {
-				continue;
+				if (cl->ps.persistant[PERS_GUNGAME_LEVEL] >= bg_gunGameInfo.numLevels) {
+					LogExit("Max gun level complete.");
+					trap_SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " won the gungame.\n\"", cl->pers.netname));
+					return;
+				}
 			}
-			if ( cl->sess.sessionTeam != TEAM_FREE ) {
-				continue;
-			}
-
-			if ( cl->ps.persistant[PERS_SCORE] >= g_fraglimit.integer ) {
+		} else if ( g_fraglimit.integer ) {
+			if ( level.teamScores[TEAM_RED] >= g_fraglimit.integer ) {
+				trap_SendServerCommand( -1, "print \"Red hit the fraglimit.\n\"" );
 				LogExit( "Fraglimit hit." );
-				trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
-					cl->pers.netname ) );
 				return;
+			}
+
+			if ( level.teamScores[TEAM_BLUE] >= g_fraglimit.integer ) {
+				trap_SendServerCommand( -1, "print \"Blue hit the fraglimit.\n\"" );
+				LogExit( "Fraglimit hit." );
+				return;
+			}
+
+			for ( i=0 ; i< g_maxplayers.integer ; i++ ) {
+				cl = level.players + i;
+				if ( cl->pers.connected != CON_CONNECTED ) {
+					continue;
+				}
+				if ( cl->sess.sessionTeam != TEAM_FREE ) {
+					continue;
+				}
+
+				if ( cl->ps.persistant[PERS_SCORE] >= g_fraglimit.integer ) {
+					LogExit( "Fraglimit hit." );
+					trap_SendServerCommand( -1, va("print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
+						cl->pers.netname ) );
+					return;
+				}
 			}
 		}
 	}

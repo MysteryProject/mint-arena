@@ -162,6 +162,7 @@ Suite 120, Rockville, Maryland 20850 USA.
 
 typedef enum {
 	GT_FFA,				// free for all
+	GT_GUNGAME,			// gun game
 	GT_TOURNAMENT,		// one on one tournament
 	GT_SINGLE_PLAYER,	// single player ffa
 
@@ -558,6 +559,7 @@ typedef enum {
 	PERS_ATTACKER,					// playerNum of last damage inflicter
 	PERS_ATTACKEE_ARMOR,			// health/armor of last person we attacked
 	PERS_KILLED,					// count of the number of times you died
+	PERS_GUNGAME_LEVEL,				// gungame progression
 	// player awards tracking
 	PERS_IMPRESSIVE_COUNT,			// two railgun hits in a row
 	PERS_EXCELLENT_COUNT,			// two successive kills in a short amount of time
@@ -777,7 +779,9 @@ typedef enum {
 	EV_TAUNT_FOLLOWME,
 	EV_TAUNT_GETFLAG,
 	EV_TAUNT_GUARDBASE,
-	EV_TAUNT_PATROL
+	EV_TAUNT_PATROL,
+
+	EV_GUNGAMESWAP
 
 } entity_event_t;
 
@@ -1106,7 +1110,13 @@ typedef enum {
 							// this avoids having to set eFlags and eventNum
 } entityType_t;
 
-
+#define MAX_GUNGAME_LEVELS 32
+typedef struct {
+	int numLevels;
+	weapon_t levels[MAX_GUNGAME_LEVELS];
+} gunGameInfo_t;
+extern gunGameInfo_t bg_gunGameInfo;
+void BG_GunGameInfoFromString(const char *info);
 
 void	BG_EvaluateTrajectory( const trajectory_t *tr, int atTime, vec3_t result );
 void	BG_EvaluateTrajectoryDelta( const trajectory_t *tr, int atTime, vec3_t result );

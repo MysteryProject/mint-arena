@@ -455,6 +455,12 @@ static void CG_DrawStatusBar( void ) {
 		}
 	}
 
+	if (cgs.gametype == GT_GUNGAME) {
+		CG_DrawString(0 + BIGCHAR_WIDTH * 5, SCREEN_HEIGHT, 
+			va("%d/%d", cg.cur_ps->persistant[PERS_GUNGAME_LEVEL] + 1, bg_gunGameInfo.numLevels), 
+			UI_VA_BOTTOM | UI_RIGHT | UI_GRADIENT | UI_GIANTFONT | UI_NOSCALE, colors[3]);
+	}
+
 	//
 	// health
 	//
@@ -2599,6 +2605,10 @@ static void CG_DrawAmmoWarning( void ) {
 
 	if ( !cg.cur_lc->lowAmmoWarning ) {
 		return;
+	}
+
+	if ( cgs.gametype == GT_GUNGAME ) {
+		return; // infinite ammo in gungame
 	}
 
 	CG_SetScreenPlacement(PLACE_CENTER, PLACE_TOP);

@@ -175,6 +175,7 @@ void TeamMain_MenuInit( int localPlayerNum ) {
 	case GT_SINGLE_PLAYER:
 	case GT_FFA:
 	case GT_TOURNAMENT:
+	case GT_GUNGAME:
 		s_teammain.joinred.generic.flags  |= QMF_GRAYED;
 		s_teammain.joinblue.generic.flags |= QMF_GRAYED;
 		break;

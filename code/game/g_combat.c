@@ -107,7 +107,7 @@ void TossPlayerItems( gentity_t *self ) {
 	}
 
 	if ( weapon > WP_MACHINEGUN && weapon != WP_GRAPPLING_HOOK && 
-		self->player->ps.ammo[ weapon ] && !g_instagib.integer ) {
+		self->player->ps.ammo[ weapon ] && !g_instagib.integer && g_gametype.integer != GT_GUNGAME) {
 		// find the item type for this weapon
 		item = BG_FindItemForWeapon( weapon );
 
@@ -525,6 +525,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	int			i;
 	char		*killerName, *obit;
 	qboolean	gibPlayer;
+	int			weapon;
 
 	if ( self->player->ps.pm_type == PM_DEAD ) {
 		return;
@@ -600,8 +601,34 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 
 		if ( attacker == self || OnSameTeam (self, attacker ) ) {
 			AddScore( attacker, self->r.currentOrigin, -1 );
+
+			if ( g_gametype.integer == GT_GUNGAME && self->player->ps.persistant[PERS_GUNGAME_LEVEL] > 0) {
+				self->player->ps.persistant[PERS_GUNGAME_LEVEL]--;
+			}
 		} else {
 			AddScore( attacker, self->r.currentOrigin, 1 );
+
+			if (meansOfDeath == MOD_BFG_SPLASH) {
+				weapon = WP_BFG;
+			} else if (meansOfDeath == MOD_GRENADE_SPLASH) {
+				weapon = WP_GRENADE_LAUNCHER;
+			} else if (meansOfDeath == MOD_PLASMA_SPLASH) {
+				weapon = WP_PLASMAGUN;
+			} else if (meansOfDeath == MOD_ROCKET_SPLASH) {
+				weapon = WP_ROCKET_LAUNCHER;
+			} else {
+				weapon = attacker->player->ps.weapon;
+			}
+
+			if ( g_gametype.integer == GT_GUNGAME && weapon == bg_gunGameInfo.levels[attacker->player->ps.persistant[PERS_GUNGAME_LEVEL]] ) {
+				weapon = bg_gunGameInfo.levels[++attacker->player->ps.persistant[PERS_GUNGAME_LEVEL]];
+
+				if (attacker->player->ps.persistant[PERS_GUNGAME_LEVEL] < bg_gunGameInfo.numLevels) {
+					attacker->player->ps.stats[STAT_WEAPONS] = (1 << weapon);
+					attacker->player->ps.stats[STAT_WEAPONS] |= (1 << WP_GAUNTLET);
+					G_AddPredictableEvent(attacker, EV_GUNGAMESWAP, weapon);
+				}
+			}
 
 			if( meansOfDeath == MOD_GAUNTLET ) {
 				
@@ -633,6 +660,10 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 	} else {
 		AddScore( self, self->r.currentOrigin, -1 );
+
+		if (g_gametype.integer == GT_GUNGAME && self->player->ps.persistant[PERS_GUNGAME_LEVEL] > 0) {
+			self->player->ps.persistant[PERS_GUNGAME_LEVEL]--;
+		}
 	}
 
 	// Add team bonuses

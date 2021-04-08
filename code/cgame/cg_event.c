@@ -840,6 +840,15 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 	//
 	// weapon events
 	//
+	case EV_GUNGAMESWAP:
+		DEBUGNAME("EV_GUNGAMESWAP");
+		CG_Printf("Change weapon");
+		for (i = 0; i < CG_MaxSplitView(); i++) {
+			if (es->number == cg.snap->pss[i].playerNum) {
+				CG_GunGameWeaponSwap(i, es->eventParm);
+			}
+		}
+		break;
 	case EV_NOAMMO:
 		DEBUGNAME("EV_NOAMMO");
 //		trap_S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.noAmmoSound );

@@ -1170,7 +1170,15 @@ void PlayerSpawn(gentity_t *ent) {
 
 	player->ps.playerNum = index;
 
-	if ( g_instagib.integer ) {
+	if ( g_gametype.integer == GT_GUNGAME ) {
+		int gunGameWeapon = bg_gunGameInfo.levels[player->ps.persistant[PERS_GUNGAME_LEVEL]];
+
+		player->ps.stats[STAT_WEAPONS] = ( 1 << gunGameWeapon );
+
+		// infinite ammo in gun game
+		for (i = WP_NUM_WEAPONS - 1; i > WP_GAUNTLET; i--)
+			player->ps.ammo[i] = -1;
+	} else if ( g_instagib.integer ) {
 		player->ps.stats[STAT_WEAPONS] = ( 1 << WP_RAILGUN );
 		player->ps.ammo[WP_RAILGUN] = 999;
 	} else {

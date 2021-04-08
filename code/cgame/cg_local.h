@@ -1783,6 +1783,7 @@ void CG_AddViewWeapon (playerState_t *ps);
 void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent, int team );
 void CG_DrawWeaponSelect( void );
 
+void CG_GunGameWeaponSwap(int localPlayerNum, weapon_t weapon);
 void CG_OutOfAmmoChange( int localPlayerNum );	// should this be in pmove?
 
 //

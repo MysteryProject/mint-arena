@@ -318,6 +318,8 @@ qboolean G_CallSpawn( gentity_t *ent ) {
 			if ( g_instagib.integer && item->giType != IT_TEAM ) {
 				// only spawn team play items in instagib mode
 				return qfalse;
+			} else if (g_gametype.integer == GT_GUNGAME && item->giType != IT_ARMOR && item->giType != IT_HEALTH) {
+				return qfalse;
 			}
 			G_SpawnItem( ent, item );
 			return qtrue;

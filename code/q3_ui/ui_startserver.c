@@ -100,6 +100,7 @@ static const char *gametype_items[] = {
 	"Free For All",
 	"Team Deathmatch",
 	"Tournament",
+	"Gun Game",
 	"Capture the Flag",
 #ifdef MISSIONPACK
 	"1 Flag CTF",
@@ -109,7 +110,7 @@ static const char *gametype_items[] = {
 	NULL
 };
 
-static int gametype_remap[] = {GT_FFA, GT_TEAM, GT_TOURNAMENT, GT_CTF
+static int gametype_remap[] = {GT_FFA, GT_TEAM, GT_TOURNAMENT, GT_GUNGAME, GT_CTF
 #ifdef MISSIONPACK
 ,GT_1FCTF, GT_OBELISK, GT_HARVESTER
 #endif
@@ -143,6 +144,11 @@ static int GametypeBits( char *string ) {
 
 		if( Q_stricmp( token, "ffa" ) == 0 ) {
 			bits |= 1 << GT_FFA;
+			continue;
+		}
+
+		if( Q_stricmp( token, "gg" ) == 0 ) {
+			bits |= 1 << GT_GUNGAME;
 			continue;
 		}
 

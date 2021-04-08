@@ -1794,6 +1794,24 @@ void CG_OutOfAmmoChange( int localPlayerNum ) {
 	}
 }
 
+/*
+===================
+CG_GunGameWeaponSwap
+
+Swap weapon on level up
+===================
+*/
+void CG_GunGameWeaponSwap(int localPlayerNum, weapon_t weapon) {
+	localPlayer_t *player;
+
+	if (cg.localPlayers[localPlayerNum].playerNum == -1)
+		return;
+
+	player = &cg.localPlayers[localPlayerNum];
+	player->weaponSelectTime = cg.time;
+	player->weaponSelect = weapon;
+}
+
 
 
 /*
