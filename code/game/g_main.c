@@ -116,6 +116,8 @@ vmCvar_t	g_proxMineTimeout;
 vmCvar_t	g_playerCapsule;
 vmCvar_t	g_instagib;
 vmCvar_t 	g_gunGameWeapons;
+vmCvar_t	g_mapname;
+vmCvar_t	g_rotation;
 
 static cvarTable_t		gameCvarTable[] = {
 	// don't override the cheat state set by the system
@@ -125,6 +127,7 @@ static cvarTable_t		gameCvarTable[] = {
 	{ NULL, "gameversion", PRODUCT_NAME " " PRODUCT_VERSION " " PLATFORM_STRING " " PRODUCT_DATE, CVAR_SERVERINFO | CVAR_ROM, 0, RANGE_ALL },
 	{ NULL, "gameprotocol", GAME_PROTOCOL, CVAR_SERVERINFO | CVAR_ROM, 0, RANGE_ALL },
 	{ &g_restarted, "g_restarted", "0", CVAR_ROM, 0, RANGE_ALL },
+	{ &g_mapname, "mapname", "", CVAR_SERVERINFO | CVAR_ROM, 0, qfalse  },
 
 	// latched vars
 	{ &g_gametype, "g_gametype", "0", CVAR_SERVERINFO | CVAR_USERINFO | CVAR_LATCH, GCF_DO_RESTART, RANGE_INT(0, GT_MAX_GAME_TYPE-1)  },
@@ -199,7 +202,9 @@ static cvarTable_t		gameCvarTable[] = {
 	{ &pmove_fixed, "pmove_fixed", "0", CVAR_SYSTEMINFO, 0, RANGE_BOOL },
 	{ &pmove_msec, "pmove_msec", "8", CVAR_SYSTEMINFO, 0, RANGE_ALL },
 
-	{ &g_rankings, "g_rankings", "0", 0, 0, RANGE_ALL }
+	{ &g_rankings, "g_rankings", "0", 0, 0, RANGE_ALL },
+
+	{ &g_rotation, "g_rotation", "", CVAR_ARCHIVE, 0, RANGE_ALL }
 
 };
 
@@ -608,6 +613,15 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	// clear ready players from intermission
 	trap_SetConfigstring( CS_PLAYERS_READY, "" );
 	trap_SetConfigstring( CS_INTERMISSION, "" );
+
+	if ( g_gametype.integer != GT_SINGLE_PLAYER ) {
+		// launch rotation system on first map load
+		if ( trap_Cvar_VariableIntegerValue( SV_ROTATION ) == 0 ) {
+			trap_Cvar_Set( SV_ROTATION, "1" );
+			level.denyMapRestart = qtrue;
+			ParseMapRotation();
+		}
+	}
 }
 
 
@@ -1332,6 +1346,16 @@ void ExitLevel (void) {
 		}
 	}
 
+	if ( !ParseMapRotation() ) {
+		char val[ MAX_CVAR_VALUE_STRING ];
+
+		trap_Cvar_VariableStringBuffer( "nextmap", val, sizeof( val ) );
+
+		if ( !val[0] || !Q_stricmpn( val, "map_restart ", 12 ) )
+			G_LoadMap( NULL );
+		else
+			trap_Cmd_ExecuteText( EXEC_APPEND, "vstr nextmap\n" );
+	}
 }
 
 /*

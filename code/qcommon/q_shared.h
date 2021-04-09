@@ -724,6 +724,11 @@ void	COM_ParseError( char *format, ... ) __attribute__ ((format (printf, 1, 2)))
 void	COM_ParseWarning( char *format, ... ) __attribute__ ((format (printf, 1, 2)));
 //int		COM_ParseInfos( char *buf, int max, char infos[][MAX_INFO_STRING] );
 
+void	SkipTillSeparators( char **data );
+void	Com_InitSeparators( void );
+char	*COM_ParseSep( char **data_p, qboolean allowLineBreaks );
+int		Com_Split( char *in, char **out, int outsz, int delim );
+
 #define MAX_TOKENLENGTH		1024
 
 #ifndef TT_STRING

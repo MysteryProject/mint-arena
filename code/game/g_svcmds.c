@@ -628,6 +628,33 @@ void	Svcmd_TellComplete( char *args, int argNum ) {
 	}
 }
 
+/*
+===================
+Svcmd_Rotate_f
+===================
+*/
+void Svcmd_Rotate_f( void ) {
+	char	str[MAX_TOKEN_CHARS];
+
+	if ( trap_Argc() >= 2 ) {
+		trap_Argv( 1, str, sizeof( str ) );
+		if ( atoi( str ) > 0 ) {
+			trap_Cvar_Set( SV_ROTATION, str );
+		}
+	}
+
+	if ( !ParseMapRotation() ) {
+		char val[ MAX_CVAR_VALUE_STRING ];
+
+		trap_Cvar_VariableStringBuffer( "nextmap", val, sizeof( val ) );
+
+		if ( !val[0] || !Q_stricmpn( val, "map_restart ", 12 ) )
+			G_LoadMap( NULL );
+		else
+			trap_Cmd_ExecuteText( EXEC_APPEND, "vstr nextmap\n" );
+	}
+}
+
 struct svcmd
 {
   char     *cmd;
@@ -647,6 +674,7 @@ struct svcmd
   { "say", qtrue, Svcmd_Say_f },
   { "teleport", qfalse, Svcmd_Teleport_f, Svcmd_TeleportComplete },
   { "tell", qtrue, Svcmd_Tell_f, Svcmd_TellComplete },
+  { "rotate", qfalse, Svcmd_Rotate_f },
 };
 
 const size_t numSvCmds = ARRAY_LEN(svcmds);

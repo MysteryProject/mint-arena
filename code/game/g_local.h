@@ -455,6 +455,8 @@ typedef struct {
 #ifdef MISSIONPACK
 	int			portalSequence;
 #endif
+
+	qboolean	denyMapRestart;
 } level_locals_t;
 
 
@@ -754,6 +756,12 @@ int BotAIStartFrame( int time );
 void BotTestAAS(vec3_t origin);
 void Svcmd_BotTeamplayReport_f( void );
 
+// g_rotation.c
+#define SV_ROTATION "sessionMapIndex"
+qboolean ParseMapRotation( void );
+void G_LoadMap( const char *map );
+qboolean G_MapExist( const char *map );
+
 #include "g_team.h" // teamplay specific stuff
 #include "g_syscalls.h"
 
@@ -813,3 +821,5 @@ extern	vmCvar_t	g_proxMineTimeout;
 extern	vmCvar_t	g_playerCapsule;
 extern	vmCvar_t	g_instagib;
 extern	vmCvar_t	g_gunGameWeapons;
+extern	vmCvar_t	g_rotation; // baseq3a
+extern	vmCvar_t	g_mapname; // baseq3a

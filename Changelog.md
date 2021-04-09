@@ -1,1 +1,1 @@
-- Added weapon select option `cg_drawWeaponSelect` (credits: Quake3e)
+- Added weapon select option `cg_drawWeaponSelect` (credits: baseq3a)
