@@ -621,6 +621,37 @@ static float CG_DrawFPS( float y ) {
 }
 
 /*
+================
+CG_DrawSpeedMeter
+================
+*/
+static float CG_DrawSpeedMeter( float y ) {
+	const char *s;
+
+	if ( cg.viewport != 0 ) {
+		return y;
+	}
+
+	s = va( "%1.0fups", cg.xyspeed );
+
+	if ( cg_drawSpeed[cg.cur_localPlayerNum].integer == 1 ) {
+		/* top left-hand corner of screen */
+		CG_DrawString( 635, y + 2, s, UI_RIGHT|UI_DROPSHADOW|UI_BIGFONT, NULL );
+		return y + BIGCHAR_HEIGHT + 4;
+	} else if ( cg_drawSpeed[cg.cur_localPlayerNum].integer == 2 ) {
+		/* center of screen */
+		CG_DrawString( 320, 240 + BIGCHAR_HEIGHT, s, UI_CENTER|UI_DROPSHADOW|UI_BIGFONT, NULL );
+		return y;
+	} else if ( cg_drawSpeed[cg.cur_localPlayerNum].integer == 3 ) {
+		/* center of screen */
+		CG_DrawString( 320, 240 + SMALLCHAR_HEIGHT, s, UI_CENTER|UI_DROPSHADOW|UI_TINYFONT, NULL );
+		return y;
+	}
+
+	return y;
+}
+
+/*
 =================
 CG_DrawTimer
 =================
@@ -855,6 +886,15 @@ static void CG_DrawUpperRight(stereoFrame_t stereoFrame)
 	}
 	if (cg_drawFPS.integer && (stereoFrame == STEREO_CENTER || stereoFrame == STEREO_RIGHT)) {
 		y = CG_DrawFPS( y );
+	}
+	if( cg_drawSpeed[cg.cur_localPlayerNum].integer ) {
+		if ( cg_drawSpeed[cg.cur_localPlayerNum].integer > 1 ) {
+			CG_SetScreenPlacement(PLACE_CENTER, PLACE_CENTER);
+			CG_DrawSpeedMeter( 0 );
+			CG_PopScreenPlacement();
+		} else {
+			y = CG_DrawSpeedMeter( y );
+		}
 	}
 	if ( cg_drawTimer.integer ) {
 		y = CG_DrawTimer( y );
