@@ -337,6 +337,12 @@ vmCvar_t	cg_currentSelectedPlayerName[MAX_SPLITVIEW];
 vmCvar_t cg_drawWeaponSelect[MAX_SPLITVIEW]; // baseq3a weapon select
 vmCvar_t cg_drawSpeed[MAX_SPLITVIEW]; // baseq3a drawspeed
 
+vmCvar_t cg_crosshairColor[MAX_SPLITVIEW];
+vmCvar_t cg_crosshairColorRed[MAX_SPLITVIEW];
+vmCvar_t cg_crosshairColorGreen[MAX_SPLITVIEW];
+vmCvar_t cg_crosshairColorBlue[MAX_SPLITVIEW];
+vmCvar_t cg_crosshairColorAlpha[MAX_SPLITVIEW];
+
 typedef struct {
 	vmCvar_t	*vmCvar;
 	char		*cvarName;
@@ -558,6 +564,13 @@ static userCvarTable_t userCvarTable[] = {
 	{ cg_thirdPersonSmooth, "cg_thirdPersonSmooth", "0", 0, RANGE_ALL }, // this cvar exists because it's behavior is too buggy to enable by default
 	{ cg_drawWeaponSelect, "cg_drawWeaponSelect", "1", CVAR_ARCHIVE, RANGE_INT(-4, 4) },
 	{ cg_drawSpeed, "cg_drawSpeed", "0", CVAR_ARCHIVE, RANGE_INT(0, 3) },
+
+	{ cg_crosshairColor, "cg_crosshairColor", "0", CVAR_ARCHIVE, RANGE_INT(0, 6) },
+	{ cg_crosshairColorRed, "cg_crosshairColorR", "255", CVAR_ARCHIVE, RANGE_INT(0, 255) },
+	{ cg_crosshairColorGreen, "cg_crosshairColorG", "255", CVAR_ARCHIVE, RANGE_INT(0, 255) },
+	{ cg_crosshairColorBlue, "cg_crosshairColorB", "255", CVAR_ARCHIVE, RANGE_INT(0, 255) },
+	{ cg_crosshairColorAlpha, "cg_crosshairColorA", "255", CVAR_ARCHIVE, RANGE_INT(0, 255) },
+
 #ifdef MISSIONPACK
 	{ cg_currentSelectedPlayer, "cg_currentSelectedPlayer", "0", CVAR_ARCHIVE, RANGE_ALL },
 	{ cg_currentSelectedPlayerName, "cg_currentSelectedPlayerName", "", CVAR_ARCHIVE, RANGE_ALL }

@@ -1492,6 +1492,13 @@ extern	vmCvar_t		cg_currentSelectedPlayerName[MAX_SPLITVIEW];
 extern vmCvar_t cg_drawWeaponSelect[MAX_SPLITVIEW]; // baseq3a weapon select
 extern vmCvar_t cg_drawSpeed[MAX_SPLITVIEW]; // baseq3a drawSpeed
 
+extern vmCvar_t cg_crosshairColor[MAX_SPLITVIEW];
+extern vmCvar_t cg_crosshairColorRed[MAX_SPLITVIEW];
+extern vmCvar_t cg_crosshairColorGreen[MAX_SPLITVIEW];
+extern vmCvar_t cg_crosshairColorBlue[MAX_SPLITVIEW];
+extern vmCvar_t cg_crosshairColorAlpha[MAX_SPLITVIEW];
+
+
 //
 // cg_main.c
 //

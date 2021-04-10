@@ -1883,6 +1883,14 @@ CROSSHAIR
 ================================================================================
 */
 
+const float defaultCrosshairColors[6][4] = {
+	{1.0f, 1.0f, 1.0f, 1.0f},	// White
+	{0.2f, 1.0f, 0.2f, 1.0f},	// Green
+	{0.2f, 1.0f, 1.0f, 1.0f},	// Cyan
+	{0.2f, 0.2f, 1.0f, 1.0f},	// Blue
+	{1.0f, 0.2f, 0.2f, 1.0f},	// Red
+	{1.0f, 1.0f, 0.2f, 1.0f}	// Yellow
+};
 
 /*
 =================
@@ -1895,7 +1903,8 @@ static void CG_DrawCrosshair(void)
 	qhandle_t	hShader;
 	float		f;
 	float		x, y;
-	int			ca;
+	int			color;
+	vec4_t		cColor;
 
 	if ( !cg_drawCrosshair.integer ) {
 		return;
@@ -1912,12 +1921,12 @@ static void CG_DrawCrosshair(void)
 	CG_SetScreenPlacement(PLACE_CENTER, PLACE_CENTER);
 
 	// set color based on health
-	if ( cg_crosshairHealth.integer ) {
-		vec4_t		hcolor;
+	// if ( cg_crosshairHealth.integer ) {
+	// 	vec4_t		hcolor;
 
-		CG_ColorForHealth( hcolor );
-		trap_R_SetColor( hcolor );
-	}
+	// 	CG_ColorForHealth( hcolor );
+	// 	trap_R_SetColor( hcolor );
+	// }
 
 	if (cg.numViewports > 1) {
 		// In splitscreen make crosshair normal [non-splitscreen] size, so it is easier to see.
@@ -1936,12 +1945,20 @@ static void CG_DrawCrosshair(void)
 
 	x = cg_crosshairX.integer;
 	y = cg_crosshairY.integer;
+	hShader = cgs.media.crosshairShader[cg_drawCrosshair.integer];
 
-	ca = cg_drawCrosshair.integer;
-	if (ca < 0) {
-		ca = 0;
+	color = cg_crosshairColor[cg.cur_localPlayerNum].integer;
+
+	if (color >= 6) {
+		cColor[0] = cg_crosshairColorRed[cg.cur_localPlayerNum].value / 255.0f;
+		cColor[1] = cg_crosshairColorGreen[cg.cur_localPlayerNum].value / 255.0f;
+		cColor[2] = cg_crosshairColorBlue[cg.cur_localPlayerNum].value / 255.0f;
+		cColor[3] = cg_crosshairColorAlpha[cg.cur_localPlayerNum].value / 255.0f;
+
+		trap_R_SetColor(cColor);
+	} else {
+		trap_R_SetColor(defaultCrosshairColors[color]);
 	}
-	hShader = cgs.media.crosshairShader[ ca % NUM_CROSSHAIRS ];
 
 	CG_DrawPic( ((SCREEN_WIDTH-w)*0.5f)+x, ((SCREEN_HEIGHT-h)*0.5f)+y, w, h, hShader );
 
