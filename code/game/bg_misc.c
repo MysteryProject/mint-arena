@@ -2392,6 +2392,27 @@ gunGameInfo_t bg_classicGunGameInfo = {
 	}
 };
 
+/*
+==============
+RemoveColorEscapeSequences
+==============
+*/
+void RemoveColorEscapeSequences( char *text ) {
+	int i, l;
+
+	l = 0;
+	for ( i = 0; text[i]; i++ ) {
+		if (Q_IsColorString(&text[i])) {
+			i++;
+			continue;
+		}
+		if (text[i] > 0x7E)
+			continue;
+		text[l++] = text[i];
+	}
+	text[l] = '\0';
+}
+
 char **str_split(char *str, char delim, int *numSplits) {
 	char **ret;
 	int retLen;

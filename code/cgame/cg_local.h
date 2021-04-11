@@ -1498,6 +1498,12 @@ extern vmCvar_t cg_crosshairColorGreen[MAX_SPLITVIEW];
 extern vmCvar_t cg_crosshairColorBlue[MAX_SPLITVIEW];
 extern vmCvar_t cg_crosshairColorAlpha[MAX_SPLITVIEW];
 
+// obituary
+extern vmCvar_t cg_obituaryX[MAX_SPLITVIEW];
+extern vmCvar_t cg_obituaryY[MAX_SPLITVIEW];
+extern vmCvar_t cg_obituaryGap[MAX_SPLITVIEW];
+extern vmCvar_t cg_obituarySpacing[MAX_SPLITVIEW];
+extern vmCvar_t cg_obituaryFadetime[MAX_SPLITVIEW];
 
 //
 // cg_main.c
@@ -1746,7 +1752,7 @@ void CG_LoadDeferredPlayers( void );
 // cg_events.c
 //
 void CG_CheckEvents( centity_t *cent );
-const char	*CG_PlaceString( int rank );
+const char	*CG_PlaceString( int rank, qboolean scoreboard );
 void CG_EntityEvent( centity_t *cent, vec3_t position );
 void CG_PainEvent( centity_t *cent, int health );
 
@@ -1976,6 +1982,12 @@ void	CG_ParticleMisc (qhandle_t pshader, vec3_t origin, int size, int duration, 
 void	CG_ParticleExplosion (char *animStr, vec3_t origin, vec3_t vel, int duration, int sizeStart, int sizeEnd);
 extern qboolean		initparticles;
 int CG_NewParticleArea ( int num );
+
+//
+// cg_obituary.c
+//
+void CG_DrawObituary(void);
+void CG_ParseObituary(entityState_t *ent);
 
 //
 // cg_input.c

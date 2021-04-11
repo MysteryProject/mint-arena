@@ -361,7 +361,7 @@ qboolean CG_DrawOldScoreboard( void ) {
 	if ( cgs.gametype < GT_TEAM) {
 		if (cg.cur_ps && cg.cur_ps->persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
 			s = va("%s place with %i",
-				CG_PlaceString( cg.cur_ps->persistant[PERS_RANK] + 1 ),
+				CG_PlaceString( cg.cur_ps->persistant[PERS_RANK] + 1, qtrue ),
 				cg.cur_ps->persistant[PERS_SCORE] );
 			y = SB_HEADER - 6 - CG_DrawStringLineHeight( UI_BIGFONT );
 			CG_DrawString( SCREEN_WIDTH / 2, y, s, UI_CENTER|UI_DROPSHADOW|UI_BIGFONT, NULL );

@@ -45,15 +45,31 @@ CG_PlaceString
 Also called by scoreboard drawing
 ===================
 */
-const char	*CG_PlaceString( int rank ) {
+const char	*CG_PlaceString( int rank, qboolean scoreboard ) {
 	static char	str[64];
 	char	*s, *t;
 
-	if ( rank & RANK_TIED_FLAG ) {
-		rank &= ~RANK_TIED_FLAG;
-		t = "Tied for ";
-	} else {
-		t = "";
+	if (cgs.gametype == GT_GUNGAME && !scoreboard)
+	{
+		if (rank & RANK_TIED_FLAG)
+		{
+			rank &= ~RANK_TIED_FLAG;
+			t = "tied for ";
+		}
+		else
+			t = "in ";
+	}
+	else
+	{
+		if (rank & RANK_TIED_FLAG)
+		{
+			rank &= ~RANK_TIED_FLAG;
+			t = "Tied for ";
+		}
+		else
+		{
+			t = "";
+		}
 	}
 
 	if ( rank == 1 ) {
@@ -233,8 +249,8 @@ static void CG_Obituary( entityState_t *ent ) {
 
 			if ( cgs.gametype < GT_TEAM ) {
 				s = va("You fragged %s\n%s place with %i", targetName, 
-					CG_PlaceString( ps->persistant[PERS_RANK] + 1 ),
-					ps->persistant[PERS_SCORE] );
+					CG_PlaceString( ps->persistant[PERS_RANK] + 1, qfalse ),
+					ps->persistant[PERS_SCORE], qfalse );
 			} else {
 				s = va("You fragged %s", targetName );
 			}
@@ -1272,7 +1288,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 
 	case EV_OBITUARY:
 		DEBUGNAME("EV_OBITUARY");
-		CG_Obituary( es );
+		CG_ParseObituary(es);
+		//CG_Obituary( es );
 		break;
 
 	//

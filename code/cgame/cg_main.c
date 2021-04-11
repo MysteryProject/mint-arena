@@ -343,6 +343,14 @@ vmCvar_t cg_crosshairColorGreen[MAX_SPLITVIEW];
 vmCvar_t cg_crosshairColorBlue[MAX_SPLITVIEW];
 vmCvar_t cg_crosshairColorAlpha[MAX_SPLITVIEW];
 
+// obituary customizing
+vmCvar_t cg_obituaryX[MAX_SPLITVIEW];
+vmCvar_t cg_obituaryY[MAX_SPLITVIEW];
+vmCvar_t cg_obituaryGap[MAX_SPLITVIEW];
+vmCvar_t cg_obituarySpacing[MAX_SPLITVIEW];
+vmCvar_t cg_obituaryFadetime[MAX_SPLITVIEW];
+vmCvar_t cg_obituaryMaxVisable[MAX_SPLITVIEW];
+
 typedef struct {
 	vmCvar_t	*vmCvar;
 	char		*cvarName;
@@ -570,6 +578,12 @@ static userCvarTable_t userCvarTable[] = {
 	{ cg_crosshairColorGreen, "cg_crosshairColorG", "255", CVAR_ARCHIVE, RANGE_INT(0, 255) },
 	{ cg_crosshairColorBlue, "cg_crosshairColorB", "255", CVAR_ARCHIVE, RANGE_INT(0, 255) },
 	{ cg_crosshairColorAlpha, "cg_crosshairColorA", "255", CVAR_ARCHIVE, RANGE_INT(0, 255) },
+
+	{ cg_obituaryX, "cg_obituaryX", "100", CVAR_ARCHIVE, RANGE_ALL },
+	{ cg_obituaryY, "cg_obituaryY", "400", CVAR_ARCHIVE, RANGE_ALL },
+	{ cg_obituarySpacing, "cg_obituarySpacing", "10", CVAR_ARCHIVE, RANGE_ALL },
+	{ cg_obituaryGap, "cg_obituaryGap", "3", CVAR_ARCHIVE, RANGE_ALL },
+	{ cg_obituaryFadetime, "cg_obituaryFadetime", "5.0", CVAR_ARCHIVE, RANGE_ALL },
 
 #ifdef MISSIONPACK
 	{ cg_currentSelectedPlayer, "cg_currentSelectedPlayer", "0", CVAR_ARCHIVE, RANGE_ALL },
