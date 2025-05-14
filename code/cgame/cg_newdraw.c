@@ -1377,7 +1377,7 @@ const char *CG_GetGameStatusText(void) {
 	const char *s = "";
 	if ( cgs.gametype < GT_TEAM) {
 		if (cg.cur_ps && cg.cur_ps->persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
-			s = va("%s place with %i",CG_PlaceString( cg.cur_ps->persistant[PERS_RANK] + 1 ),cg.cur_ps->persistant[PERS_SCORE] );
+			s = va("%s place with %i",CG_PlaceString( cg.cur_ps->persistant[PERS_RANK] + 1, qtrue ),cg.cur_ps->persistant[PERS_SCORE] );
 		}
 	} else {
 		if ( cg.teamScores[0] == cg.teamScores[1] ) {
