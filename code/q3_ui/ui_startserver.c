@@ -80,6 +80,7 @@ typedef struct {
 	menubitmap_s	arrows;
 	menubitmap_s	prevpage;
 	menubitmap_s	nextpage;
+	menutext_s		pagecount;
 	menubitmap_s	back;
 	menubitmap_s	next;
 
@@ -88,6 +89,7 @@ typedef struct {
 
 	qboolean		multiplayer;
 	int				currentmap;
+	char			currentmapname[MAX_QPATH];
 	int				nummaps;
 	int				page;
 	int				maxpages;
@@ -260,11 +262,12 @@ static void StartServer_Update( void ) {
 		}
 
 		// set the map name
-		info = UI_GetArenaInfoByNumber( s_startserver.maplist[ s_startserver.currentmap ]);
-		Q_strncpyz( s_startserver.mapname.string, Info_ValueForKey( info, "map" ), MAX_NAMELENGTH);
+		Q_strncpyz( s_startserver.mapname.string, s_startserver.currentmapname, MAX_NAMELENGTH);
 	}
 	
 	Q_strupr( s_startserver.mapname.string );
+
+	Com_sprintf( s_startserver.pagecount.string, 64, "Page %d of %d", s_startserver.page + 1, s_startserver.maxpages );
 }
 
 
@@ -274,11 +277,18 @@ StartServer_MapEvent
 =================
 */
 static void StartServer_MapEvent( void* ptr, int event ) {
+	const char	*info;
+
 	if( event != QM_ACTIVATED) {
 		return;
 	}
 
 	s_startserver.currentmap = (s_startserver.page*MAX_MAPSPERPAGE) + (((menucommon_s*)ptr)->id - ID_PICTURES);
+
+	info = UI_GetArenaInfoByNumber( s_startserver.maplist[ s_startserver.currentmap ] );
+	Q_strncpyz( s_startserver.currentmapname, Info_ValueForKey( info, "map" ),
+	            sizeof( s_startserver.currentmapname ) );
+
 	StartServer_Update();
 }
 
@@ -301,6 +311,7 @@ static void StartServer_GametypeEvent( void* ptr, int event ) {
 
 	count = UI_GetNumArenas();
 	s_startserver.nummaps = 0;
+	s_startserver.currentmap = 0;
 	matchbits = 1 << gametype_remap[s_startserver.gametype.curvalue];
 	if( gametype_remap[s_startserver.gametype.curvalue] == GT_FFA ) {
 		matchbits |= ( 1 << GT_SINGLE_PLAYER );
@@ -313,12 +324,19 @@ static void StartServer_GametypeEvent( void* ptr, int event ) {
 			continue;
 		}
 
+		if ( !Q_stricmp( s_startserver.currentmapname, Info_ValueForKey( info, "map" ) ) ) {
+			s_startserver.currentmap = s_startserver.nummaps;
+		}
+
 		s_startserver.maplist[ s_startserver.nummaps ] = i;
 		s_startserver.nummaps++;
 	}
 	s_startserver.maxpages = (s_startserver.nummaps + MAX_MAPSPERPAGE-1)/MAX_MAPSPERPAGE;
-	s_startserver.page = 0;
-	s_startserver.currentmap = 0;
+	s_startserver.page = s_startserver.currentmap / MAX_MAPSPERPAGE;
+
+	info = UI_GetArenaInfoByNumber( s_startserver.maplist[ s_startserver.currentmap ] );
+	Q_strncpyz( s_startserver.currentmapname, Info_ValueForKey( info, "map" ),
+	            sizeof( s_startserver.currentmapname ) );
 
 	StartServer_Update();
 }
@@ -350,7 +368,6 @@ static void StartServer_MenuEvent( void* ptr, int event ) {
 		break;
 
 	case ID_STARTSERVERNEXT:
-		trap_Cvar_SetValue( "g_gameType", gametype_remap[s_startserver.gametype.curvalue] );
 		UI_ServerOptionsMenu( s_startserver.multiplayer );
 		break;
 
@@ -434,6 +451,7 @@ static void StartServer_MenuInit( qboolean multiplayer ) {
 	int	x;
 	int	y;
 	static char mapnamebuffer[64];
+	static char pagecountbuffer[64];
 
 	// zero set all our globals
 	memset( &s_startserver, 0 ,sizeof(startserver_t) );
@@ -536,6 +554,14 @@ static void StartServer_MenuInit( qboolean multiplayer ) {
 	s_startserver.nextpage.height  		    = 32;
 	s_startserver.nextpage.focuspic         = GAMESERVER_ARROWSR;
 
+	s_startserver.pagecount.generic.type  = MTYPE_TEXT;
+	s_startserver.pagecount.generic.flags = QMF_RIGHT_JUSTIFY|QMF_INACTIVE;
+	s_startserver.pagecount.generic.x	    = (3 % MAX_MAPCOLS) * (128+8) + (SCREEN_WIDTH - (MAX_MAPCOLS * (128+8)) - 8) / 2 + 128;
+	s_startserver.pagecount.generic.y	    = 368;
+	s_startserver.pagecount.string        = pagecountbuffer;
+	s_startserver.pagecount.style         = UI_RIGHT|UI_SMALLFONT;
+	s_startserver.pagecount.color         = text_color_normal;
+
 	s_startserver.mapname.generic.type  = MTYPE_PTEXT;
 	s_startserver.mapname.generic.flags = QMF_CENTER_JUSTIFY|QMF_INACTIVE;
 	s_startserver.mapname.generic.x	    = 320;
@@ -587,10 +613,22 @@ static void StartServer_MenuInit( qboolean multiplayer ) {
 	Menu_AddItem( &s_startserver.menu, &s_startserver.arrows );
 	Menu_AddItem( &s_startserver.menu, &s_startserver.prevpage );
 	Menu_AddItem( &s_startserver.menu, &s_startserver.nextpage );
+	Menu_AddItem( &s_startserver.menu, &s_startserver.pagecount );
 	Menu_AddItem( &s_startserver.menu, &s_startserver.back );
 	Menu_AddItem( &s_startserver.menu, &s_startserver.next );
 	Menu_AddItem( &s_startserver.menu, &s_startserver.mapname );
 	Menu_AddItem( &s_startserver.menu, &s_startserver.item_null );
+
+	if ( trap_Cvar_VariableValue("sv_running") ) {
+		int gametype;
+
+		gametype = (int) Com_Clamp(0, ARRAY_LEN(gametype_remap2) - 1,
+							trap_Cvar_VariableValue("g_gametype"));
+		s_startserver.gametype.curvalue = gametype_remap2[gametype];
+
+		Q_strncpyz( s_startserver.currentmapname, CG_Cvar_VariableString( "mapname" ),
+		            sizeof( s_startserver.currentmapname ) );
+	}
 
 	StartServer_GametypeEvent( NULL, QM_ACTIVATED );
 }
@@ -789,7 +827,6 @@ static void ServerOptions_Start( void ) {
 	int		skill;
 	int		n;
 	char	buf[64];
-	const char *info;
 
 	timelimit	 = atoi( MField_Buffer( &s_serveroptions.timelimit.field ) );
 	fraglimit	 = atoi( MField_Buffer( &s_serveroptions.fraglimit.field ) );
@@ -898,8 +935,13 @@ static void ServerOptions_Start( void ) {
 	}
 
 	// the wait commands will allow the dedicated to take effect
-	info = UI_GetArenaInfoByNumber( s_startserver.maplist[ s_startserver.currentmap ]);
-	trap_Cmd_ExecuteText( EXEC_APPEND, va( "wait ; wait ; map %s\n", Info_ValueForKey( info, "map" )));
+	trap_Cmd_ExecuteText( EXEC_APPEND, va( "wait ; wait ; g_gametype %d ; map %s\n",
+	                      s_serveroptions.gametype, s_startserver.currentmapname ) );
+
+	// remove bots
+	if ( trap_Cvar_VariableValue("sv_running") ) {
+		trap_Cmd_ExecuteText( EXEC_APPEND, "kickbots\n" );
+	}
 
 	// add bots
 	trap_Cmd_ExecuteText( EXEC_APPEND, "wait 3\n" );
@@ -1264,8 +1306,6 @@ ServerOptions_SetMenuItems
 */
 static void ServerOptions_SetMenuItems( void ) {
 	static char picname[64];
-	char		mapname[MAX_NAMELENGTH];
-	const char	*info;
 
 	switch( s_serveroptions.gametype ) {
 	case GT_FFA:
@@ -1324,12 +1364,9 @@ static void ServerOptions_SetMenuItems( void ) {
 	s_serveroptions.pure.curvalue = Com_Clamp( 0, 1, trap_Cvar_VariableValue( "sv_pure" ) );
 
 	// set the map pic
-	info = UI_GetArenaInfoByNumber( s_startserver.maplist[ s_startserver.currentmap ]);
-	Q_strncpyz( mapname, Info_ValueForKey( info, "map"), MAX_NAMELENGTH );
-
-	Com_sprintf( picname, sizeof(picname), "levelshots/%s_small", mapname );
+	Com_sprintf( picname, sizeof(picname), "levelshots/%s_small", s_startserver.currentmapname );
 	if ( !trap_R_RegisterShaderNoMip( picname ) ) {
-		Com_sprintf( picname, sizeof(picname), "levelshots/%s", mapname );
+		Com_sprintf( picname, sizeof(picname), "levelshots/%s", s_startserver.currentmapname );
 	}
 	s_serveroptions.mappic.generic.name = picname;
 
@@ -1406,8 +1443,7 @@ static void ServerOptions_MenuInit( qboolean multiplayer ) {
 
 	memset( &s_serveroptions, 0 ,sizeof(serveroptions_t) );
 	s_serveroptions.multiplayer = multiplayer;
-	s_serveroptions.gametype = (int) Com_Clamp(0, ARRAY_LEN(gametype_remap2) - 1,
-						trap_Cvar_VariableValue("g_gametype"));
+	s_serveroptions.gametype = gametype_remap[s_startserver.gametype.curvalue];
 
 	ServerOptions_Cache();
 
